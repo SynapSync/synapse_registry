@@ -1,0 +1,32 @@
+{
+  "$schema": "https://synapsync.dev/schemas/cognitive-manifest.json",
+  "name": "feature-branch-manager",
+  "type": "agent",
+  "version": "1.0.0",
+  "description": "Git workflow manager for feature branch creation, pushing changes, and PR creation",
+  "author": {
+    "name": "SynapSync",
+    "url": "https://github.com/SynapSync",
+    "email": "hello@synapsync.dev"
+  },
+  "license": "Apache-2.0",
+  "category": "general",
+  "tags": [
+    "git",
+    "workflow",
+    "branches",
+    "pull-request",
+    "automation",
+    "devops"
+  ],
+  "providers": [
+    "claude"
+  ],
+  "file": "feature-branch-manager.md",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/SynapSync/synapse-registry"
+  },
+  "createdAt": "2026-01-28T00:00:00Z",
+  "updatedAt": "2026-01-28T00:00:00Z"
+}
