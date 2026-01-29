@@ -1,12 +1,12 @@
 ---
 name: project-planner
 description: >
-  Comprehensive project planning framework with structured analysis, planning, and execution phases.
-  Trigger: When planning a new feature, project scope, or complex task that requires analysis, planning, and execution phases.
+  Planning-only framework that produces structured analysis, planning, and execution-plan documents.
+  Trigger: When planning a new feature, project scope, or complex task that requires structured planning documents.
 license: Apache-2.0
 metadata:
   author: synapsync
-  version: "1.0"
+  version: "1.1"
   scope: [root]
   auto_invoke: "Planning a new project or feature"
 allowed-tools: Read, Edit, Write, Glob, Grep, Bash, Task
@@ -14,7 +14,11 @@ allowed-tools: Read, Edit, Write, Glob, Grep, Bash, Task
 
 ## Purpose
 
-Create a structured project planning framework that separates analysis, planning, and execution into distinct phases with clear roles, deliverables, and tracking mechanisms.
+Create a structured project planning framework that produces analysis, planning, and execution-plan documents with clear roles, deliverables, and tracking mechanisms.
+
+> **CRITICAL RULE — PLANNING ONLY**
+>
+> This skill is strictly a **planning skill**. Its sole responsibility is to **create, organize, and deliver all planning documents** (analysis, planning, execution plan, sprint templates). It **MUST NOT** start implementing, executing, or carrying out any of the tasks defined in the plan. Execution is handled by a separate dedicated skill. Once all planning documents are complete, this skill's job is done.
 
 ## When to Use This Skill
 
@@ -28,34 +32,34 @@ Create a structured project planning framework that separates analysis, planning
 ## Capabilities
 
 ### Planning Framework
-- **Three-phase structure**: Analysis → Planning → Execution
+- **Three-phase document structure**: Analysis → Planning → Execution Plan
 - **Hierarchical goals**: Features → Phases → Objectives
 - **Dependency tracking**: Task relationships and blocking
-- **Progress monitoring**: Sprint-based execution with status tracking
+- **Sprint templates**: Pre-built tracking documents ready for execution
 
-### Analysis Phase
+### Analysis Document Creation
 - Requirements documentation
 - Resource assessment
 - Technical feasibility evaluation
 - Constraint identification
 
-### Planning Phase
+### Planning Document Creation
 - Step-by-step implementation strategy
 - Phase decomposition with objectives
 - Resource allocation
 - Timeline and dependency mapping
 
-### Execution Phase
-- Concrete task definitions
-- Phase-based implementation
-- Sprint/todo organization
-- Progress tracking and monitoring
+### Execution Plan Document Creation
+- Concrete task definitions organized by phase
+- Phase-based task breakdown
+- Sprint/todo template organization
+- Progress tracking templates
 
-### Monitoring & Tracking
-- Sprint-based todo lists
-- Phase completion checklist
-- Dependency resolution status
-- Overall project progress dashboard
+### Sprint Template Creation
+- Sprint-based todo list templates
+- Phase completion checklist templates
+- Dependency resolution tracking templates
+- Overall project progress dashboard template
 
 ## Output Location
 
@@ -110,8 +114,8 @@ Define how you'll build it based on analysis findings.
 
 **Role**: Strategic planning. Ask "how will we do this?" and "what are the phases?"
 
-### Step 3: Execution Phase
-Execute the plan and track progress.
+### Step 3: Execution Plan Document
+Define the concrete tasks and structure needed for execution. **This step creates the execution plan document — it does NOT start executing tasks.**
 
 **Deliverable**: `.synapsync/planning/{project-name}/execution-plan/EXECUTION.md`
 
@@ -126,10 +130,10 @@ Execute the plan and track progress.
 4. **Resource Allocation**: Who does what
 5. **Risk Monitoring**: Ongoing risk assessment
 
-**Role**: Hands-on implementation. Ask "what specific tasks must we do?"
+**Role**: Task definition and structuring. Ask "what specific tasks must be done?"
 
-### Step 4: Execution Tracking (Todos/Sprints)
-Monitor daily/weekly progress with sprint-based todos.
+### Step 4: Sprint Templates
+Create sprint tracking templates ready for use during execution. **This step creates the sprint template documents — it does NOT begin tracking or executing work.**
 
 **Deliverable**: `.synapsync/planning/{project-name}/todos/SPRINT-{N}.md`
 
@@ -146,7 +150,14 @@ Monitor daily/weekly progress with sprint-based todos.
 4. **Blockers & Risk Updates**: Current issues
 5. **Completion Tracking**: Percentage complete per phase
 
-**Role**: Daily progress monitoring. Ask "are we on track?"
+**Role**: Template creation for future tracking. Ask "what will we need to track?"
+
+### Step 5: Handoff
+Once all documents are created, the planning skill's work is complete. Summarize what was produced and indicate that the plan is ready to be picked up by an execution skill or team.
+
+**Deliverable**: Summary of all created documents and their locations.
+
+**This skill STOPS here. It does NOT begin implementing any of the planned tasks.**
 
 ## Directory Structure
 
@@ -384,10 +395,10 @@ touch .synapsync/planning/create-new-register/todos/SPRINT-1.md
 - Set objectives per phase
 - Create timeline
 
-**Day 3+**: Execute and track
-- Update EXECUTION.md with real tasks
-- Create SPRINT-1.md for tracking
-- Update daily in sprint file
+**Day 3+**: Complete execution plan and sprint templates
+- Write EXECUTION.md with concrete tasks per phase
+- Create SPRINT-1.md template for tracking
+- Summarize all produced documents and hand off to execution
 
 ## Best Practices
 
@@ -426,45 +437,53 @@ touch .synapsync/planning/create-new-register/todos/SPRINT-1.md
    - Adjust timeline based on feedback
    - Create execution document
 
-### Execution Phase (Before/During/After)
+### Execution Plan Document (Before/During)
 
-1. **Before execution**:
+1. **Before writing the execution plan**:
    - Break phases into concrete tasks
    - Assign task owners
    - Identify task dependencies
 
-2. **During execution**:
-   - Update sprint todos daily
-   - Track blockers immediately
-   - Monitor phase progress
-   - Adapt if needed
+2. **During execution plan writing**:
+   - Define clear, actionable tasks per phase
+   - Map dependencies between tasks
+   - Set success criteria per phase
+   - Allocate resources to tasks
 
-3. **After execution**:
-   - Document lessons learned
-   - Update PROJECT-STATUS.md
-   - Archive completed sprints
+3. **After completing the execution plan document**:
+   - Review task completeness with stakeholders
+   - Validate that all phases have concrete deliverables
 
-### Monitoring & Tracking (Before/During/After)
+### Sprint Template Creation (Before/During)
 
-1. **Before sprints**:
+1. **Before creating sprint templates**:
    - Plan sprint scope based on execution phases
    - Set realistic capacity
    - Identify dependencies
 
-2. **During sprints**:
-   - Update todos daily
-   - Communicate blockers
-   - Track phase progress
-   - Adjust scope if needed
+2. **During template creation**:
+   - Structure todos by phase
+   - Include blocker tracking sections
+   - Add completion tracking metrics
+   - Ensure tasks map to execution phases
 
-3. **After sprints**:
-   - Calculate completion percentage
-   - Document what changed
-   - Plan next sprint
+3. **After sprint templates are created**:
+   - Verify all execution plan tasks are represented
+   - Confirm sprint scope aligns with phase objectives
+   - **Hand off** — the planning skill's work is done
 
 ## Critical Patterns
 
-### Pattern 0: Central Planning Location
+### Pattern 0: Planning Only — Never Execute
+
+This skill **MUST NOT** begin implementing, coding, building, deploying, or otherwise carrying out any task defined in the plan. Its output is strictly **documents**: analysis, planning, execution plan, and sprint templates. Once all documents are created and delivered, the skill's work is complete.
+
+**Bad**: Creating the plan and then starting to implement Phase 1 tasks
+**Good**: Creating all planning documents and summarizing what was produced, then stopping
+
+**Why**: Separation of concerns. Planning and execution are distinct responsibilities. Mixing them leads to incomplete plans, rushed analysis, and untracked work. A dedicated execution skill will pick up where this skill leaves off.
+
+### Pattern 1: Central Planning Location
 
 All project plans MUST be created in `.synapsync/planning/` directory:
 
@@ -477,7 +496,7 @@ All project plans MUST be created in `.synapsync/planning/` directory:
 - Consistent structure across all plans
 - Better tooling integration
 
-### Pattern 1: Phase Naming Convention
+### Pattern 2: Phase Naming Convention
 
 Use clear, action-oriented phase names:
 
@@ -486,7 +505,7 @@ Use clear, action-oriented phase names:
 
 **Why**: Clear names help teams understand what each phase accomplishes and when it's complete.
 
-### Pattern 2: Objective Specificity
+### Pattern 3: Objective Specificity
 
 Objectives must be measurable and concrete:
 
@@ -495,7 +514,7 @@ Objectives must be measurable and concrete:
 
 **Why**: Specific objectives tell you exactly when a phase is done and prevent scope creep.
 
-### Pattern 3: Phase Dependencies
+### Pattern 4: Phase Dependencies
 
 Always declare phase dependencies explicitly:
 
@@ -507,7 +526,7 @@ Always declare phase dependencies explicitly:
 
 **Why**: Dependencies prevent starting work that has prerequisites and help identify parallel work.
 
-### Pattern 4: Task-to-Phase Mapping
+### Pattern 5: Task-to-Phase Mapping
 
 Every task in a sprint must map to an execution phase:
 
@@ -517,7 +536,7 @@ Every task in a sprint must map to an execution phase:
 
 **Why**: This prevents orphan tasks and keeps focus on phase completion.
 
-### Pattern 5: Sprint Scope Alignment
+### Pattern 6: Sprint Scope Alignment
 
 Sprint todos should pull tasks from 1-2 active execution phases:
 
@@ -535,14 +554,14 @@ Sprint todos should pull tasks from 1-2 active execution phases:
 
 ## Integration with Other Skills
 
+### With `project-executor` (Execution Skill)
+Once all planning documents are created, hand off to `project-executor` to begin implementing and tracking the plan. **This skill creates the plan; `project-executor` carries it out.**
+
 ### With `task-planner`
 Use project-planner to define the overall structure, then use task-planner to create detailed task breakdowns for each sprint.
 
-### With `task-executor`
-Once execution phases are defined, use task-executor to monitor daily progress against sprint todos.
-
 ### With `growth-architect`
-Use for strategic project review and phase prioritization during planning stage.
+Use for strategic project review and phase prioritization during the planning stage.
 
 ## Configuration Options
 
@@ -564,17 +583,19 @@ Use for strategic project review and phase prioritization during planning stage.
 
 ## Limitations
 
-1. **Requires upfront planning**: Framework assumes analysis can happen before execution
-2. **Not suitable for highly iterative work**: If requirements change frequently, plan for iteration phases
-3. **Requires phase discipline**: Skipping phases or blending them reduces framework benefits
-4. **Manual tracking**: No automated progress calculation; must update manually
+1. **Planning only**: This skill creates planning documents but does NOT execute, implement, or carry out any planned tasks. Use a dedicated execution skill for that.
+2. **Requires upfront planning**: Framework assumes analysis can happen before execution
+3. **Not suitable for highly iterative work**: If requirements change frequently, plan for iteration phases
+4. **Requires phase discipline**: Skipping phases or blending them reduces framework benefits
+5. **Manual tracking**: No automated progress calculation; must update manually
 
 ## Safety Features
 
-- **Phase review gates**: Analysis and Planning should be reviewed before Execution
-- **Dependency blocking**: Never start a phase before prerequisites are complete
-- **Scope protection**: All changes to plan must be documented in update sprints
-- **Status transparency**: Project-STATUS.md prevents surprises about completion
+- **Planning-only boundary**: This skill never starts implementing tasks — it only produces planning documents
+- **Phase review gates**: Analysis and Planning documents should be reviewed before creating the Execution Plan
+- **Dependency blocking**: Phase dependencies are documented to prevent premature execution
+- **Scope protection**: All plan changes must be documented in updated documents
+- **Status transparency**: PROJECT-STATUS.md template prevents surprises about completion
 
 ## Troubleshooting
 
@@ -745,6 +766,7 @@ Complete Phase 1, start Phase 2
 
 ## Version History
 
+- **1.1** (2026-01-29): Refactored to planning-only scope — skill creates all planning documents but does not execute tasks. Execution responsibility delegated to a dedicated execution skill.
 - **1.0** (2026-01-28): Initial release with three-phase framework and sprint tracking
 
 ## Future Enhancements
