@@ -6,7 +6,7 @@ description: >
 license: Apache-2.0
 metadata:
   author: synapsync
-  version: "1.1"
+  version: "1.2"
   scope: [root]
   auto_invoke: "Planning a new project or feature"
 allowed-tools: Read, Edit, Write, Glob, Grep, Bash, Task
@@ -16,9 +16,21 @@ allowed-tools: Read, Edit, Write, Glob, Grep, Bash, Task
 
 Create a structured project planning framework that produces analysis, planning, and execution-plan documents with clear roles, deliverables, and tracking mechanisms.
 
-> **CRITICAL RULE — PLANNING ONLY**
+> **CRITICAL RULE 1 — PLANNING ONLY**
 >
 > This skill is strictly a **planning skill**. Its sole responsibility is to **create, organize, and deliver all planning documents** (analysis, planning, execution plan, sprint templates). It **MUST NOT** start implementing, executing, or carrying out any of the tasks defined in the plan. Execution is handled by a separate dedicated skill. Once all planning documents are complete, this skill's job is done.
+
+> **CRITICAL RULE 2 — CONTEXT-FIRST: RESPECT EXISTING PATTERNS**
+>
+> Before making **any** planning decision, this skill **MUST** explore and understand the existing codebase. Every proposal — whether it involves UI, backend logic, architecture, file structure, naming, or tooling — **MUST align with the project's established patterns and conventions**. The planner does not invent new approaches when existing ones already solve the problem. It does not propose a generic button when the project has a design system with its own button component. It does not suggest a new state management pattern when the app already uses one. It does not introduce a new folder structure when the project follows an established convention.
+>
+> **This is not a restriction on creativity.** When something genuinely new is needed, the planner documents *why* existing patterns don't suffice and proposes the new approach as a conscious, justified deviation — never as a default.
+>
+> **Mandatory before planning**:
+> 1. Explore the project's file structure, architecture, and conventions
+> 2. Identify reusable components, shared utilities, design tokens, and patterns
+> 3. Document these findings in a `CONVENTIONS.md` reference file
+> 4. Reference these conventions in every planning decision
 
 ## When to Use This Skill
 
@@ -37,11 +49,19 @@ Create a structured project planning framework that produces analysis, planning,
 - **Dependency tracking**: Task relationships and blocking
 - **Sprint templates**: Pre-built tracking documents ready for execution
 
+### Codebase Discovery
+- Project structure and architecture exploration
+- UI component and design system identification
+- Backend patterns and conventions mapping
+- Naming conventions, file organization, and coding style detection
+- Reusable utilities, shared modules, and design tokens catalog
+
 ### Analysis Document Creation
 - Requirements documentation
 - Resource assessment
 - Technical feasibility evaluation
 - Constraint identification
+- Existing conventions and patterns reference
 
 ### Planning Document Creation
 - Step-by-step implementation strategy
@@ -78,44 +98,104 @@ All project plans must be created in the central planning directory:
 
 ## Workflow
 
+### Step 0: Codebase Discovery (MANDATORY)
+Before any planning begins, explore the existing project to understand its patterns, architecture, and conventions. **This step is non-negotiable.** Skipping it leads to plans that conflict with the project's established design.
+
+**Deliverable**: `.synapsync/planning/{project-name}/analysis/CONVENTIONS.md`
+
+**What to explore**:
+1. **Project Structure**: Folder organization, module boundaries, monorepo vs single-app
+2. **UI Patterns** (if applicable): Component library, design system, reusable components (buttons, forms, modals, cards, layouts), styling approach (CSS modules, Tailwind, styled-components, etc.), design tokens (colors, spacing, typography)
+3. **Backend Patterns** (if applicable): API structure (REST, GraphQL, tRPC), error handling patterns, middleware conventions, service/repository layers, validation approach
+4. **State Management**: How the app manages state (Redux, Zustand, Context, signals, etc.)
+5. **Data Layer**: ORM/database patterns, migration conventions, model definitions
+6. **Naming Conventions**: File naming, variable naming, component naming, route naming
+7. **Testing Patterns**: Test framework, test file location, mocking approach, coverage expectations
+8. **Shared Utilities**: Existing helpers, hooks, services, and abstractions already available
+9. **Dependencies & Tooling**: Key libraries already in use, build tools, linters, formatters
+
+**Output format for CONVENTIONS.md**:
+```markdown
+# Project Conventions: [Project Name]
+
+## Architecture
+- Pattern: [e.g., Feature-based modules, MVC, Clean Architecture]
+- Key directories: [e.g., src/features/, src/shared/, src/core/]
+
+## UI Components (if applicable)
+- Design system: [e.g., Custom components in src/components/ui/]
+- Button component: [e.g., src/components/ui/Button.tsx — use this, never create raw <button>]
+- Form pattern: [e.g., React Hook Form + Zod validation]
+- Styling: [e.g., Tailwind CSS with design tokens in tailwind.config.ts]
+
+## Backend Patterns (if applicable)
+- API style: [e.g., REST with Express routers in src/routes/]
+- Error handling: [e.g., Custom AppError class in src/utils/errors.ts]
+- Validation: [e.g., Zod schemas in src/schemas/]
+
+## State Management
+- Approach: [e.g., Zustand stores in src/stores/]
+
+## Naming Conventions
+- Files: [e.g., kebab-case for files, PascalCase for components]
+- Functions: [e.g., camelCase, verbs for actions]
+
+## Testing
+- Framework: [e.g., Vitest + Testing Library]
+- Location: [e.g., __tests__/ adjacent to source]
+
+## Shared Utilities
+- [List key reusable modules already available]
+
+## Key Dependencies
+- [List critical libraries and their purpose]
+```
+
+**Role**: Codebase archaeologist. Ask "what patterns does this project already follow?" and "what exists that we should reuse?"
+
+> **IMPORTANT**: Every subsequent step (Analysis, Planning, Execution Plan) MUST reference this conventions document. If a planning decision conflicts with an established convention, it must be explicitly called out and justified.
+
 ### Step 1: Analysis Phase
-Investigate and document what you need to build.
+Investigate and document what you need to build. **Reference CONVENTIONS.md throughout.**
 
 **Deliverable**: `.synapsync/planning/{project-name}/analysis/ANALYSIS.md`
 
 **Sections**:
 1. **Requirement Summary**: What are we building?
 2. **Current State Assessment**: What exists today?
-3. **Technical Analysis**: What technologies/tools do we need?
-4. **Resource Analysis**: What resources are available?
-5. **Constraints & Risks**: What limitations exist?
-6. **Success Criteria**: How will we know it's done?
+3. **Conventions Reference**: Link to CONVENTIONS.md — summarize which existing patterns are relevant to this feature
+4. **Technical Analysis**: What technologies/tools do we need? (Prioritize what the project already uses)
+5. **Resource Analysis**: What resources are available?
+6. **Constraints & Risks**: What limitations exist?
+7. **Success Criteria**: How will we know it's done?
 
 **Role**: Information gathering and feasibility assessment. Ask "what do we have?" and "what do we need?"
 
 ### Step 2: Planning Phase
-Define how you'll build it based on analysis findings.
+Define how you'll build it based on analysis findings. **All proposals must align with CONVENTIONS.md.**
 
 **Deliverable**: `.synapsync/planning/{project-name}/planning/PLANNING.md`
 
 **Sections**:
-1. **Implementation Strategy**: High-level approach
-2. **Execution Phases**: Major milestones/phases
+1. **Implementation Strategy**: High-level approach — must explain how it fits within the existing architecture
+2. **Conventions Alignment**: Which existing patterns, components, and utilities will be reused. Any justified deviations from conventions must be explicitly listed here with reasoning.
+3. **Execution Phases**: Major milestones/phases
    - Each phase has a name, description, and concrete objectives
    - Phases should be sequential or have clear dependencies
-3. **Phase Details**: For each phase:
+4. **Phase Details**: For each phase:
    - **Phase Name & Description**
    - **Objectives**: Specific, measurable goals
    - **Deliverables**: What gets completed
    - **Dependencies**: Prerequisites from other phases
-4. **Resource Plan**: Who/what is needed
-5. **Timeline**: Estimated phase duration
-6. **Risk Mitigation**: Handling identified risks
+   - **Existing Patterns Used**: Which conventions/components apply to this phase
+5. **Resource Plan**: Who/what is needed
+6. **Timeline**: Estimated phase duration
+7. **Risk Mitigation**: Handling identified risks
 
 **Role**: Strategic planning. Ask "how will we do this?" and "what are the phases?"
 
 ### Step 3: Execution Plan Document
-Define the concrete tasks and structure needed for execution. **This step creates the execution plan document — it does NOT start executing tasks.**
+Define the concrete tasks and structure needed for execution. **This step creates the execution plan document — it does NOT start executing tasks.** Each task must specify which existing patterns, components, or utilities to use.
 
 **Deliverable**: `.synapsync/planning/{project-name}/execution-plan/EXECUTION.md`
 
@@ -124,13 +204,13 @@ Define the concrete tasks and structure needed for execution. **This step create
 2. **Phase Breakdown**: For each execution phase:
    - **Phase X: [Name]**
    - **Objectives**: What this phase accomplishes
-   - **Tasks**: Specific, actionable items
+   - **Tasks**: Specific, actionable items — each task should note which existing components/patterns/utilities to use (e.g., "Create form using `FormField` component from `src/components/ui/` with Zod validation per project convention")
    - **Expected Duration**: How long this phase takes
 3. **Success Criteria per Phase**: Completion metrics
 4. **Resource Allocation**: Who does what
 5. **Risk Monitoring**: Ongoing risk assessment
 
-**Role**: Task definition and structuring. Ask "what specific tasks must be done?"
+**Role**: Task definition and structuring. Ask "what specific tasks must be done, and which existing patterns apply?"
 
 ### Step 4: Sprint Templates
 Create sprint tracking templates ready for use during execution. **This step creates the sprint template documents — it does NOT begin tracking or executing work.**
@@ -167,6 +247,7 @@ All projects must follow this structure inside `.synapsync/planning/`:
 .synapsync/planning/
 ├── {project-name}/              # Project identifier (kebab-case)
 │   ├── analysis/
+│   │   ├── CONVENTIONS.md       # Existing project patterns & conventions (Step 0)
 │   │   ├── ANALYSIS.md          # Main analysis document
 │   │   └── [optional-details]/  # Detailed analysis by component
 │   ├── planning/
@@ -215,10 +296,16 @@ What are we building? Why?
 - Current user workflows
 - Technical debt considerations
 
+## Conventions Reference
+See: `CONVENTIONS.md`
+- Key patterns relevant to this feature: [list]
+- Existing components/utilities to reuse: [list]
+- Architecture patterns that apply: [list]
+
 ## Technical Analysis
-- Required technologies
-- Architecture implications
-- New dependencies needed
+- Required technologies (prioritize what the project already uses)
+- Architecture implications (within existing architecture)
+- New dependencies needed (justify why existing tools don't suffice)
 
 ## Resource Analysis
 - Team members available
@@ -242,7 +329,12 @@ What are we building? Why?
 # Planning: [Project/Feature Name]
 
 ## Implementation Strategy
-High-level approach and philosophy.
+High-level approach and philosophy. Explain how it fits within the existing architecture.
+
+## Conventions Alignment
+- **Reused patterns**: [List existing patterns, components, and utilities that will be used]
+- **Deviations**: [List any justified departures from existing conventions, with reasoning]
+  - Deviation 1: [What] — Reason: [Why existing pattern doesn't suffice]
 
 ## Execution Phases
 
@@ -259,6 +351,8 @@ High-level approach and philosophy.
 - Deliverable 2
 
 **Dependencies**: Phase 0 (if any)
+
+**Existing Patterns Used**: [Which conventions/components apply]
 
 ### Phase 2: [Name]
 [Same structure as Phase 1]
@@ -385,9 +479,14 @@ touch .synapsync/planning/create-new-register/todos/SPRINT-1.md
 
 ### Using the Framework
 
+**Day 0**: Codebase Discovery
+- Explore project structure and architecture
+- Identify existing patterns, components, and conventions
+- Create CONVENTIONS.md
+
 **Day 1**: Fill in Analysis
 - Research requirements
-- Document current state
+- Document current state (referencing CONVENTIONS.md)
 - Identify constraints
 
 **Day 2**: Create Planning document
@@ -402,9 +501,30 @@ touch .synapsync/planning/create-new-register/todos/SPRINT-1.md
 
 ## Best Practices
 
+### Codebase Discovery (Always First)
+
+1. **Explore the project**:
+   - Read the project's README, CLAUDE.md, or similar documentation
+   - Browse the folder structure to understand architecture
+   - Identify the UI component library / design system
+   - Identify backend patterns (API routes, services, models)
+   - Check existing utilities, hooks, and shared modules
+   - Note naming conventions and file organization
+
+2. **Document findings**:
+   - Create CONVENTIONS.md with all discovered patterns
+   - List reusable components by name and path
+   - Note the styling approach, state management, and testing patterns
+   - Identify any design tokens, theme configurations, or shared constants
+
+3. **Use as foundation**:
+   - Every subsequent document references CONVENTIONS.md
+   - Every proposed solution is checked against existing patterns first
+
 ### Analysis Phase (Before/During)
 
 1. **Before starting**:
+   - Complete Codebase Discovery (Step 0) — CONVENTIONS.md must exist
    - Gather all requirements documentation
    - Interview stakeholders
    - Review related systems
@@ -413,6 +533,7 @@ touch .synapsync/planning/create-new-register/todos/SPRINT-1.md
    - Document assumptions clearly
    - Identify technical unknowns
    - List all constraints upfront
+   - Cross-reference requirements against existing conventions — what can be solved with existing patterns?
 
 3. **After analysis**:
    - Circulate for feedback
@@ -423,6 +544,7 @@ touch .synapsync/planning/create-new-register/todos/SPRINT-1.md
 
 1. **Before planning**:
    - Finalize analysis document
+   - Review CONVENTIONS.md — ensure you know the project's patterns
    - Get team together
    - Review timeline requirements
 
@@ -431,9 +553,12 @@ touch .synapsync/planning/create-new-register/todos/SPRINT-1.md
    - Set specific, measurable objectives
    - Identify phase dependencies
    - Estimate durations realistically
+   - For each phase, note which existing components/patterns apply
+   - Document any justified deviations in the Conventions Alignment section
 
 3. **After planning**:
    - Get team agreement on phases
+   - Verify all proposals align with CONVENTIONS.md
    - Adjust timeline based on feedback
    - Create execution document
 
@@ -496,7 +621,48 @@ All project plans MUST be created in `.synapsync/planning/` directory:
 - Consistent structure across all plans
 - Better tooling integration
 
-### Pattern 2: Phase Naming Convention
+### Pattern 2: Respect Existing Patterns — Never Reinvent
+
+Every planning decision must align with the project's established conventions. Before proposing any component, pattern, or approach, check what already exists.
+
+**Bad**: "Create a new `<button>` element with custom CSS for the submit action"
+**Good**: "Use the existing `Button` component from `src/components/ui/Button.tsx` with variant='primary'"
+
+**Bad**: "Set up Redux for state management"
+**Good**: "Use the existing Zustand store pattern in `src/stores/` as the project already uses Zustand"
+
+**Bad**: "Create a `helpers/` folder for utility functions"
+**Good**: "Add utility to `src/utils/` following the existing project structure"
+
+**Bad**: "Use Axios for API calls"
+**Good**: "Use the existing `apiClient` wrapper in `src/services/api.ts` that the project already uses"
+
+**Why**: Consistency is what makes a codebase maintainable. Introducing new patterns when existing ones work creates fragmentation, increases cognitive load, and produces code that feels foreign to the team. The planner's job is to work **with** the project, not against it.
+
+### Pattern 3: Justify Every Deviation
+
+When something genuinely new IS needed (new library, new pattern, new component not yet in the system), the plan must explicitly document:
+1. **What exists today** and why it doesn't solve the problem
+2. **What is proposed** as the new approach
+3. **Why the deviation is justified** — concrete technical reasoning
+4. **How it aligns** with the project's broader architecture and philosophy
+
+This goes in the **Conventions Alignment** section of the Planning document.
+
+**Bad**: Silently introducing a new pattern without mentioning it
+**Good**:
+```markdown
+## Conventions Alignment
+### Deviation: New WebSocket service
+- **Existing pattern**: REST API calls via `src/services/api.ts`
+- **Why it doesn't suffice**: Real-time notifications require persistent connections; REST polling would be inefficient
+- **Proposal**: Create `src/services/websocket.ts` following the same service pattern structure
+- **Alignment**: Uses the same error handling conventions and auth token flow as `api.ts`
+```
+
+**Why**: Conscious, documented deviations are healthy engineering. Silent deviations are technical debt.
+
+### Pattern 4: Phase Naming Convention
 
 Use clear, action-oriented phase names:
 
@@ -505,7 +671,7 @@ Use clear, action-oriented phase names:
 
 **Why**: Clear names help teams understand what each phase accomplishes and when it's complete.
 
-### Pattern 3: Objective Specificity
+### Pattern 5: Objective Specificity
 
 Objectives must be measurable and concrete:
 
@@ -514,7 +680,7 @@ Objectives must be measurable and concrete:
 
 **Why**: Specific objectives tell you exactly when a phase is done and prevent scope creep.
 
-### Pattern 4: Phase Dependencies
+### Pattern 6: Phase Dependencies
 
 Always declare phase dependencies explicitly:
 
@@ -526,7 +692,7 @@ Always declare phase dependencies explicitly:
 
 **Why**: Dependencies prevent starting work that has prerequisites and help identify parallel work.
 
-### Pattern 5: Task-to-Phase Mapping
+### Pattern 7: Task-to-Phase Mapping
 
 Every task in a sprint must map to an execution phase:
 
@@ -536,7 +702,7 @@ Every task in a sprint must map to an execution phase:
 
 **Why**: This prevents orphan tasks and keeps focus on phase completion.
 
-### Pattern 6: Sprint Scope Alignment
+### Pattern 8: Sprint Scope Alignment
 
 Sprint todos should pull tasks from 1-2 active execution phases:
 
@@ -592,6 +758,8 @@ Use for strategic project review and phase prioritization during the planning st
 ## Safety Features
 
 - **Planning-only boundary**: This skill never starts implementing tasks — it only produces planning documents
+- **Conventions enforcement**: CONVENTIONS.md must be created before any planning begins; all proposals are checked against it
+- **Deviation transparency**: Any departure from existing patterns must be explicitly documented and justified
 - **Phase review gates**: Analysis and Planning documents should be reviewed before creating the Execution Plan
 - **Dependency blocking**: Phase dependencies are documented to prevent premature execution
 - **Scope protection**: All plan changes must be documented in updated documents
@@ -619,6 +787,14 @@ Use for strategic project review and phase prioritization during the planning st
 
 **Solution**: Create sprint todos AFTER finalizing execution phases. Map each sprint todo to a specific execution phase objective.
 
+### Issue: "Plan proposes patterns that conflict with existing codebase"
+
+**Solution**: This means Step 0 (Codebase Discovery) was skipped or incomplete. Go back and create/update CONVENTIONS.md. Review every proposal in the plan against the documented conventions. Replace conflicting proposals with approaches that use existing patterns.
+
+### Issue: "Not sure if something should follow existing patterns or introduce something new"
+
+**Solution**: Default to existing patterns. Only deviate when the existing approach genuinely cannot solve the problem. When in doubt, ask the team. If deviating, document the reasoning in the Conventions Alignment section of the Planning document.
+
 ## Example: Building a "Send Register" Feature
 
 **Project Location**: `.synapsync/planning/create-new-register/`
@@ -638,11 +814,18 @@ Users need to submit a registration form that creates a new register record in t
 - Database has register table with required fields
 - No email templates for registration
 
+## Conventions Reference
+See: `CONVENTIONS.md`
+- **UI**: Project uses custom `FormField`, `Button`, and `Input` components from `src/components/ui/`
+- **Forms**: React Hook Form + Zod validation pattern
+- **API**: Express routes in `src/routes/` with `apiClient` wrapper
+- **Error handling**: Uses `AppError` class from `src/utils/errors.ts`
+
 ## Technical Analysis
-- Need to update API endpoint to trigger email
-- Need to create email template
-- Need error handling for email failures
-- Frontend form validation required
+- Need to update API endpoint to trigger email (using existing Express route pattern)
+- Need to create email template (using existing SendGrid integration)
+- Need error handling for email failures (using existing AppError pattern)
+- Frontend form validation required (using existing React Hook Form + Zod pattern)
 
 ## Resource Analysis
 - Backend: 1 engineer (2 days)
@@ -652,8 +835,8 @@ Users need to submit a registration form that creates a new register record in t
 ## Success Criteria
 - User submits form and receives confirmation email
 - Email contains registration details
-- Error handling if email fails
-- Mobile responsive form
+- Error handling if email fails (consistent with existing error patterns)
+- Mobile responsive form (using existing responsive patterns)
 ```
 
 ### Planning Document
@@ -766,6 +949,7 @@ Complete Phase 1, start Phase 2
 
 ## Version History
 
+- **1.2** (2026-01-29): Added context-first planning rules — mandatory Codebase Discovery step, CONVENTIONS.md, pattern alignment enforcement, and deviation justification requirements.
 - **1.1** (2026-01-29): Refactored to planning-only scope — skill creates all planning documents but does not execute tasks. Execution responsibility delegated to a dedicated execution skill.
 - **1.0** (2026-01-28): Initial release with three-phase framework and sprint tracking
 
