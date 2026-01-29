@@ -1,0 +1,39 @@
+{
+  "$schema": "https://synapsync.dev/schemas/cognitive-manifest.json",
+  "name": "cognitive-register",
+  "type": "skill",
+  "version": "1.0.0",
+  "description": "Registers new cognitives into the SynapSync Registry with proper structure and validation",
+  "author": {
+    "name": "SynapSync",
+    "url": "https://github.com/SynapSync",
+    "email": "hello@synapsync.dev"
+  },
+  "license": "Apache-2.0",
+  "category": "general",
+  "tags": [
+    "registry",
+    "cognitive",
+    "registration",
+    "meta",
+    "automation",
+    "manifest",
+    "validation"
+  ],
+  "providers": [
+    "claude",
+    "openai",
+    "cursor",
+    "windsurf",
+    "copilot",
+    "gemini"
+  ],
+  "file": "SKILL.md",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/SynapSync/synapse-registry"
+  },
+  "homepage": "https://synapsync.dev/cognitives/cognitive-register",
+  "createdAt": "2026-01-28T00:00:00Z",
+  "updatedAt": "2026-01-28T00:00:00Z"
+}

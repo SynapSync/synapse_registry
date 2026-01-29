@@ -2,7 +2,7 @@
   "$schema": "https://synapsync.dev/schemas/registry.json",
   "version": "1.0.0",
   "lastUpdated": "2026-01-28T00:00:00Z",
-  "totalCognitives": 3,
+  "totalCognitives": 4,
   "cognitives": [
     {
       "name": "skill-creator",
@@ -11,8 +11,23 @@
       "description": "Creates AI skills following SynapSync spec with templates and best practices",
       "author": "synapsync",
       "category": "general",
-      "tags": ["skill", "creator", "templates", "meta", "documentation", "ai-instructions", "best-practices"],
-      "providers": ["claude", "openai", "cursor", "windsurf", "copilot", "gemini"],
+      "tags": [
+        "skill",
+        "creator",
+        "templates",
+        "meta",
+        "documentation",
+        "ai-instructions",
+        "best-practices"
+      ],
+      "providers": [
+        "claude",
+        "openai",
+        "cursor",
+        "windsurf",
+        "copilot",
+        "gemini"
+      ],
       "downloads": 0,
       "path": "skills/general/skill-creator"
     },
@@ -23,8 +38,22 @@
       "description": "Git workflow manager for feature branch creation, pushing changes, and PR creation",
       "author": "synapsync",
       "category": "general",
-      "tags": ["git", "workflow", "branches", "pull-request", "automation", "devops"],
-      "providers": ["claude"],
+      "tags": [
+        "git",
+        "workflow",
+        "branches",
+        "pull-request",
+        "automation",
+        "devops"
+      ],
+      "providers": [
+        "claude",
+        "openai",
+        "cursor",
+        "windsurf",
+        "copilot",
+        "gemini"
+      ],
       "downloads": 0,
       "path": "agents/general/feature-branch-manager"
     },
@@ -35,10 +64,52 @@
       "description": "Comprehensive project planning framework with analysis, planning, and execution phases",
       "author": "synapsync",
       "category": "workflow",
-      "tags": ["planning", "project-management", "workflow", "analysis", "execution", "sprints", "tracking"],
-      "providers": ["claude", "openai", "cursor", "windsurf", "copilot", "gemini"],
+      "tags": [
+        "planning",
+        "project-management",
+        "workflow",
+        "analysis",
+        "execution",
+        "sprints",
+        "tracking"
+      ],
+      "providers": [
+        "claude",
+        "openai",
+        "cursor",
+        "windsurf",
+        "copilot",
+        "gemini"
+      ],
       "downloads": 0,
       "path": "skills/workflow/project-planner"
+    },
+    {
+      "name": "cognitive-register",
+      "type": "skill",
+      "version": "1.0.0",
+      "description": "Registers new cognitives into the SynapSync Registry with proper structure and validation",
+      "author": "synapsync",
+      "category": "general",
+      "tags": [
+        "registry",
+        "cognitive",
+        "registration",
+        "meta",
+        "automation",
+        "manifest",
+        "validation"
+      ],
+      "providers": [
+        "claude",
+        "openai",
+        "cursor",
+        "windsurf",
+        "copilot",
+        "gemini"
+      ],
+      "downloads": 0,
+      "path": "skills/general/cognitive-register"
     }
   ]
 }
