@@ -1,0 +1,39 @@
+{
+  "$schema": "https://synapsync.dev/schemas/cognitive-manifest.json",
+  "name": "project-planner",
+  "type": "skill",
+  "version": "1.0.0",
+  "description": "Comprehensive project planning framework with analysis, planning, and execution phases",
+  "author": {
+    "name": "SynapSync",
+    "url": "https://github.com/SynapSync",
+    "email": "hello@synapsync.dev"
+  },
+  "license": "Apache-2.0",
+  "category": "workflow",
+  "tags": [
+    "planning",
+    "project-management",
+    "workflow",
+    "analysis",
+    "execution",
+    "sprints",
+    "tracking"
+  ],
+  "providers": [
+    "claude",
+    "openai",
+    "cursor",
+    "windsurf",
+    "copilot",
+    "gemini"
+  ],
+  "file": "SKILL.md",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/SynapSync/synapse-registry"
+  },
+  "homepage": "https://synapsync.dev/cognitives/project-planner",
+  "createdAt": "2026-01-28T00:00:00Z",
+  "updatedAt": "2026-01-28T00:00:00Z"
+}
