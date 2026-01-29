@@ -56,6 +56,23 @@ synapse-registry/
     └── integrations/
 ```
 
+## Available Cognitives
+
+### Skills
+
+| Name | Category | Version | Description |
+|------|----------|---------|-------------|
+| [skill-creator](skills/general/skill-creator/) | general | 3.0.0 | Creates AI skills following SynapSync spec with templates and best practices |
+| [project-planner](skills/workflow/project-planner/) | workflow | 1.2.0 | Planning-only framework that produces analysis, planning, and execution-plan documents |
+| [cognitive-register](skills/general/cognitive-register/) | general | 1.0.0 | Registers new cognitives into the SynapSync Registry with proper structure and validation |
+| [code-analyzer](skills/analytics/code-analyzer/) | analytics | 1.0.0 | Analyzes code modules and generates structured technical reports with architecture diagrams |
+
+### Agents
+
+| Name | Category | Version | Description |
+|------|----------|---------|-------------|
+| [feature-branch-manager](agents/general/feature-branch-manager/) | general | 1.0.0 | Git workflow manager for feature branch creation, pushing changes, and PR creation |
+
 ## Cognitive Types
 
 | Type | Description | File |

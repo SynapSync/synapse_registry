@@ -2,7 +2,7 @@
   "$schema": "https://synapsync.dev/schemas/registry.json",
   "version": "1.0.0",
   "lastUpdated": "2026-01-29T00:00:00Z",
-  "totalCognitives": 4,
+  "totalCognitives": 5,
   "cognitives": [
     {
       "name": "skill-creator",
@@ -110,6 +110,35 @@
       ],
       "downloads": 0,
       "path": "skills/general/cognitive-register"
+    },
+    {
+      "name": "code-analyzer",
+      "type": "skill",
+      "version": "1.0.0",
+      "description": "Analyzes code modules and generates structured technical reports with architecture diagrams",
+      "author": "synapsync",
+      "category": "analytics",
+      "tags": [
+        "code-analysis",
+        "architecture",
+        "documentation",
+        "mermaid",
+        "module-analysis",
+        "technical-report",
+        "onboarding",
+        "refactoring"
+      ],
+      "providers": [
+        "claude",
+        "openai",
+        "cursor",
+        "windsurf",
+        "copilot",
+        "gemini",
+        "codex"
+      ],
+      "downloads": 0,
+      "path": "skills/analytics/code-analyzer"
     }
   ]
 }
