@@ -2,7 +2,7 @@
   "$schema": "https://synapsync.dev/schemas/registry.json",
   "version": "1.0.0",
   "lastUpdated": "2026-01-31T00:00:00Z",
-  "totalCognitives": 6,
+  "totalCognitives": 5,
   "cognitives": [
     {
       "name": "skill-creator",
@@ -29,7 +29,7 @@
         "gemini"
       ],
       "downloads": 0,
-      "path": "skills/general/skill-creator"
+      "path": "cognitives/skills/general/skill-creator"
     },
     {
       "name": "feature-branch-manager",
@@ -55,7 +55,7 @@
         "gemini"
       ],
       "downloads": 0,
-      "path": "agents/general/feature-branch-manager"
+      "path": "cognitives/agents/general/feature-branch-manager"
     },
     {
       "name": "project-planner",
@@ -63,7 +63,7 @@
       "version": "1.2.0",
       "description": "Planning-only framework that produces analysis, planning, and execution-plan documents",
       "author": "synapsync",
-      "category": "workflow",
+      "category": "planning",
       "tags": [
         "planning",
         "project-management",
@@ -82,34 +82,7 @@
         "gemini"
       ],
       "downloads": 0,
-      "path": "skills/workflow/project-planner"
-    },
-    {
-      "name": "cognitive-register",
-      "type": "skill",
-      "version": "1.0.0",
-      "description": "Registers new cognitives into the SynapSync Registry with proper structure and validation",
-      "author": "synapsync",
-      "category": "general",
-      "tags": [
-        "registry",
-        "cognitive",
-        "registration",
-        "meta",
-        "automation",
-        "manifest",
-        "validation"
-      ],
-      "providers": [
-        "claude",
-        "openai",
-        "cursor",
-        "windsurf",
-        "copilot",
-        "gemini"
-      ],
-      "downloads": 0,
-      "path": "skills/general/cognitive-register"
+      "path": "cognitives/skills/planning/project-planner"
     },
     {
       "name": "code-analyzer",
@@ -138,7 +111,7 @@
         "codex"
       ],
       "downloads": 0,
-      "path": "skills/analytics/code-analyzer"
+      "path": "cognitives/skills/analytics/code-analyzer"
     },
     {
       "name": "sdlc-planner",
@@ -146,7 +119,7 @@
       "version": "1.0.0",
       "description": "Generates SDLC Phase 1 (Requirements) and Phase 2 (Design) documentation from a product idea",
       "author": "synapsync",
-      "category": "general",
+      "category": "planning",
       "tags": [
         "sdlc",
         "requirements",
@@ -167,7 +140,7 @@
         "codex"
       ],
       "downloads": 0,
-      "path": "skills/general/sdlc-planner"
+      "path": "cognitives/skills/planning/sdlc-planner"
     }
   ]
 }
