@@ -52,22 +52,25 @@ If the user provides the cognitive content inline or in a previous message, use 
 ```
 synapse-registry/
 ├── registry.json                          # Central index — MUST be updated
-├── skills/{category}/{name}/
-│   ├── manifest.json                      # Metadata
-│   ├── SKILL.md                           # Content file
-│   └── assets/                            # Optional templates/schemas
-├── agents/{category}/{name}/
-│   ├── manifest.json
-│   └── {name}.md                          # Content file (uses cognitive name)
-├── prompts/{category}/{name}/
-│   ├── manifest.json
-│   └── PROMPT.md
-├── workflows/{category}/{name}/
-│   ├── manifest.json
-│   └── WORKFLOW.yaml
-└── tools/{category}/{name}/
-    ├── manifest.json
-    └── TOOL.md
+├── cognitives/                            # Public registry content
+│   ├── skills/{category}/{name}/
+│   │   ├── manifest.json                  # Metadata
+│   │   ├── SKILL.md                       # Content file
+│   │   └── assets/                        # Optional templates/schemas
+│   ├── agents/{category}/{name}/
+│   │   ├── manifest.json
+│   │   └── {name}.md                      # Content file (uses cognitive name)
+│   ├── prompts/{category}/{name}/
+│   │   ├── manifest.json
+│   │   └── PROMPT.md
+│   ├── workflows/{category}/{name}/
+│   │   ├── manifest.json
+│   │   └── WORKFLOW.yaml
+│   └── tools/{category}/{name}/
+│       ├── manifest.json
+│       └── TOOL.md
+└── core/                                  # Internal tooling (not published)
+    └── register/                          # This skill
 ```
 
 ## Valid Categories
@@ -84,7 +87,7 @@ synapse-registry/
 | `analytics`     | Data analysis, research, benchmarking        |
 | `automation`    | Task automation, workflows                   |
 | `integrations`  | External services (Supabase, Stripe, etc.)   |
-| `workflow`      | Planning, project management, processes      |
+| `planning`      | Project planning, SDLC, requirements, architecture |
 
 If the cognitive doesn't clearly fit a category, default to `general`. If the user specifies a category, use it even if it's new — the registry supports extensibility.
 
@@ -136,25 +139,25 @@ Before creating anything, check that no cognitive with the same name exists:
 ### Step 3: Create Directory Structure
 
 ```bash
-mkdir -p {type}s/{category}/{name}
+mkdir -p cognitives/{type}s/{category}/{name}
 ```
 
-The directory follows the pattern: `{type}s/{category}/{name}/`
+The directory follows the pattern: `cognitives/{type}s/{category}/{name}/`
 
 Examples:
-- `skills/general/my-skill/`
-- `agents/devops/deploy-manager/`
-- `prompts/frontend/component-generator/`
+- `cognitives/skills/general/my-skill/`
+- `cognitives/agents/devops/deploy-manager/`
+- `cognitives/prompts/frontend/component-generator/`
 
 ### Step 4: Create Content File
 
 Write the cognitive content to the appropriate file:
 
-- **skill** → `{type}s/{category}/{name}/SKILL.md`
-- **agent** → `{type}s/{category}/{name}/{name}.md`
-- **prompt** → `{type}s/{category}/{name}/PROMPT.md`
-- **workflow** → `{type}s/{category}/{name}/WORKFLOW.yaml`
-- **tool** → `{type}s/{category}/{name}/TOOL.md`
+- **skill** → `cognitives/{type}s/{category}/{name}/SKILL.md`
+- **agent** → `cognitives/{type}s/{category}/{name}/{name}.md`
+- **prompt** → `cognitives/{type}s/{category}/{name}/PROMPT.md`
+- **workflow** → `cognitives/{type}s/{category}/{name}/WORKFLOW.yaml`
+- **tool** → `cognitives/{type}s/{category}/{name}/TOOL.md`
 
 If the user provided content with YAML frontmatter, use it as-is. If not, ensure the content has proper frontmatter before writing.
 
@@ -216,7 +219,7 @@ Add the new cognitive to `registry.json`:
   "tags": ["{same tags as manifest}"],
   "providers": ["{same providers as manifest}"],
   "downloads": 0,
-  "path": "{type}s/{category}/{name}"
+  "path": "cognitives/{type}s/{category}/{name}"
 }
 ```
 
@@ -244,7 +247,7 @@ These rules are non-negotiable. If any fails, fix it before completing:
 | Description length         | Maximum 100 characters in manifest/registry description    |
 | Name format                | Lowercase, hyphens only, no spaces or special chars        |
 | Version format             | Semantic versioning (e.g., `1.0.0`)                        |
-| Path format                | `{type}s/{category}/{name}` matches actual directory       |
+| Path format                | `cognitives/{type}s/{category}/{name}` matches actual directory |
 | registry.json sync         | `totalCognitives` count matches actual array length        |
 
 ## Naming Convention Reference
@@ -316,8 +319,8 @@ All three artifacts (content file, manifest.json, registry.json) must be created
 
 If the category directory doesn't exist under the type directory, create it:
 ```bash
-# If skills/workflow/ doesn't exist yet
-mkdir -p skills/workflow/project-planner
+# If cognitives/skills/planning/ doesn't exist yet
+mkdir -p cognitives/skills/planning/project-planner
 ```
 
 This is valid — the registry supports new categories as the ecosystem grows.
@@ -387,15 +390,15 @@ After registering a cognitive, use `feature-branch-manager` to commit the change
 
 **AI executes**:
 
-1. Parse: name=`project-planner`, type=`skill`, category=`workflow` (inferred from content)
+1. Parse: name=`project-planner`, type=`skill`, category=`planning` (inferred from content)
 2. Check `registry.json` → no duplicate found
-3. Create `skills/workflow/project-planner/`
-4. Write `skills/workflow/project-planner/SKILL.md` (user's content)
-5. Write `skills/workflow/project-planner/manifest.json`
+3. Create `cognitives/skills/planning/project-planner/`
+4. Write `cognitives/skills/planning/project-planner/SKILL.md` (user's content)
+5. Write `cognitives/skills/planning/project-planner/manifest.json`
 6. Update `registry.json`:
    - `totalCognitives`: 2 → 3
-   - Add entry with `"path": "skills/workflow/project-planner"`
-7. Confirm: "Registered `project-planner` skill in `skills/workflow/project-planner/`"
+   - Add entry with `"path": "cognitives/skills/planning/project-planner"`
+7. Confirm: "Registered `project-planner` skill in `cognitives/skills/planning/project-planner/`"
 
 ## Example: Registering an Agent
 
@@ -405,9 +408,9 @@ After registering a cognitive, use `feature-branch-manager` to commit the change
 
 1. Parse: name=`deploy-automator`, type=`agent`, category=`devops` (inferred)
 2. Check `registry.json` → no duplicate found
-3. Create `agents/devops/deploy-automator/`
-4. Write `agents/devops/deploy-automator/deploy-automator.md` (note: agents use `{name}.md`)
-5. Write `agents/devops/deploy-automator/manifest.json` with `"file": "deploy-automator.md"`
+3. Create `cognitives/agents/devops/deploy-automator/`
+4. Write `cognitives/agents/devops/deploy-automator/deploy-automator.md` (note: agents use `{name}.md`)
+5. Write `cognitives/agents/devops/deploy-automator/manifest.json` with `"file": "deploy-automator.md"`
 6. Update `registry.json`
 7. Confirm registration
 

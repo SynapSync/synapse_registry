@@ -35,8 +35,8 @@ cd synapse-registry
 ### 2. Create Your Cognitive Folder
 
 ```bash
-# Pattern: {type}s/{category}/{name}/
-mkdir -p skills/frontend/my-skill
+# Pattern: cognitives/{type}s/{category}/{name}/
+mkdir -p cognitives/skills/frontend/my-skill
 ```
 
 ### 3. Add Required Files
@@ -129,7 +129,7 @@ Add your cognitive to the `cognitives` array:
   "tags": ["react", "hooks", "patterns"],
   "providers": ["claude", "openai", "cursor"],
   "downloads": 0,
-  "path": "skills/frontend/my-skill"
+  "path": "cognitives/skills/frontend/my-skill"
 }
 ```
 
@@ -171,6 +171,7 @@ Use one of these categories:
 | `analytics` | Data analysis, research, benchmarking |
 | `automation` | Task automation, workflows |
 | `integrations` | External services (Supabase, Stripe, etc.) |
+| `planning` | Project planning, SDLC, requirements, architecture |
 
 ## Provider Compatibility
 

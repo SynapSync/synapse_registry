@@ -29,31 +29,36 @@ synapse-registry/
 ├── CONTRIBUTING.md                     # Guide for contributors
 ├── registry.json                       # Central index of all cognitives
 │
-├── skills/                             # AI instruction skills
-│   ├── general/                        # General-purpose skills
-│   ├── frontend/                       # Frontend development
-│   ├── backend/                        # Backend development
-│   ├── database/                       # Database & ORMs
-│   ├── devops/                         # CI/CD & infrastructure
-│   ├── security/                       # Security analysis
-│   ├── testing/                        # Testing & QA
-│   ├── analytics/                      # Data analysis
-│   ├── automation/                     # Task automation
-│   └── integrations/                   # External services
+├── cognitives/                         # Public registry content (downloadable)
+│   ├── skills/                         # AI instruction skills
+│   │   ├── general/                    # General-purpose skills
+│   │   ├── frontend/                   # Frontend development
+│   │   ├── backend/                    # Backend development
+│   │   ├── database/                   # Database & ORMs
+│   │   ├── devops/                     # CI/CD & infrastructure
+│   │   ├── security/                   # Security analysis
+│   │   ├── testing/                    # Testing & QA
+│   │   ├── analytics/                  # Data analysis
+│   │   ├── automation/                 # Task automation
+│   │   ├── planning/                   # Project planning & SDLC
+│   │   └── integrations/              # External services
+│   │
+│   ├── agents/                         # Autonomous AI agents
+│   │   ├── general/
+│   │   └── automation/
+│   │
+│   ├── prompts/                        # Reusable prompt templates
+│   │   ├── general/
+│   │   └── frontend/
+│   │
+│   ├── workflows/                      # Multi-step AI workflows
+│   │   └── devops/
+│   │
+│   └── tools/                          # External integrations
+│       └── integrations/
 │
-├── agents/                             # Autonomous AI agents
-│   ├── general/
-│   └── automation/
-│
-├── prompts/                            # Reusable prompt templates
-│   ├── general/
-│   └── frontend/
-│
-├── workflows/                          # Multi-step AI workflows
-│   └── devops/
-│
-└── tools/                              # External integrations
-    └── integrations/
+└── core/                               # Internal project tooling (not published)
+    └── register/                       # Cognitive registration automation
 ```
 
 ## Available Cognitives
@@ -62,16 +67,16 @@ synapse-registry/
 
 | Name | Category | Version | Description |
 |------|----------|---------|-------------|
-| [skill-creator](skills/general/skill-creator/) | general | 3.0.0 | Creates AI skills following SynapSync spec with templates and best practices |
-| [project-planner](skills/workflow/project-planner/) | workflow | 1.2.0 | Planning-only framework that produces analysis, planning, and execution-plan documents |
-| [cognitive-register](skills/general/cognitive-register/) | general | 1.0.0 | Registers new cognitives into the SynapSync Registry with proper structure and validation |
-| [code-analyzer](skills/analytics/code-analyzer/) | analytics | 1.0.0 | Analyzes code modules and generates structured technical reports with architecture diagrams |
+| [skill-creator](cognitives/skills/general/skill-creator/) | general | 3.0.0 | Creates AI skills following SynapSync spec with templates and best practices |
+| [project-planner](cognitives/skills/planning/project-planner/) | planning | 1.2.0 | Planning-only framework that produces analysis, planning, and execution-plan documents |
+| [sdlc-planner](cognitives/skills/planning/sdlc-planner/) | planning | 1.0.0 | Generates SDLC Phase 1 (Requirements) and Phase 2 (Design) documentation from a product idea |
+| [code-analyzer](cognitives/skills/analytics/code-analyzer/) | analytics | 1.0.0 | Analyzes code modules and generates structured technical reports with architecture diagrams |
 
 ### Agents
 
 | Name | Category | Version | Description |
 |------|----------|---------|-------------|
-| [feature-branch-manager](agents/general/feature-branch-manager/) | general | 1.0.0 | Git workflow manager for feature branch creation, pushing changes, and PR creation |
+| [feature-branch-manager](cognitives/agents/general/feature-branch-manager/) | general | 1.0.0 | Git workflow manager for feature branch creation, pushing changes, and PR creation |
 
 ## Cognitive Types
 
@@ -97,6 +102,7 @@ synapse-registry/
 | `analytics` | Data analysis, research, benchmarking |
 | `automation` | Task automation, workflows |
 | `integrations` | External services (Supabase, Stripe, etc.) |
+| `planning` | Project planning, SDLC, requirements, architecture |
 
 ## Contributing
 
@@ -105,7 +111,7 @@ We welcome contributions! See [CONTRIBUTING.md](CONTRIBUTING.md) for guidelines 
 ### Quick Start
 
 1. Fork this repository
-2. Create a folder: `{type}s/{category}/{your-cognitive-name}/`
+2. Create a folder: `cognitives/{type}s/{category}/{your-cognitive-name}/`
 3. Add `manifest.json` and your cognitive file (e.g., `SKILL.md`)
 4. Add an entry to `registry.json`
 5. Submit a Pull Request

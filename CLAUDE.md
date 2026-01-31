@@ -10,26 +10,36 @@ SynapSync is a CLI tool for orchestrating AI capabilities across multiple provid
 
 ```
 synapse-registry/
-├── registry.json              # Central index of all cognitives (source of truth)
-├── skills/{category}/{name}/  # AI instruction skills (SKILL.md + manifest.json)
-├── agents/{category}/{name}/  # Autonomous AI agents (AGENT.md + manifest.json)
-├── prompts/{category}/{name}/ # Reusable prompt templates (PROMPT.md + manifest.json)
-├── workflows/{category}/{name}/ # Multi-step processes (WORKFLOW.yaml + manifest.json)
-└── tools/{category}/{name}/   # External integrations (TOOL.md + manifest.json)
+├── registry.json                        # Central index of all cognitives (source of truth)
+├── cognitives/                          # Public registry content (downloadable)
+│   ├── skills/{category}/{name}/        # AI instruction skills (SKILL.md + manifest.json)
+│   ├── agents/{category}/{name}/        # Autonomous AI agents (AGENT.md + manifest.json)
+│   ├── prompts/{category}/{name}/       # Reusable prompt templates (PROMPT.md + manifest.json)
+│   ├── workflows/{category}/{name}/     # Multi-step processes (WORKFLOW.yaml + manifest.json)
+│   └── tools/{category}/{name}/         # External integrations (TOOL.md + manifest.json)
+└── core/                                # Internal project tooling (not published)
+    └── register/                        # Cognitive registration automation
 ```
 
-Every cognitive lives in `{type}s/{category}/{name}/` and must contain:
+Every cognitive lives in `cognitives/{type}s/{category}/{name}/` and must contain:
 1. `manifest.json` — metadata, version, author, tags, provider compatibility
 2. A content file — `SKILL.md`, `AGENT.md`, `PROMPT.md`, `WORKFLOW.yaml`, or `TOOL.md`
 
 ## Current Cognitives
 
-- **skill-creator** (`skills/general/skill-creator/`) — Meta-skill for creating new skills with templates. Includes `assets/` with basic and advanced templates.
-- **feature-branch-manager** (`agents/general/feature-branch-manager/`) — Git workflow agent for branch creation, pushing, and PR creation. Claude-only.
+- **skill-creator** (`cognitives/skills/general/skill-creator/`) — Meta-skill for creating new skills with templates. Includes `assets/` with basic and advanced templates.
+- **feature-branch-manager** (`cognitives/agents/general/feature-branch-manager/`) — Git workflow agent for branch creation, pushing, and PR creation. Claude-only.
+- **project-planner** (`cognitives/skills/planning/project-planner/`) — Planning-only framework that produces analysis, planning, and execution-plan documents.
+- **code-analyzer** (`cognitives/skills/analytics/code-analyzer/`) — Analyzes code modules and generates structured technical reports with architecture diagrams.
+- **sdlc-planner** (`cognitives/skills/planning/sdlc-planner/`) — Generates SDLC Phase 1 (Requirements) and Phase 2 (Design) documentation from a product idea.
+
+## Internal Tooling (not published)
+
+- **cognitive-register** (`core/register/`) — Automates registration of new cognitives into the registry. Used internally by contributors.
 
 ## Valid Categories
 
-`general`, `frontend`, `backend`, `database`, `devops`, `security`, `testing`, `analytics`, `automation`, `integrations`
+`general`, `frontend`, `backend`, `database`, `devops`, `security`, `testing`, `analytics`, `automation`, `integrations`, `planning`
 
 ## Valid Providers
 
