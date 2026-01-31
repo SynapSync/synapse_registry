@@ -1,0 +1,41 @@
+{
+  "$schema": "https://synapsync.dev/schemas/cognitive-manifest.json",
+  "name": "sdlc-planner",
+  "type": "skill",
+  "version": "1.0.0",
+  "description": "Generates SDLC Phase 1 (Requirements) and Phase 2 (Design) documentation from a product idea",
+  "author": {
+    "name": "SynapSync",
+    "url": "https://github.com/SynapSync",
+    "email": "hello@synapsync.dev"
+  },
+  "license": "Apache-2.0",
+  "category": "general",
+  "tags": [
+    "sdlc",
+    "requirements",
+    "system-design",
+    "architecture",
+    "documentation",
+    "planning",
+    "product-analysis",
+    "software-engineering"
+  ],
+  "providers": [
+    "claude",
+    "openai",
+    "cursor",
+    "windsurf",
+    "copilot",
+    "gemini",
+    "codex"
+  ],
+  "file": "SKILL.md",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/SynapSync/synapse-registry"
+  },
+  "homepage": "https://synapsync.dev/cognitives/sdlc-planner",
+  "createdAt": "2026-01-31T00:00:00Z",
+  "updatedAt": "2026-01-31T00:00:00Z"
+}

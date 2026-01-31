@@ -1,8 +1,8 @@
 {
   "$schema": "https://synapsync.dev/schemas/registry.json",
   "version": "1.0.0",
-  "lastUpdated": "2026-01-29T00:00:00Z",
-  "totalCognitives": 5,
+  "lastUpdated": "2026-01-31T00:00:00Z",
+  "totalCognitives": 6,
   "cognitives": [
     {
       "name": "skill-creator",
@@ -139,6 +139,35 @@
       ],
       "downloads": 0,
       "path": "skills/analytics/code-analyzer"
+    },
+    {
+      "name": "sdlc-planner",
+      "type": "skill",
+      "version": "1.0.0",
+      "description": "Generates SDLC Phase 1 (Requirements) and Phase 2 (Design) documentation from a product idea",
+      "author": "synapsync",
+      "category": "general",
+      "tags": [
+        "sdlc",
+        "requirements",
+        "system-design",
+        "architecture",
+        "documentation",
+        "planning",
+        "product-analysis",
+        "software-engineering"
+      ],
+      "providers": [
+        "claude",
+        "openai",
+        "cursor",
+        "windsurf",
+        "copilot",
+        "gemini",
+        "codex"
+      ],
+      "downloads": 0,
+      "path": "skills/general/sdlc-planner"
     }
   ]
 }
