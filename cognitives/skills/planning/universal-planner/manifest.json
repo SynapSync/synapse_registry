@@ -1,0 +1,43 @@
+{
+  "$schema": "https://synapsync.dev/schemas/cognitive-manifest.json",
+  "name": "universal-planner",
+  "type": "skill",
+  "version": "1.0.0",
+  "description": "Adaptive planning skill for any software scenario: new projects, features, refactors, and more",
+  "author": {
+    "name": "SynapSync",
+    "url": "https://github.com/SynapSync",
+    "email": "hello@synapsync.dev"
+  },
+  "license": "Apache-2.0",
+  "category": "planning",
+  "tags": [
+    "planning",
+    "sdlc",
+    "requirements",
+    "architecture",
+    "sprints",
+    "refactoring",
+    "project-management",
+    "analysis",
+    "execution",
+    "universal"
+  ],
+  "providers": [
+    "claude",
+    "openai",
+    "cursor",
+    "windsurf",
+    "copilot",
+    "gemini",
+    "codex"
+  ],
+  "file": "SKILL.md",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/SynapSync/synapse-registry"
+  },
+  "homepage": "https://synapsync.dev/cognitives/universal-planner",
+  "createdAt": "2026-02-04T00:00:00Z",
+  "updatedAt": "2026-02-04T00:00:00Z"
+}

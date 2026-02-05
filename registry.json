@@ -1,8 +1,8 @@
 {
   "$schema": "https://synapsync.dev/schemas/registry.json",
   "version": "1.0.0",
-  "lastUpdated": "2026-01-31T00:00:00Z",
-  "totalCognitives": 5,
+  "lastUpdated": "2026-02-04T00:00:00Z",
+  "totalCognitives": 6,
   "cognitives": [
     {
       "name": "skill-creator",
@@ -141,6 +141,37 @@
       ],
       "downloads": 0,
       "path": "cognitives/skills/planning/sdlc-planner"
+    },
+    {
+      "name": "universal-planner",
+      "type": "skill",
+      "version": "1.0.0",
+      "description": "Adaptive planning skill for any software scenario: new projects, features, refactors, and more",
+      "author": "synapsync",
+      "category": "planning",
+      "tags": [
+        "planning",
+        "sdlc",
+        "requirements",
+        "architecture",
+        "sprints",
+        "refactoring",
+        "project-management",
+        "analysis",
+        "execution",
+        "universal"
+      ],
+      "providers": [
+        "claude",
+        "openai",
+        "cursor",
+        "windsurf",
+        "copilot",
+        "gemini",
+        "codex"
+      ],
+      "downloads": 0,
+      "path": "cognitives/skills/planning/universal-planner"
     }
   ]
 }
