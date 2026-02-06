@@ -7,7 +7,7 @@ description: >
 license: Apache-2.0
 metadata:
   author: synapsync
-  version: "1.0"
+  version: "1.1"
   scope: [root]
   auto_invoke:
     - "Planning a new project, feature, refactor, or any software work"
@@ -15,6 +15,11 @@ metadata:
     - "Create requirements, design, and execution plans"
     - "Analyze and plan a bug fix, tech debt reduction, or architecture change"
   changelog:
+    - version: "1.1"
+      date: "2026-02-05"
+      changes:
+        - "Sprint generation is now optional — skill asks user before generating sprint documents"
+        - "User can defer sprint creation to universal-planner-executor"
     - version: "1.0"
       date: "2026-02-04"
       changes:
@@ -251,11 +256,16 @@ Define concrete tasks structured by phase. Each task specifies which existing pa
 
 **Task format requirement**: Every task in the execution plan must follow the standard task structure (see Sprint Structure Standards below).
 
-### Step: Sprint Plans
+### Step: Sprint Plans (Optional)
 
-Create sprint tracking documents with actionable, checkboxed tasks.
+**Before generating sprint documents, ASK the user:**
 
-**Deliverables**: `sprints/PROGRESS.md` + `sprints/SPRINT-{N}-{name}.md`
+> "The analysis, planning, and execution plan are complete. Do you want me to generate the sprint tracking documents (PROGRESS.md and SPRINT-*.md files) now, or would you prefer to stop here and generate them later with `universal-planner-executor`?"
+
+- If the user says **yes** → Generate `sprints/PROGRESS.md` + `sprints/SPRINT-{N}-{name}.md` following the Sprint Structure Standards below.
+- If the user says **no** → Skip sprint generation and proceed directly to Handoff. The user can later use `universal-planner-executor` to generate sprints from the execution plan.
+
+**Deliverables** (when generated): `sprints/PROGRESS.md` + `sprints/SPRINT-{N}-{name}.md`
 
 See Sprint Structure Standards for format specifications.
 
