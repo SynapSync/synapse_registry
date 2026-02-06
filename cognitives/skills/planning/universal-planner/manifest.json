@@ -2,7 +2,7 @@
   "$schema": "https://synapsync.dev/schemas/cognitive-manifest.json",
   "name": "universal-planner",
   "type": "skill",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "Adaptive planning skill for any software scenario: new projects, features, refactors, and more",
   "author": {
     "name": "SynapSync",
@@ -39,5 +39,5 @@
   },
   "homepage": "https://synapsync.dev/cognitives/universal-planner",
   "createdAt": "2026-02-04T00:00:00Z",
-  "updatedAt": "2026-02-04T00:00:00Z"
+  "updatedAt": "2026-02-05T00:00:00Z"
 }
