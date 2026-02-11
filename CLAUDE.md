@@ -41,6 +41,7 @@ Every cognitive lives in `cognitives/{type}s/{category}/{name}/` and must contai
 - **sdlc-planner** (`cognitives/skills/planning/sdlc-planner/`) — Generates SDLC Phase 1 (Requirements) and Phase 2 (Design) documentation from a product idea.
 - **obsidian-sync** (`cognitives/skills/integrations/obsidian-sync/`) — Syncs markdown reports, plans, and documents from the workspace to an Obsidian vault via MCP.
 - **obsidian-reader** (`cognitives/skills/integrations/obsidian-reader/`) — Reads, searches, and reasons over Obsidian vault notes as contextual knowledge source.
+- **obsidian-md-standard** (`cognitives/skills/integrations/obsidian-md-standard/`) — Obsidian-native markdown output standard for all SynapSync skills that produce documents.
 
 ### Agents
 - **feature-branch-manager** (`cognitives/agents/general/feature-branch-manager/`) — Git workflow agent for branch creation, pushing, and PR creation. Claude-only.

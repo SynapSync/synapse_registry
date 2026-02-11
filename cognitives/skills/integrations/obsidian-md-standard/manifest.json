@@ -1,27 +1,25 @@
 {
   "$schema": "https://synapsync.dev/schemas/cognitive-manifest.json",
-  "name": "universal-planner-executor",
+  "name": "obsidian-md-standard",
   "type": "skill",
-  "version": "2.0.0",
-  "description": "Senior developer executor that implements universal-planner sprints and tracks progress",
+  "version": "1.0.0",
+  "description": "Obsidian-native markdown output standard for all SynapSync skills that produce documents",
   "author": {
     "name": "SynapSync",
     "url": "https://github.com/SynapSync",
     "email": "hello@synapsync.dev"
   },
   "license": "Apache-2.0",
-  "category": "planning",
+  "category": "integrations",
   "tags": [
-    "execution",
-    "sprints",
-    "implementation",
-    "scrum",
-    "project-management",
-    "fullstack",
-    "planning",
-    "automation",
-    "tracking",
-    "development"
+    "obsidian",
+    "markdown",
+    "standard",
+    "frontmatter",
+    "wiki-links",
+    "knowledge-graph",
+    "documentation",
+    "output-format"
   ],
   "providers": [
     "claude",
@@ -37,7 +35,7 @@
     "type": "git",
     "url": "https://github.com/SynapSync/synapse-registry"
   },
-  "homepage": "https://synapsync.dev/cognitives/universal-planner-executor",
-  "createdAt": "2026-02-04T00:00:00Z",
+  "homepage": "https://synapsync.dev/cognitives/obsidian-md-standard",
+  "createdAt": "2026-02-11T00:00:00Z",
   "updatedAt": "2026-02-11T00:00:00Z"
 }

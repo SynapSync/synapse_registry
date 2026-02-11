@@ -148,6 +148,12 @@ allowed-tools: Read, Edit, Write, Glob, Grep, Bash, WebFetch, WebSearch, Task
 
 ---
 
+## Obsidian Output Standard
+{OPTIONAL: For skills that write .md files to {output_base} — Remove if not applicable}
+{Include the appropriate domain profile from obsidian-md-standard. See the obsidian-md-standard skill for available profiles: Planning, Technical Report, SDLC, Sprint Execution, Retrospective, Sync.}
+
+---
+
 ## Output Structure
 {OPTIONAL: For skills that produce artifacts - Remove if not applicable}
 
