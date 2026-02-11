@@ -86,7 +86,7 @@ Create a structured project planning framework that produces analysis, planning,
 All project plans must be created in the central planning directory:
 
 ```
-.synapsync/planning/
+{output_base}/planning/
 └── {project-name}/
     ├── analysis/
     ├── planning/
@@ -94,14 +94,35 @@ All project plans must be created in the central planning directory:
     └── todos/
 ```
 
-**Key Rule**: All workflow outputs go to `.synapsync/planning/**`
+**Key Rule**: All workflow outputs go to `{output_base}/planning/**`
+
+## Configuration Resolution
+
+Before starting any workflow step, resolve the `{output_base}` path that determines where all output documents are stored.
+
+1. **Check** for `cognitive.config.json` in the project root (current working directory)
+2. **If found**: read the `output_base` value and use it for all `{output_base}` references in this skill
+3. **If NOT found**:
+   a. Infer the project name from the current directory name or git repository name
+   b. Ask the user: _"Where should I store output documents for this project?"_ — suggest `~/obsidian-vault/{project-name}/` as the default
+   c. Create `cognitive.config.json` in the project root with their chosen path
+   d. Inform the user the config was saved for future skill runs
+
+**Config file format** (`cognitive.config.json`):
+```json
+{
+  "output_base": "~/obsidian-vault/my-project"
+}
+```
+
+> **IMPORTANT**: Every `{output_base}` reference in this skill depends on this resolution. If the config file cannot be read or created, ask the user for an explicit path before proceeding.
 
 ## Workflow
 
 ### Step 0: Codebase Discovery (MANDATORY)
 Before any planning begins, explore the existing project to understand its patterns, architecture, and conventions. **This step is non-negotiable.** Skipping it leads to plans that conflict with the project's established design.
 
-**Deliverable**: `.synapsync/planning/{project-name}/analysis/CONVENTIONS.md`
+**Deliverable**: `{output_base}/planning/{project-name}/analysis/CONVENTIONS.md`
 
 **What to explore**:
 1. **Project Structure**: Folder organization, module boundaries, monorepo vs single-app
@@ -158,7 +179,7 @@ Before any planning begins, explore the existing project to understand its patte
 ### Step 1: Analysis Phase
 Investigate and document what you need to build. **Reference CONVENTIONS.md throughout.**
 
-**Deliverable**: `.synapsync/planning/{project-name}/analysis/ANALYSIS.md`
+**Deliverable**: `{output_base}/planning/{project-name}/analysis/ANALYSIS.md`
 
 **Sections**:
 1. **Requirement Summary**: What are we building?
@@ -174,7 +195,7 @@ Investigate and document what you need to build. **Reference CONVENTIONS.md thro
 ### Step 2: Planning Phase
 Define how you'll build it based on analysis findings. **All proposals must align with CONVENTIONS.md.**
 
-**Deliverable**: `.synapsync/planning/{project-name}/planning/PLANNING.md`
+**Deliverable**: `{output_base}/planning/{project-name}/planning/PLANNING.md`
 
 **Sections**:
 1. **Implementation Strategy**: High-level approach — must explain how it fits within the existing architecture
@@ -197,7 +218,7 @@ Define how you'll build it based on analysis findings. **All proposals must alig
 ### Step 3: Execution Plan Document
 Define the concrete tasks and structure needed for execution. **This step creates the execution plan document — it does NOT start executing tasks.** Each task must specify which existing patterns, components, or utilities to use.
 
-**Deliverable**: `.synapsync/planning/{project-name}/execution-plan/EXECUTION.md`
+**Deliverable**: `{output_base}/planning/{project-name}/execution-plan/EXECUTION.md`
 
 **Sections**:
 1. **Execution Overview**: Summary of phases and timeline
@@ -215,7 +236,7 @@ Define the concrete tasks and structure needed for execution. **This step create
 ### Step 4: Sprint Templates
 Create sprint tracking templates ready for use during execution. **This step creates the sprint template documents — it does NOT begin tracking or executing work.**
 
-**Deliverable**: `.synapsync/planning/{project-name}/todos/SPRINT-{N}.md`
+**Deliverable**: `{output_base}/planning/{project-name}/todos/SPRINT-{N}.md`
 
 **Sections per Sprint**:
 1. **Sprint Overview**: Timeline and goals
@@ -241,10 +262,10 @@ Once all documents are created, the planning skill's work is complete. Summarize
 
 ## Directory Structure
 
-All projects must follow this structure inside `.synapsync/planning/`:
+All projects must follow this structure inside `{output_base}/planning/`:
 
 ```
-.synapsync/planning/
+{output_base}/planning/
 ├── {project-name}/              # Project identifier (kebab-case)
 │   ├── analysis/
 │   │   ├── CONVENTIONS.md       # Existing project patterns & conventions (Step 0)
@@ -467,14 +488,14 @@ Active Phases: Phase 1, Phase 2
 ### Creating a New Project Plan
 
 ```bash
-# Create project structure in .synapsync/planning/
-mkdir -p .synapsync/planning/create-new-register/{analysis,planning,execution-plan,todos}
+# Create project structure in {output_base}/planning/
+mkdir -p {output_base}/planning/create-new-register/{analysis,planning,execution-plan,todos}
 
 # Create initial documents
-touch .synapsync/planning/create-new-register/analysis/ANALYSIS.md
-touch .synapsync/planning/create-new-register/planning/PLANNING.md
-touch .synapsync/planning/create-new-register/execution-plan/EXECUTION.md
-touch .synapsync/planning/create-new-register/todos/SPRINT-1.md
+touch {output_base}/planning/create-new-register/analysis/ANALYSIS.md
+touch {output_base}/planning/create-new-register/planning/PLANNING.md
+touch {output_base}/planning/create-new-register/execution-plan/EXECUTION.md
+touch {output_base}/planning/create-new-register/todos/SPRINT-1.md
 ```
 
 ### Using the Framework
@@ -610,10 +631,10 @@ This skill **MUST NOT** begin implementing, coding, building, deploying, or othe
 
 ### Pattern 1: Central Planning Location
 
-All project plans MUST be created in `.synapsync/planning/` directory:
+All project plans MUST be created in `{output_base}/planning/` directory:
 
 **Bad**: Storing plans in individual project folders or ad-hoc locations
-**Good**: Everything in `.synapsync/planning/{project-name}/`
+**Good**: Everything in `{output_base}/planning/{project-name}/`
 
 **Why**: Centralized planning enables:
 - Single source of truth for all projects
@@ -797,10 +818,10 @@ Use for strategic project review and phase prioritization during the planning st
 
 ## Example: Building a "Send Register" Feature
 
-**Project Location**: `.synapsync/planning/create-new-register/`
+**Project Location**: `{output_base}/planning/create-new-register/`
 
 ### Analysis Document
-File: `.synapsync/planning/create-new-register/analysis/ANALYSIS.md`
+File: `{output_base}/planning/create-new-register/analysis/ANALYSIS.md`
 
 ```markdown
 # Analysis: Send Register Feature
@@ -840,7 +861,7 @@ See: `CONVENTIONS.md`
 ```
 
 ### Planning Document
-File: `.synapsync/planning/create-new-register/planning/PLANNING.md`
+File: `{output_base}/planning/create-new-register/planning/PLANNING.md`
 
 ```markdown
 # Planning: Send Register Feature
@@ -883,7 +904,7 @@ Verify complete flow works
 ```
 
 ### Execution Document
-File: `.synapsync/planning/create-new-register/execution-plan/EXECUTION.md`
+File: `{output_base}/planning/create-new-register/execution-plan/EXECUTION.md`
 
 ```markdown
 # Execution Plan: Send Register Feature
@@ -911,7 +932,7 @@ File: `.synapsync/planning/create-new-register/execution-plan/EXECUTION.md`
 ```
 
 ### Sprint 1 Todos
-File: `.synapsync/planning/create-new-register/todos/SPRINT-1.md`
+File: `{output_base}/planning/create-new-register/todos/SPRINT-1.md`
 
 ```markdown
 # Sprint 1: Week of Jan 27

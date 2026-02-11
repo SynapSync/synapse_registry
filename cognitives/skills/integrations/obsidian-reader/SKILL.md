@@ -139,6 +139,27 @@ When another skill or agent requests knowledge, return structured summaries:
 - Identify recently modified notes
 - Surface notes related to the current working directory/project
 
+## Configuration Resolution
+
+Before starting any workflow step, resolve the `{output_base}` path that determines where project documents are stored.
+
+1. **Check** for `cognitive.config.json` in the project root (current working directory)
+2. **If found**: read the `output_base` value and use it for all `{output_base}` references in this skill
+3. **If NOT found**:
+   a. Infer the project name from the current directory name or git repository name
+   b. Ask the user: _"Where are your output documents stored for this project?"_ — suggest `~/obsidian-vault/{project-name}/` as the default
+   c. Create `cognitive.config.json` in the project root with their chosen path
+   d. Inform the user the config was saved for future skill runs
+
+**Config file format** (`cognitive.config.json`):
+```json
+{
+  "output_base": "~/obsidian-vault/my-project"
+}
+```
+
+> **IMPORTANT**: Every `{output_base}` reference in this skill depends on this resolution. If the config file cannot be read or created, ask the user for an explicit path before proceeding.
+
 ## Workflow
 
 ### Step 0: Detect Access Mode
@@ -457,7 +478,7 @@ date: "2026-02-10"
 project: "agent-sync-sdk"
 type: "strategic-analysis"           # See type taxonomy below
 tags: [strategy, roadmap, plan]
-source: ".agents/plan/2026-02-10/"   # Original local path (set by obsidian-sync)
+source: "{output_base}/planning/2026-02-10/"   # Original local path (set by obsidian-sync)
 status: "active"                     # Optional: active, archived, draft
 ---
 ```

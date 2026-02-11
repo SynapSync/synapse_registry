@@ -80,6 +80,27 @@ The user provides:
 - "Explain how `/apps/core/auth` works and how it connects to other modules"
 - "Do a v3 analysis of `/src/services/notification-service.ts`"
 
+## Configuration Resolution
+
+Before starting any workflow step, resolve the `{output_base}` path that determines where all output documents are stored.
+
+1. **Check** for `cognitive.config.json` in the project root (current working directory)
+2. **If found**: read the `output_base` value and use it for all `{output_base}` references in this skill
+3. **If NOT found**:
+   a. Infer the project name from the current directory name or git repository name
+   b. Ask the user: _"Where should I store output documents for this project?"_ — suggest `~/obsidian-vault/{project-name}/` as the default
+   c. Create `cognitive.config.json` in the project root with their chosen path
+   d. Inform the user the config was saved for future skill runs
+
+**Config file format** (`cognitive.config.json`):
+```json
+{
+  "output_base": "~/obsidian-vault/my-project"
+}
+```
+
+> **IMPORTANT**: Every `{output_base}` reference in this skill depends on this resolution. If the config file cannot be read or created, ask the user for an explicit path before proceeding.
+
 ## Workflow
 
 ### Step 1: Discovery
@@ -128,7 +149,7 @@ Produce the structured technical report with all findings.
 **Actions**:
 1. Write the report following the **Output Structure** (see below)
 2. Generate Mermaid diagrams for visual understanding
-3. Save the report to `.synapsync/technical/module-analysis/{module-name}/`
+3. Save the report to `{output_base}/technical/module-analysis/{module-name}/`
 
 **Output**: Complete markdown report with diagrams.
 
@@ -149,16 +170,16 @@ If the user requests a v3 analysis, add improvement suggestions.
 All reports are saved to a central technical documentation directory:
 
 ```
-.synapsync/technical/module-analysis/
+{output_base}/technical/module-analysis/
 └── {module-name}/
     ├── REPORT.md              # Main technical report
     └── REFACTOR.md            # Refactoring recommendations (v3 only)
 ```
 
 **Naming convention**: Use the module's folder name in kebab-case.
-- `/src/modules/OrderService` → `.synapsync/technical/module-analysis/order-service/`
-- `/apps/core/payments` → `.synapsync/technical/module-analysis/payments/`
-- `/src/services/notification-service.ts` → `.synapsync/technical/module-analysis/notification-service/`
+- `/src/modules/OrderService` → `{output_base}/technical/module-analysis/order-service/`
+- `/apps/core/payments` → `{output_base}/technical/module-analysis/payments/`
+- `/src/services/notification-service.ts` → `{output_base}/technical/module-analysis/notification-service/`
 
 ## Output Structure
 
@@ -302,7 +323,7 @@ The analysis framework works for any language or framework. Adapt terminology to
 1. **Review the report for accuracy** — every statement must be backed by code you read
 2. **Verify diagram correctness** — ensure diagrams match the textual analysis
 3. **Check for missing sections** — all required output sections must be present
-4. **Save to the correct location** — `.synapsync/technical/module-analysis/{module-name}/`
+4. **Save to the correct location** — `{output_base}/technical/module-analysis/{module-name}/`
 
 ## Integration with Other Skills
 
@@ -334,7 +355,7 @@ Before executing a phase that modifies a module, run `code-analyzer` to document
 
 **Solution**: Break the module into sub-modules and analyze each separately. Create a top-level summary that references the individual reports:
 ```
-.synapsync/technical/module-analysis/
+{output_base}/technical/module-analysis/
 └── large-module/
     ├── REPORT.md              # High-level overview
     ├── sub-module-a/

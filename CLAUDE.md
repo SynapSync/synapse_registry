@@ -2,9 +2,14 @@
 
 ## Project Overview
 
-This is the **SynapSync Registry** — the official public registry of cognitives (skills, agents, prompts, workflows, tools) for the SynapSync CLI. It is a content-only repository with no build system, no dependencies, and no executable code.
+This is the **SynapSync Registry** — the official public registry of cognitives (skills, agents, prompts, workflows, tools). It is a content-only repository with no build system, no dependencies, and no executable code.
 
-SynapSync is a CLI tool for orchestrating AI capabilities across multiple providers (Claude, OpenAI, Cursor, Windsurf, Copilot, Gemini). Cognitives are reusable AI instructions that help AI assistants understand project patterns and conventions.
+Cognitives are reusable AI instructions that help AI assistants understand project patterns and conventions. They work across multiple providers (Claude, OpenAI, Cursor, Windsurf, Copilot, Gemini) and are installed via the `skills` CLI:
+
+```bash
+npx skills add owner/repo    # Install cognitives from a registry
+npx skills update             # Update installed cognitives
+```
 
 ## Repository Structure
 
@@ -27,11 +32,18 @@ Every cognitive lives in `cognitives/{type}s/{category}/{name}/` and must contai
 
 ## Current Cognitives
 
+### Skills
 - **skill-creator** (`cognitives/skills/general/skill-creator/`) — Meta-skill for creating new skills with templates. Includes `assets/` with basic and advanced templates.
-- **feature-branch-manager** (`cognitives/agents/general/feature-branch-manager/`) — Git workflow agent for branch creation, pushing, and PR creation. Claude-only.
 - **project-planner** (`cognitives/skills/planning/project-planner/`) — Planning-only framework that produces analysis, planning, and execution-plan documents.
+- **universal-planner** (`cognitives/skills/planning/universal-planner/`) — Adaptive planning skill for any software scenario: new projects, features, refactors, bug fixes, tech debt, architecture changes.
+- **universal-planner-executor** (`cognitives/skills/planning/universal-planner-executor/`) — Sprint-by-sprint executor companion for universal-planner output.
 - **code-analyzer** (`cognitives/skills/analytics/code-analyzer/`) — Analyzes code modules and generates structured technical reports with architecture diagrams.
 - **sdlc-planner** (`cognitives/skills/planning/sdlc-planner/`) — Generates SDLC Phase 1 (Requirements) and Phase 2 (Design) documentation from a product idea.
+- **obsidian-sync** (`cognitives/skills/integrations/obsidian-sync/`) — Syncs markdown reports, plans, and documents from the workspace to an Obsidian vault via MCP.
+- **obsidian-reader** (`cognitives/skills/integrations/obsidian-reader/`) — Reads, searches, and reasons over Obsidian vault notes as contextual knowledge source.
+
+### Agents
+- **feature-branch-manager** (`cognitives/agents/general/feature-branch-manager/`) — Git workflow agent for branch creation, pushing, and PR creation. Claude-only.
 
 ## Internal Tooling (not published)
 
@@ -92,6 +104,46 @@ The central index at the root. When adding a cognitive, an entry must also be ad
 
 Skills use YAML frontmatter with: `name`, `description`, `license`, `metadata` (author, version, scope, auto_invoke), and `allowed-tools`.
 
+**Important**: Do NOT put `output_base` in frontmatter. Output paths are resolved per-project at runtime via `cognitive.config.json` (see below).
+
+### Per-Project Output Configuration (`cognitive.config.json`)
+
+Skills that produce output documents (reports, plans, analysis, etc.) use a `{output_base}` variable for all output paths. This variable is resolved at runtime from a per-project config file, allowing each project to have its own output destination.
+
+**Config file**: `cognitive.config.json` at the project root (current working directory).
+
+```json
+{
+  "output_base": "~/obsidian-vault/my-project"
+}
+```
+
+**How skills resolve `{output_base}`**:
+1. Check for `cognitive.config.json` in the project root
+2. If found — read `output_base` and use it
+3. If not found — ask the user for a path (suggest `~/obsidian-vault/{project-name}/`), create the config file, proceed
+
+**When creating a new skill that produces output**, you MUST:
+1. Use `{output_base}` for all output paths (e.g., `{output_base}/planning/`, `{output_base}/technical/`)
+2. Include a `## Configuration Resolution` section before the Workflow section
+3. Never hardcode output paths — no `.synapsync/`, `.agents/`, or absolute paths
+
+**Standard Configuration Resolution section** (copy this into new skills):
+
+```markdown
+## Configuration Resolution
+
+Before starting any workflow step, resolve the `{output_base}` path that determines where all output documents are stored.
+
+1. **Check** for `cognitive.config.json` in the project root (current working directory)
+2. **If found**: read the `output_base` value and use it for all `{output_base}` references in this skill
+3. **If NOT found**:
+   a. Infer the project name from the current directory name or git repository name
+   b. Ask the user: _"Where should I store output documents for this project?"_ — suggest `~/obsidian-vault/{project-name}/` as the default
+   c. Create `cognitive.config.json` in the project root with their chosen path
+   d. Inform the user the config was saved for future skill runs
+```
+
 ## Commit Convention
 
 This project uses conventional commits: `feat:`, `fix:`, `chore:`, `docs:`, etc. with optional scope in parentheses (e.g., `feat(agents): ...`).
@@ -105,6 +157,9 @@ This project uses conventional commits: `feat:`, `fix:`, `chore:`, `docs:`, etc.
 - Category must be from the valid categories list
 - Maximum 10 tags per cognitive
 - Description maximum 100 characters
+- Skills that produce output MUST use `{output_base}` variable (never hardcoded paths)
+- Skills that produce output MUST include a `## Configuration Resolution` section
+- No `output_base` field in SKILL.md frontmatter (resolved at runtime via `cognitive.config.json`)
 
 ## Working on This Repo
 

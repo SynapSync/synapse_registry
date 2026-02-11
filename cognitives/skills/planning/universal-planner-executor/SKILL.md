@@ -122,6 +122,27 @@ This skill does NOT plan. It receives a complete plan from `universal-planner` a
 
 ---
 
+## Configuration Resolution
+
+Before starting any workflow step, resolve the `{output_base}` path that determines where all output documents are stored.
+
+1. **Check** for `cognitive.config.json` in the project root (current working directory)
+2. **If found**: read the `output_base` value and use it for all `{output_base}` references in this skill
+3. **If NOT found**:
+   a. Infer the project name from the current directory name or git repository name
+   b. Ask the user: _"Where should I store output documents for this project?"_ — suggest `~/obsidian-vault/{project-name}/` as the default
+   c. Create `cognitive.config.json` in the project root with their chosen path
+   d. Inform the user the config was saved for future skill runs
+
+**Config file format** (`cognitive.config.json`):
+```json
+{
+  "output_base": "~/obsidian-vault/my-project"
+}
+```
+
+> **IMPORTANT**: Every `{output_base}` reference in this skill depends on this resolution. If the config file cannot be read or created, ask the user for an explicit path before proceeding.
+
 ## Workflow
 
 ### Step 0: Locate and Validate Planning
@@ -129,7 +150,7 @@ This skill does NOT plan. It receives a complete plan from `universal-planner` a
 Before any work begins, locate the planning directory and verify all required documents exist.
 
 **Actions**:
-1. Find the planning directory at `.synapsync/planning/{project-name}/`
+1. Find the planning directory at `{output_base}/planning/{project-name}/`
 2. Verify these files exist (based on the planning mode that was used):
    - `analysis/ANALYSIS.md`
    - `planning/PLANNING.md`
@@ -366,7 +387,7 @@ When making decisions not explicitly covered by the plan, document them in the s
 This skill consumes the output of `universal-planner`. The expected directory structure:
 
 ```
-.synapsync/planning/{project-name}/
+{output_base}/planning/{project-name}/
 ├── README.md
 ├── discovery/
 │   └── CONVENTIONS.md              # Project patterns (when applicable)
@@ -437,7 +458,7 @@ Default behavior: **Per phase** — balances granularity with practicality.
 ## Troubleshooting
 
 ### "Plan directory not found"
-Verify the path `.synapsync/planning/{project-name}/` exists. The user may need to run `universal-planner` first or specify the correct project name.
+Verify the path `{output_base}/planning/{project-name}/` exists. The user may need to run `universal-planner` first or specify the correct project name.
 
 ### "CONVENTIONS.md references components that don't exist"
 The codebase may have changed since the plan was written. Verify the current state of the codebase, adapt the implementation to use what actually exists, and document the discrepancy in the Decision Log.
