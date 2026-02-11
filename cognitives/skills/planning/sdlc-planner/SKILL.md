@@ -110,10 +110,10 @@ The instruction may be vague, detailed, or anywhere in between. Your job is to e
 
 ## Output Structure
 
-All output goes into `.synapsync/sdlc/{project-name}/`.
+All output goes into `{output_base}/sdlc/{project-name}/`.
 
 ```
-.synapsync/sdlc/{project-name}/
+{output_base}/sdlc/{project-name}/
 ├── README.md
 ├── requirement-analysis/
 │   ├── 01-problem-definition.md
@@ -145,6 +145,27 @@ Infer `{project-name}` from the user's input using kebab-case:
 
 ---
 
+## Configuration Resolution
+
+Before starting any workflow step, resolve the `{output_base}` path that determines where all output documents are stored.
+
+1. **Check** for `cognitive.config.json` in the project root (current working directory)
+2. **If found**: read the `output_base` value and use it for all `{output_base}` references in this skill
+3. **If NOT found**:
+   a. Infer the project name from the current directory name or git repository name
+   b. Ask the user: _"Where should I store output documents for this project?"_ — suggest `~/obsidian-vault/{project-name}/` as the default
+   c. Create `cognitive.config.json` in the project root with their chosen path
+   d. Inform the user the config was saved for future skill runs
+
+**Config file format** (`cognitive.config.json`):
+```json
+{
+  "output_base": "~/obsidian-vault/my-project"
+}
+```
+
+> **IMPORTANT**: Every `{output_base}` reference in this skill depends on this resolution. If the config file cannot be read or created, ask the user for an explicit path before proceeding.
+
 ## Workflow
 
 ### Step 0 — Analyze the Product Idea
@@ -162,9 +183,9 @@ Do NOT output this analysis. Use it internally to guide all subsequent documenta
 ### Step 1 — Create Directory Structure
 
 ```bash
-mkdir -p .synapsync/sdlc/{project-name}/requirement-analysis
-mkdir -p .synapsync/sdlc/{project-name}/design
-mkdir -p .synapsync/sdlc/{project-name}/future-phases
+mkdir -p {output_base}/sdlc/{project-name}/requirement-analysis
+mkdir -p {output_base}/sdlc/{project-name}/design
+mkdir -p {output_base}/sdlc/{project-name}/future-phases
 ```
 
 ### Step 2 — Generate README.md
@@ -480,7 +501,7 @@ Adapt the depth of documentation based on inferred project scale:
 
 ### Output Location Override
 
-Default: `.synapsync/sdlc/{project-name}/`
+Default: `{output_base}/sdlc/{project-name}/`
 
 If the user specifies a custom output path, use that instead while maintaining the internal folder structure.
 
@@ -535,7 +556,7 @@ If the user specifies a custom output path, use that instead while maintaining t
 
 **Inferred project name:** `gym-management`
 
-**Output location:** `.synapsync/sdlc/gym-management/`
+**Output location:** `{output_base}/sdlc/gym-management/`
 
 **README.md excerpt:**
 ```markdown
@@ -584,7 +605,7 @@ without calling or visiting the front desk.
 ## Troubleshooting
 
 ### Output directory already exists
-If `.synapsync/sdlc/{project-name}/` already exists, ask the user whether to overwrite or choose a different name (e.g., `{project-name}-v2`).
+If `{output_base}/sdlc/{project-name}/` already exists, ask the user whether to overwrite or choose a different name (e.g., `{project-name}-v2`).
 
 ### Input is too vague
 If the input is a single word like "app" or "system," make broader assumptions and document them prominently in `06-assumptions-and-constraints.md`. Still generate all files.

@@ -221,7 +221,7 @@ Replace these placeholders in your request:
 | Variable | Description | Example |
 |----------|-------------|---------|
 | `[PATH_TO_MODULE]` | Main code location | `/apps/myapp/src/modules/users` |
-| `[OUTPUT_DIRECTORY]` | Where to save plans | `/.synapsync/planning/users-refactor` |
+| `[OUTPUT_DIRECTORY]` | Where to save plans | `{output_base}/planning/users-refactor` (resolved from `cognitive.config.json`) |
 | `[FRAMEWORK]` | Tech stack | Angular, React, Flutter, Node.js |
 | `[PROJECT_TYPE]` | Type of work | REFACTOR, FIX_ISSUE, NEW_FEATURE |
 | `[TIMELINE]` | Available time | 2 weeks, 3 sprints |
@@ -244,7 +244,7 @@ Focus on:
 - Code duplication identification
 - Architectural pattern compliance for Angular/Clean Architecture
 
-Create a sprint-based work plan in `/.synapsync/planning/orders-refactor/` with:
+Create a sprint-based work plan in `{output_base}/planning/orders-refactor/` with:
 - analysis.md (complete analysis)
 - PROGRESS.md (master tracker)
 - SPRINT-1-*.md through SPRINT-N-*.md (detailed task lists)
@@ -264,7 +264,7 @@ Analyze the code and create a fix plan:
 - Step-by-step fix procedure
 - Test cases to prevent regression
 
-Output to `/.synapsync/planning/payment-fix/` with:
+Output to `{output_base}/planning/payment-fix/` with:
 - analysis.md (root cause, impact, solution)
 - PROGRESS.md (fix progress)
 - SPRINT-1-INVESTIGATION.md (reproduce, identify)
@@ -282,7 +282,7 @@ Requirements:
 - [Requirement 1]
 - [Requirement 2]
 
-Create implementation plan in `/.synapsync/planning/[feature-name]/`:
+Create implementation plan in `{output_base}/planning/[feature-name]/`:
 - analysis.md (architecture design, dependencies, interfaces)
 - PROGRESS.md (development tracker)
 - SPRINT-1-SETUP.md (scaffolding, models, interfaces)
@@ -300,7 +300,7 @@ I'm starting a new project: [PROJECT_NAME]
 Tech stack: [STACK]
 Type: [web app, mobile app, API, library]
 
-Create project initialization plan in `/.synapsync/planning/[project-name]-init/`:
+Create project initialization plan in `{output_base}/planning/[project-name]-init/`:
 - analysis.md (architecture decisions, folder structure, conventions)
 - PROGRESS.md (setup progress)
 - SPRINT-1-FOUNDATION.md (project creation, config, tooling)

@@ -106,10 +106,10 @@ Detect the mode from the user's input using these signals:
 
 ## Output Structure
 
-All output goes into `.synapsync/planning/{project-name}/`.
+All output goes into `{output_base}/planning/{project-name}/`.
 
 ```
-.synapsync/planning/{project-name}/
+{output_base}/planning/{project-name}/
 ├── README.md                              # Project overview and document navigation
 │
 ├── discovery/                              # Codebase Discovery (all modes except NEW_PROJECT)
@@ -155,6 +155,27 @@ Use kebab-case for `{project-name}`, inferred from the user's input:
 - "CI/CD pipeline manager" → `cicd-pipeline-manager`
 
 ---
+
+## Configuration Resolution
+
+Before starting any workflow step, resolve the `{output_base}` path that determines where all output documents are stored.
+
+1. **Check** for `cognitive.config.json` in the project root (current working directory)
+2. **If found**: read the `output_base` value and use it for all `{output_base}` references in this skill
+3. **If NOT found**:
+   a. Infer the project name from the current directory name or git repository name
+   b. Ask the user: _"Where should I store output documents for this project?"_ — suggest `~/obsidian-vault/{project-name}/` as the default
+   c. Create `cognitive.config.json` in the project root with their chosen path
+   d. Inform the user the config was saved for future skill runs
+
+**Config file format** (`cognitive.config.json`):
+```json
+{
+  "output_base": "~/obsidian-vault/my-project"
+}
+```
+
+> **IMPORTANT**: Every `{output_base}` reference in this skill depends on this resolution. If the config file cannot be read or created, ask the user for an explicit path before proceeding.
 
 ## Shared Workflow Steps
 

@@ -36,7 +36,7 @@ Sync markdown reports, plans, and documentation generated in the workspace to an
 - User says "guardar en obsidian", "sincronizar a obsidian", or similar in Spanish
 - User asks to **create a report/plan AND save it to Obsidian** (this skill handles the Obsidian part after creation)
 - User wants to **browse their vault** to choose where to place documents
-- User asks to move an entire folder (e.g., `.agents/plan/`) to their Obsidian vault
+- User asks to move an entire folder (e.g., `{output_base}/planning/`) to their Obsidian vault
 - After another skill finishes generating documents, user wants them in Obsidian
 
 ### When NOT to Use
@@ -101,6 +101,27 @@ After syncing, always report:
 - The exact Obsidian paths where they were saved
 - Any files that were skipped and why
 
+## Configuration Resolution
+
+Before starting any workflow step, resolve the `{output_base}` path that determines where source documents are located.
+
+1. **Check** for `cognitive.config.json` in the project root (current working directory)
+2. **If found**: read the `output_base` value and use it for all `{output_base}` references in this skill
+3. **If NOT found**:
+   a. Infer the project name from the current directory name or git repository name
+   b. Ask the user: _"Where are your output documents stored for this project?"_ — suggest `~/obsidian-vault/{project-name}/` as the default
+   c. Create `cognitive.config.json` in the project root with their chosen path
+   d. Inform the user the config was saved for future skill runs
+
+**Config file format** (`cognitive.config.json`):
+```json
+{
+  "output_base": "~/obsidian-vault/my-project"
+}
+```
+
+> **IMPORTANT**: Every `{output_base}` reference in this skill depends on this resolution. If the config file cannot be read or created, ask the user for an explicit path before proceeding.
+
 ## Workflow
 
 ### Step 1: Identify What to Sync
@@ -110,19 +131,19 @@ Determine the source files from the user's request:
 | User Says | Action |
 |-----------|--------|
 | "sync this report to obsidian" | Identify the most recently created/discussed report in context |
-| "move .agents/plan/ to obsidian" | Glob all `.md` files in that directory |
+| "move {output_base}/planning/ to obsidian" | Glob all `.md` files in that directory |
 | "save 00-strategic-analysis.md to obsidian" | Sync that specific file |
-| "sync all reports from today to obsidian" | Find today's `.md` files in `.agents/` or similar |
+| "sync all reports from today to obsidian" | Find today's `.md` files in `{output_base}/` or similar |
 | "create plan X and save to obsidian" | Wait for plan creation, then sync the output |
 
 **Discovery commands:**
 
 ```
 # Find all markdown files in a directory
-Glob pattern: ".agents/plan/**/*.md"
+Glob pattern: "{output_base}/planning/**/*.md"
 
 # Find recently created reports
-Glob pattern: ".agents/**/*.md"
+Glob pattern: "{output_base}/**/*.md"
 
 # Find specific file
 Glob pattern: "**/{filename}.md"
@@ -191,7 +212,7 @@ mcp__obsidian__write_note(
     "date": "2026-02-10",
     "project": "agent-sync-sdk",
     "type": "strategic-analysis",
-    "source": ".agents/plan/2026-02-10/00-strategic-analysis.md",
+    "source": "{output_base}/planning/2026-02-10/00-strategic-analysis.md",
     "tags": ["agent-sync-sdk", "strategy", "plan"]
   }
 )
@@ -253,11 +274,11 @@ This skill is designed to be the **output handler** for other skills:
 
 | Producing Skill | What It Creates | obsidian-sync Role |
 |----------------|-----------------|-------------------|
-| `project-planner` | `.synapsync/planning/{project}/` plans | Sync planning docs to Obsidian |
-| `code-analyzer` | `.synapsync/technical/module-analysis/` reports | Sync analysis reports to Obsidian |
+| `project-planner` | `{output_base}/planning/{project}/` plans | Sync planning docs to Obsidian |
+| `code-analyzer` | `{output_base}/technical/module-analysis/` reports | Sync analysis reports to Obsidian |
 | `sdlc-planner` | SDLC Phase 1 & 2 documents | Sync requirements & design docs |
 | `universal-planner` | Adaptive planning documents | Sync any planning output |
-| Custom team analysis | `.agents/plan/` reports | Sync team-generated reports |
+| Custom team analysis | `{output_base}/planning/` reports | Sync team-generated reports |
 
 **Composition pattern:** When the user says "create a plan and save it to obsidian":
 1. The planner skill runs first and produces documents locally
@@ -271,7 +292,7 @@ This skill is designed to be the **output handler** for other skills:
 | Scope | Command | Behavior |
 |-------|---------|----------|
 | **Single file** | "sync this file to obsidian" | Sync one specific file |
-| **Directory** | "sync .agents/plan/ to obsidian" | Sync all .md files in directory |
+| **Directory** | "sync {output_base}/planning/ to obsidian" | Sync all .md files in directory |
 | **Pattern** | "sync all reports from today" | Glob and sync matching files |
 | **Output** | "create X and save to obsidian" | Wait for creation, then sync |
 
@@ -323,11 +344,11 @@ This skill is designed to be the **output handler** for other skills:
 
 ## Example: Full Sync Flow
 
-**User says:** "sincroniza los reportes de .agents/plan/2026-02-10/ a obsidian"
+**User says:** "sincroniza los reportes de {output_base}/planning/2026-02-10/ a obsidian"
 
 **Step 1 - Discover files:**
 ```
-Glob(".agents/plan/2026-02-10/**/*.md")
+Glob("{output_base}/planning/2026-02-10/**/*.md")
 # Found: 00-strategic-analysis.md, 01-technical-debt.md, 02-growth-vision.md
 ```
 
@@ -358,9 +379,9 @@ AskUserQuestion:
 **Step 5 - Read & Write:**
 ```
 # Read all 3 files in parallel
-Read(".agents/plan/2026-02-10/00-strategic-analysis.md")
-Read(".agents/plan/2026-02-10/01-technical-debt.md")
-Read(".agents/plan/2026-02-10/02-growth-vision.md")
+Read("{output_base}/planning/2026-02-10/00-strategic-analysis.md")
+Read("{output_base}/planning/2026-02-10/01-technical-debt.md")
+Read("{output_base}/planning/2026-02-10/02-growth-vision.md")
 
 # Write each to Obsidian with generated frontmatter
 mcp__obsidian__write_note(

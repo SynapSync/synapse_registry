@@ -1,24 +1,21 @@
 # SynapSync Registry
 
-The official public registry of cognitives (skills, agents, prompts, workflows, tools) for SynapSync CLI.
+The official public registry of cognitives (skills, agents, prompts, workflows, tools) for AI-powered development.
 
-## What is SynapSync?
+## What is This?
 
-SynapSync is a CLI tool for orchestrating AI capabilities across multiple providers (Claude, OpenAI, Cursor, Windsurf, Copilot, and more). It manages "cognitives" - reusable AI instructions that help AI assistants understand your project patterns and conventions.
+SynapSync Registry is a collection of reusable AI instructions ("cognitives") that help AI assistants understand project patterns and conventions. Cognitives work across multiple providers (Claude, OpenAI, Cursor, Windsurf, Copilot, Gemini).
 
 ## Installing Cognitives
 
-Use the SynapSync CLI to search and install cognitives:
+Use the `skills` CLI to install cognitives from any GitHub repository:
 
 ```bash
-# Search for cognitives
-synapsync search react
+# Install cognitives from a registry repo
+npx skills add owner/repo
 
-# Install a cognitive
-synapsync install skill-creator
-
-# List installed cognitives
-synapsync list
+# Update installed cognitives
+npx skills update
 ```
 
 ## Registry Structure
@@ -67,7 +64,7 @@ synapse-registry/
 
 | Name | Category | Version | Description |
 |------|----------|---------|-------------|
-| [skill-creator](cognitives/skills/general/skill-creator/) | general | 3.0.0 | Creates AI skills following SynapSync spec with templates and best practices |
+| [skill-creator](cognitives/skills/general/skill-creator/) | general | 3.0.0 | Creates AI skills with templates and best practices |
 | [project-planner](cognitives/skills/planning/project-planner/) | planning | 1.2.0 | Planning-only framework that produces analysis, planning, and execution-plan documents |
 | [sdlc-planner](cognitives/skills/planning/sdlc-planner/) | planning | 1.0.0 | Generates SDLC Phase 1 (Requirements) and Phase 2 (Design) documentation from a product idea |
 | [universal-planner](cognitives/skills/planning/universal-planner/) | planning | 1.1.0 | Adaptive planning skill for any software scenario: new projects, features, refactors, and more |
@@ -97,7 +94,7 @@ The registry includes two complementary skills that form a **bidirectional knowl
 │  project-planner ──┐                                            │
 │  code-analyzer ────┤  produce .md files   ┌──────────────────┐  │
 │  sdlc-planner ─────┤ ───────────────────> │  obsidian-sync   │  │
-│  universal-planner ┘  (.agents/, .synapsync/) │  (WRITE)    │  │
+│  universal-planner ┘  ({output_base}/*)   │  (WRITE)         │  │
 │                                           └────────┬─────────┘  │
 │                                                    │             │
 │                                           Obsidian MCP Server    │
@@ -148,7 +145,7 @@ When a skill produces documentation (plans, reports, analysis), `obsidian-sync` 
 ```
 User: "create a technical analysis and save it to obsidian"
 
-1. code-analyzer skill runs  -->  produces .agents/reports/analysis.md
+1. code-analyzer skill runs  -->  produces {output_base}/technical/analysis.md
 2. obsidian-sync activates   -->  reads the local file
 3. Lists vault folders       -->  asks user where to save
 4. Writes to vault           -->  work/my-project/reports/analysis.md
@@ -216,7 +213,7 @@ title: "Document Title"              # From first H1 heading or filename
 date: "2026-02-10"                   # Creation/sync date
 project: "agent-sync-sdk"            # Project identifier
 type: "strategic-analysis"           # Document type (see taxonomy)
-source: ".agents/plan/2026-02-10/"   # Original workspace path
+source: "{output_base}/planning/2026-02-10/"  # Original workspace path
 tags: [strategy, roadmap, plan]      # For cross-cutting discovery
 ---
 ```
@@ -282,7 +279,7 @@ Both skills require the **Obsidian MCP server** for full functionality:
 
 ```bash
 # Write to Obsidian
-"sync .agents/plan/ to obsidian"
+"sync my planning docs to obsidian"
 "create a technical report and save it to obsidian"
 "move today's reports to my vault"
 
@@ -354,6 +351,35 @@ The Obsidian skills are designed to compose with every other skill in the regist
 | `integrations` | External services, Obsidian, and knowledge management |
 | `planning` | Project planning, SDLC, requirements, architecture |
 
+## Per-Project Output Configuration
+
+Skills that produce output documents (reports, plans, analysis) use a `{output_base}` variable for all output paths instead of hardcoded directories. This allows each project to have its own output destination.
+
+### How It Works
+
+Every project that uses output-producing skills has a `cognitive.config.json` at its root:
+
+```json
+{
+  "output_base": "~/obsidian-vault/my-project"
+}
+```
+
+Skills auto-discover this file at runtime:
+1. Check for `cognitive.config.json` in the project root
+2. If found — read `output_base` and use it for all paths
+3. If not found — prompt the user, create the config, and proceed
+
+This means **N projects can each point to different vault folders** with zero cross-contamination.
+
+### For Skill Authors
+
+If your skill produces output files, you **must**:
+1. Use `{output_base}` for all output paths (e.g., `{output_base}/planning/`, `{output_base}/technical/`)
+2. Include a `## Configuration Resolution` section before the Workflow section (see [CLAUDE.md](CLAUDE.md) for the standard template)
+3. Never hardcode output paths — no `.synapsync/`, `.agents/`, or absolute paths
+4. Never put `output_base` in SKILL.md frontmatter
+
 ## Contributing
 
 We welcome contributions! See [CONTRIBUTING.md](CONTRIBUTING.md) for guidelines on how to submit your own cognitives.
@@ -368,8 +394,7 @@ We welcome contributions! See [CONTRIBUTING.md](CONTRIBUTING.md) for guidelines 
 
 ## Links
 
-- **SynapSync CLI**: https://github.com/SynapSync/synapse-cli
-- **Documentation**: https://synapsync.dev/docs
+- **Skills CLI**: `npx skills add owner/repo`
 - **Issues**: https://github.com/SynapSync/synapse-registry/issues
 
 ## License
