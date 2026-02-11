@@ -6,7 +6,7 @@ description: >
 license: Apache-2.0
 metadata:
   author: synapsync
-  version: "1.0"
+  version: "2.0"
   scope: [root]
   auto_invoke:
     - "sync report to obsidian"
@@ -16,6 +16,14 @@ metadata:
     - "guardar en obsidian"
     - "sincronizar a obsidian"
   changelog:
+    - version: "2.0"
+      date: "2026-02-11"
+      changes:
+        - "Obsidian-native standard integration: full frontmatter schema"
+        - "Expanded frontmatter from 5 fields to complete universal schema"
+        - "Added Step 5.5: Cross-Reference Validation for batch syncs"
+        - "Wiki-link preservation rules"
+        - "Expanded type taxonomy to 14 document types"
     - version: "1.0"
       date: "2026-02-10"
       changes:
@@ -75,24 +83,38 @@ Never assume the destination folder. Always:
 
 **RULE 4 - GENERATE MEANINGFUL FRONTMATTER**
 
-Every note written to Obsidian MUST include frontmatter with at minimum:
+Every note written to Obsidian MUST include frontmatter following the universal schema:
 
 ```yaml
 ---
 title: "Document Title"
 date: "YYYY-MM-DD"
+updated: "YYYY-MM-DD"
 project: "{project-name}"
 type: "{document-type}"
+status: "active"
+version: "1.0"
 tags: [relevant, tags, here]
+changelog:
+  - version: "1.0"
+    date: "YYYY-MM-DD"
+    changes: ["Synced to Obsidian"]
+related:
+  - "[[related-document]]"
 ---
 ```
 
 Infer these values from:
 - `title`: First H1 heading in the document, or filename
 - `date`: File modification date, or today's date
+- `updated`: Today's date (sync date)
 - `project`: Current working directory name or git repo name
-- `type`: Infer from content (e.g., "technical-debt", "strategic-analysis", "sprint-plan", "code-review", "architecture")
+- `type`: Infer from content using the 14-type taxonomy (see expanded type inference table below)
+- `status`: `"active"` for new documents, preserve existing status
+- `version`: `"1.0"` for new documents, preserve existing version
 - `tags`: Infer from project name, document type, and key topics
+- `changelog`: Add sync entry
+- `related`: Extract from `[[wiki-links]]` found in document content, or from `## Referencias` section
 
 **RULE 5 - REPORT RESULTS**
 
@@ -121,6 +143,18 @@ Before starting any workflow step, resolve the `{output_base}` path that determi
 ```
 
 > **IMPORTANT**: Every `{output_base}` reference in this skill depends on this resolution. If the config file cannot be read or created, ask the user for an explicit path before proceeding.
+
+## Obsidian Output Standard
+
+When syncing documents to Obsidian, follow the `obsidian-md-standard`:
+
+1. **Frontmatter enrichment**: If a document has minimal frontmatter (only title/date/project/type/tags), enrich it with the full universal schema (add updated, status, version, changelog, related)
+2. **Frontmatter preservation**: If a document already has rich frontmatter, preserve all existing fields — only add missing ones
+3. **Frontmatter generation**: If a document has no frontmatter, generate the complete universal schema
+4. **Wiki-link preservation**: Never convert `[[wiki-links]]` to `[markdown](links)` — preserve them exactly
+5. **Type inference**: Map document content to the 14-type taxonomy defined in the standard
+6. **Cross-reference validation**: After syncing a batch of files, verify that `related` fields and `## Referencias` sections are bidirectional — if A references B, B should reference A
+7. **Status**: New documents get `status: "active"`, documents with existing status are preserved
 
 ## Workflow
 
@@ -229,19 +263,51 @@ mcp__obsidian__write_note(
 | `source` | Relative path from workspace root | Absolute path |
 | `tags` | Project name + type + key content topics | `[project-name]` |
 
-**Type inference:**
+**Type inference (expanded taxonomy):**
 
 | Content Contains | Type |
 |-----------------|------|
-| "deuda tecnica", "technical debt", "code quality" | `"technical-debt"` |
-| "estrategico", "strategic", "roadmap" | `"strategic-analysis"` |
-| "crecimiento", "growth", "vision" | `"growth-vision"` |
+| "analysis", "analisis", "report" | `"analysis"` |
+| "conventions", "patterns", "convenciones" | `"conventions"` |
+| "requirements", "requisitos", "functional" | `"requirements"` |
+| "architecture", "arquitectura", "ADR" | `"architecture"` |
+| "planning", "plan de trabajo", "strategy", "estrategico" | `"plan"` |
+| "execution", "task breakdown", "ejecucion" | `"execution-plan"` |
 | "sprint", "todo", "checklist" | `"sprint-plan"` |
-| "analisis", "analysis", "report" | `"analysis"` |
-| "arquitectura", "architecture" | `"architecture"` |
-| "planning", "plan de trabajo" | `"plan"` |
-| "requirements", "requisitos" | `"requirements"` |
-| "code review", "revision" | `"code-review"` |
+| "progress", "dashboard", "tracking" | `"progress"` |
+| "technical report", "module analysis", "code analysis" | `"technical-report"` |
+| "refactor", "refactoring", "improvement" | `"refactor-plan"` |
+| "retrospective", "retro", "keep/problem/learning" | `"retrospective"` |
+| "decision", "decision log", "DEC-" | `"decision-log"` |
+| "data model", "entity", "ER diagram", "modelo de datos" | `"data-model"` |
+| "flow", "sequence diagram", "core flows" | `"flow-diagram"` |
+| "deuda tecnica", "technical debt", "code quality" | `"technical-report"` |
+| "crecimiento", "growth", "vision" | `"plan"` |
+
+**Wiki-link handling:**
+- Preserve all existing `[[wiki-links]]` in document content exactly as-is
+- Never convert `[[wiki-links]]` to `[markdown](relative-links)`
+- If a document contains `## Referencias` section, preserve it and add to `related` frontmatter field
+
+### Step 5.5: Cross-Reference Validation
+
+After syncing a batch of files (2+ files), validate bidirectional references:
+
+1. **Collect all `related` fields** from the frontmatter of synced files
+2. **Collect all `[[wiki-links]]`** found in `## Referencias` sections
+3. **For each reference A→B**: Verify that document B also references A
+4. **If a reference is one-directional**: Add the missing reverse reference to the document's `related` array and `## Referencias` section
+5. **Report any fixes made** in the sync summary
+
+**Example:**
+```
+Cross-reference validation:
+- SPRINT-1-foundation.md references [[PROGRESS]] ✓ (PROGRESS references back)
+- ANALYSIS.md references [[CONVENTIONS]] ✓ (CONVENTIONS references back)
+- PLANNING.md references [[ANALYSIS]] ⚠ Fixed: added [[PLANNING]] to ANALYSIS.md related
+```
+
+This step ensures the knowledge graph has no broken links when documents are synced in batches.
 
 ### Step 6: Report Results
 
@@ -399,3 +465,8 @@ Synced 3 files to Obsidian:
   - work/agent-sync-sdk/plans/01-technical-debt.md
   - work/agent-sync-sdk/plans/02-growth-vision.md
 ```
+
+## Version History
+
+- **2.0** (2026-02-11): Obsidian-native standard — full frontmatter schema, 14-type taxonomy, cross-reference validation, wiki-link preservation
+- **1.0** (2026-02-10): Initial release with vault browsing, folder selection, and batch sync

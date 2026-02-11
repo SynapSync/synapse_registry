@@ -6,10 +6,15 @@ description: >
 license: Apache-2.0
 metadata:
   author: synapsync
-  version: "3.0"
+  version: "3.1"
   scope: [root]
   auto_invoke: "when user asks to create, document, refactor or standardize agent skills"
   changelog:
+    - version: "3.1"
+      date: "2026-02-11"
+      changes:
+        - "Added note about ## Obsidian Output Standard for skills that write .md output"
+        - "Updated advanced template with optional Obsidian Output Standard placeholder"
     - version: "3.0"
       date: "2026-01-28"
       changes:
@@ -505,6 +510,7 @@ When generating a new skill, include sections based on complexity:
 - **Example Output**: Show realistic output (with proper formatting)
 - **Version History**: Track evolution over time
 - **Future Enhancements**: Planned improvements (checkbox format)
+- **Obsidian Output Standard**: If the skill writes `.md` files to `{output_base}`, it MUST include a `## Obsidian Output Standard` section referencing `obsidian-md-standard` with the appropriate domain profile
 
 ---
 

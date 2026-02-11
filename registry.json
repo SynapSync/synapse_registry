@@ -1,13 +1,13 @@
 {
   "$schema": "https://synapsync.dev/schemas/registry.json",
   "version": "1.0.0",
-  "lastUpdated": "2026-02-10T00:00:00Z",
-  "totalCognitives": 9,
+  "lastUpdated": "2026-02-11T00:00:00Z",
+  "totalCognitives": 10,
   "cognitives": [
     {
       "name": "skill-creator",
       "type": "skill",
-      "version": "3.0.0",
+      "version": "3.1.0",
       "description": "Creates AI skills following SynapSync spec with templates and best practices",
       "author": "synapsync",
       "category": "general",
@@ -60,7 +60,7 @@
     {
       "name": "project-planner",
       "type": "skill",
-      "version": "1.2.0",
+      "version": "2.0.0",
       "description": "Planning-only framework that produces analysis, planning, and execution-plan documents",
       "author": "synapsync",
       "category": "planning",
@@ -87,7 +87,7 @@
     {
       "name": "code-analyzer",
       "type": "skill",
-      "version": "1.0.0",
+      "version": "2.0.0",
       "description": "Analyzes code modules and generates structured technical reports with architecture diagrams",
       "author": "synapsync",
       "category": "analytics",
@@ -116,7 +116,7 @@
     {
       "name": "sdlc-planner",
       "type": "skill",
-      "version": "1.0.0",
+      "version": "2.0.0",
       "description": "Generates SDLC Phase 1 (Requirements) and Phase 2 (Design) documentation from a product idea",
       "author": "synapsync",
       "category": "planning",
@@ -145,7 +145,7 @@
     {
       "name": "universal-planner",
       "type": "skill",
-      "version": "1.1.0",
+      "version": "2.0.0",
       "description": "Adaptive planning skill for any software scenario: new projects, features, refactors, and more",
       "author": "synapsync",
       "category": "planning",
@@ -176,7 +176,7 @@
     {
       "name": "universal-planner-executor",
       "type": "skill",
-      "version": "1.0.0",
+      "version": "2.0.0",
       "description": "Senior developer executor that implements universal-planner sprints and tracks progress",
       "author": "synapsync",
       "category": "planning",
@@ -207,7 +207,7 @@
     {
       "name": "obsidian-sync",
       "type": "skill",
-      "version": "1.0.0",
+      "version": "2.0.0",
       "description": "Syncs markdown reports, plans, and documents from the workspace to an Obsidian vault via MCP",
       "author": "synapsync",
       "category": "integrations",
@@ -230,7 +230,7 @@
     {
       "name": "obsidian-reader",
       "type": "skill",
-      "version": "1.0.0",
+      "version": "1.1.0",
       "description": "Reads, searches, and reasons over Obsidian vault notes as a contextual knowledge source",
       "author": "synapsync",
       "category": "integrations",
@@ -249,6 +249,35 @@
       ],
       "downloads": 0,
       "path": "cognitives/skills/integrations/obsidian-reader"
+    },
+    {
+      "name": "obsidian-md-standard",
+      "type": "skill",
+      "version": "1.0.0",
+      "description": "Obsidian-native markdown output standard for all SynapSync skills that produce documents",
+      "author": "synapsync",
+      "category": "integrations",
+      "tags": [
+        "obsidian",
+        "markdown",
+        "standard",
+        "frontmatter",
+        "wiki-links",
+        "knowledge-graph",
+        "documentation",
+        "output-format"
+      ],
+      "providers": [
+        "claude",
+        "openai",
+        "cursor",
+        "windsurf",
+        "copilot",
+        "gemini",
+        "codex"
+      ],
+      "downloads": 0,
+      "path": "cognitives/skills/integrations/obsidian-md-standard"
     }
   ]
 }

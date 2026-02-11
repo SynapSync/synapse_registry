@@ -6,7 +6,7 @@ description: >
 license: Apache-2.0
 metadata:
   author: synapsync
-  version: "1.0"
+  version: "1.1"
   scope: [root]
   auto_invoke:
     - "read from obsidian"
@@ -21,6 +21,13 @@ metadata:
     - "consulta mis notas"
     - "que dicen mis notas sobre"
   changelog:
+    - version: "1.1"
+      date: "2026-02-11"
+      changes:
+        - "Expanded frontmatter parsing: version, changelog, related, sprint, phase, progress, metrics"
+        - "Priority ranking: status active > completed > archived, higher version ranks better"
+        - "Relationship mapping: related field as primary source of relationships"
+        - "New capability: Standard Compliance Check"
     - version: "1.0"
       date: "2026-02-10"
       changes:
@@ -139,6 +146,13 @@ When another skill or agent requests knowledge, return structured summaries:
 - Identify recently modified notes
 - Surface notes related to the current working directory/project
 
+### Standard Compliance Check
+- Report which documents follow the `obsidian-md-standard`
+- Identify documents missing required frontmatter fields
+- Flag one-directional references (A→B exists but B→A missing)
+- List documents without `## Referencias` sections
+- Check that `type` values match the 14-type taxonomy
+
 ## Configuration Resolution
 
 Before starting any workflow step, resolve the `{output_base}` path that determines where project documents are stored.
@@ -199,6 +213,7 @@ Parse the user's intent into one of these operations:
 | Get project context | `PROJECT_CONTEXT` | "dame el contexto del proyecto agent-sync-sdk" |
 | Answer a question | `REASON` | "segun mis notas, cual es el estado del proyecto?" |
 | Explore structure | `DISCOVER` | "que tengo en mi vault?" |
+| Check standard compliance | `COMPLIANCE_CHECK` | "which notes follow the obsidian standard?" |
 
 ### Step 2: Execute the Operation
 
@@ -400,6 +415,43 @@ Stats: X total notes, Y folders
 Recently modified: [list of 5-10 most recent]
 ```
 
+#### COMPLIANCE_CHECK - Standard Compliance Report
+
+Analyze documents in a project folder against the obsidian-md-standard:
+
+1. **List all .md files** in the project folder
+2. **For each file**, check:
+   - Has YAML frontmatter with required fields (title, date, updated, project, type, status, version, tags, changelog, related)
+   - `type` matches the 14-type taxonomy
+   - Contains `## Referencias` section
+   - All `[[wiki-links]]` have reciprocal references (bidirectionality)
+   - No `[text](relative-path.md)` inter-document links
+3. **Generate compliance report:**
+
+```markdown
+## Standard Compliance Report: {project-name}
+Date: {today}
+
+### Summary
+- **Total documents**: {N}
+- **Fully compliant**: {N} ({percent}%)
+- **Partial compliance**: {N}
+- **Non-compliant**: {N}
+
+### Issues Found
+
+| Document | Issue | Severity |
+|----------|-------|----------|
+| {filename} | Missing `updated` field | Low |
+| {filename} | No `## Referencias` section | Medium |
+| {filename} | One-directional reference to [[X]] | Medium |
+| {filename} | Uses relative markdown link instead of wiki-link | High |
+
+### Recommendations
+1. {Specific fix for most common issue}
+2. {Specific fix for next most common issue}
+```
+
 ### Step 3: Present Results
 
 Always structure output clearly:
@@ -475,30 +527,52 @@ This skill relies heavily on frontmatter for intelligent filtering. Expected fie
 ---
 title: "Document Title"
 date: "2026-02-10"
+updated: "2026-02-11"
 project: "agent-sync-sdk"
-type: "strategic-analysis"           # See type taxonomy below
+type: "strategic-analysis"
+status: "active"
+version: "1.2"
 tags: [strategy, roadmap, plan]
-source: "{output_base}/planning/2026-02-10/"   # Original local path (set by obsidian-sync)
-status: "active"                     # Optional: active, archived, draft
+changelog:
+  - version: "1.2"
+    date: "2026-02-11"
+    changes: ["Updated strategy based on Q1 review"]
+  - version: "1.0"
+    date: "2026-02-10"
+    changes: ["Initial creation"]
+related:
+  - "[[01-technical-debt]]"
+  - "[[02-growth-vision]]"
+sprint: 2
+phase: "2.1"
+progress: 65
+metrics:
+  tasks_completed: 12
+  tasks_total: 18
+source: "{output_base}/planning/2026-02-10/"
 ---
 ```
 
-### Type Taxonomy
+### Type Taxonomy (aligned with obsidian-md-standard)
 
 Use these types for filtering and prioritization:
 
 | Type | Priority | Description |
 |------|----------|-------------|
-| `strategic-analysis` | High | High-level project strategy and direction |
-| `plan` | High | Actionable plans with tasks and timelines |
-| `sprint-plan` | High | Sprint-level task breakdowns |
-| `technical-debt` | High | Known issues and debt tracking |
+| `analysis` | High | General analysis documents |
+| `conventions` | Medium | Project patterns and conventions reference |
+| `requirements` | Medium | Functional/non-functional requirements |
 | `architecture` | Medium | System design and architecture decisions |
-| `requirements` | Medium | Feature requirements and specifications |
-| `growth-vision` | Medium | Growth analysis and future vision |
-| `analysis` | Medium | General analysis documents |
-| `code-review` | Medium | Code review findings |
-| `report` | Low | General reports and summaries |
+| `plan` | High | Strategic planning and high-level plans |
+| `execution-plan` | High | Concrete task breakdowns |
+| `sprint-plan` | High | Sprint-level task plans |
+| `progress` | High | Master progress dashboards |
+| `technical-report` | Medium | Code/module analysis reports |
+| `refactor-plan` | Medium | Refactoring recommendations |
+| `retrospective` | Medium | Sprint/project retrospectives |
+| `decision-log` | Medium | Architecture/engineering decisions |
+| `data-model` | Low | Entity relationships and storage |
+| `flow-diagram` | Low | Core flows and sequences |
 | `note` | Low | Unstructured notes |
 | `meeting` | Low | Meeting notes |
 | `reference` | Low | Reference material |
@@ -508,7 +582,7 @@ Use these types for filtering and prioritization:
 When multiple notes are found, rank them using this weighted score:
 
 ```
-score = recency_weight + type_weight + relevance_weight
+score = recency_weight + type_weight + relevance_weight + status_weight + version_weight
 
 recency_weight:
   - Today:       +3
@@ -526,9 +600,39 @@ relevance_weight:
   - Match in frontmatter:     +2
   - Match in body:            +1
   - Match in linked note:     +0.5
+
+status_weight:
+  - active:      +3
+  - draft:       +2
+  - completed:   +1
+  - superseded:  +0
+  - archived:    +0
+
+version_weight:
+  - Higher version number: +1 per major version
+  - Example: v2.0 scores +2, v1.0 scores +1
 ```
 
 ## Relationship Mapping
+
+### Related Field (Primary Source)
+
+The `related` field in frontmatter is the **primary source** of document relationships in the obsidian-md-standard:
+
+```yaml
+related:
+  - "[[01-technical-debt]]"
+  - "[[02-growth-vision]]"
+  - "[[SPRINT-1-foundation]]"
+```
+
+When building relationship maps:
+1. **First**: Check `related` in frontmatter — these are explicit, curated relationships
+2. **Second**: Check `## Referencias` section — structured navigation links
+3. **Third**: Check wikilinks in body text — implicit references
+4. **Fourth**: Check backlinks — notes that reference this one
+
+The `related` field and `## Referencias` section follow the bidirectionality rule: if A lists B in `related`, B should list A.
 
 ### Wikilinks
 
@@ -767,6 +871,13 @@ Found 2 notes matching "race condition":
 Recommendation: The technical-debt document (01) has the most detailed
 analysis. The strategic document (00) summarizes the business impact.
 ```
+
+## Version History
+
+| Version | Date | Changes |
+|---------|------|---------|
+| 1.0 | 2026-02-10 | Initial release with MCP-first reading, search, and contextual reasoning |
+| 1.1 | 2026-02-11 | Expanded frontmatter parsing, status/version-aware ranking, related field mapping, standard compliance check |
 
 ## Future Enhancements
 

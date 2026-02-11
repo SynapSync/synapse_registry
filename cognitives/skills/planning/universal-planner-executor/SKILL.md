@@ -7,7 +7,7 @@ description: >
 license: Apache-2.0
 metadata:
   author: synapsync
-  version: "1.0"
+  version: "2.0"
   scope: [root]
   auto_invoke:
     - "Execute the project plan"
@@ -15,6 +15,14 @@ metadata:
     - "Work on the next sprint from the planning"
     - "Continue executing the plan"
   changelog:
+    - version: "2.0"
+      date: "2026-02-11"
+      changes:
+        - "Obsidian-native standard: frontmatter maintenance on sprint updates"
+        - "Added Step 3.5: Optional Retrospective Generation"
+        - "Graduation gate verification in Step 3 (Complete Sprint)"
+        - "Decision log entries include wiki-links to sprint and task context"
+        - "All document references use [[wiki-links]]"
     - version: "1.0"
       date: "2026-02-04"
       changes:
@@ -143,6 +151,30 @@ Before starting any workflow step, resolve the `{output_base}` path that determi
 
 > **IMPORTANT**: Every `{output_base}` reference in this skill depends on this resolution. If the config file cannot be read or created, ask the user for an explicit path before proceeding.
 
+## Obsidian Output Standard
+
+When modifying sprint documents and PROGRESS.md, follow the `obsidian-md-standard`:
+
+1. **Frontmatter maintenance**: When updating a sprint file, bump `version`, update `updated` date, add `changelog` entry, update `status` and `progress`
+2. **Status transitions**: Move status through `draft → active → completed` as work progresses
+3. **Decision Log**: Decisions logged with DEC- IDs include wiki-links to the sprint and task that triggered the decision
+4. **Metrics**: Use `| Metric | Before | After | Delta | Status |` format when recording actual vs planned metrics
+5. **Gates**: Verify all `## Graduation Gate` criteria before marking a sprint `completed`
+6. **Bidirectional**: When adding decision references or notes that mention other documents, ensure reciprocal links
+7. **Wiki-links**: All document references in notes, decision logs, and completion summaries use `[[filename]]` syntax
+
+**When completing a sprint, update frontmatter:**
+```yaml
+status: "completed"
+progress: 100
+version: "{bumped}"
+updated: "YYYY-MM-DD"
+changelog:
+  - version: "{new}"
+    date: "YYYY-MM-DD"
+    changes: ["Sprint completed — all tasks done, gates passed"]
+```
+
 ## Workflow
 
 ### Step 0: Locate and Validate Planning
@@ -214,6 +246,7 @@ After all tasks in a phase are complete:
 2. Mark phase verification items as `[x]` if they pass
 3. Add any relevant notes to the sprint's Notes section
 4. If any tasks were blocked or required decisions, document them
+5. Update the sprint file's frontmatter: bump `version`, set `updated` to today's date, add `changelog` entry describing the phase completion, update `progress` percentage
 
 ### Step 3: Complete Sprint (Scrum Master Role)
 
@@ -222,7 +255,8 @@ After all phases in a sprint are complete:
 **3a. Update Sprint File**
 1. Change sprint status: `NOT_STARTED` or `IN_PROGRESS` → `COMPLETED`
 2. Verify all Definition of Done criteria are met — check each one as `[x]`
-3. Add a completion summary to the Notes section:
+3. Verify all `## Graduation Gate` criteria are met — check each gate criterion as `[x]`. If any gate criterion is not met, the sprint cannot be marked `COMPLETED`. Log unmet criteria as blockers.
+4. Add a completion summary to the Notes section:
 
 ```markdown
 ## Notes
@@ -245,6 +279,85 @@ After all phases in a sprint are complete:
 1. Find the next sprint with status `NOT_STARTED`
 2. If it exists, report readiness to begin and summarize what's ahead
 3. If no more sprints exist, report project completion
+
+### Step 3.5: Retrospective Generation (Optional)
+
+After completing a sprint, offer to generate a retrospective:
+
+> _"Sprint {N} is complete. Would you like to generate a retrospective document (RETRO-{N}-{name}.md) to capture learnings and metrics?"_
+
+**If the user accepts:**
+
+1. Create `sprints/RETRO-{N}-{name}.md` with this structure:
+
+```markdown
+---
+title: "Retrospective: Sprint {N} — {Sprint Name}"
+date: "YYYY-MM-DD"
+updated: "YYYY-MM-DD"
+project: "{project-name}"
+type: "retrospective"
+status: "active"
+version: "1.0"
+sprint: {N}
+previous_doc: "[[SPRINT-{N}-name]]"
+tags: ["{project-name}", "retrospective", "sprint-{N}"]
+changelog:
+  - version: "1.0"
+    date: "YYYY-MM-DD"
+    changes: ["Initial retrospective"]
+related:
+  - "[[SPRINT-{N}-name]]"
+  - "[[SPRINT-{N+1}-name]]"
+  - "[[PROGRESS]]"
+---
+
+# Retrospective: Sprint {N} — {Sprint Name}
+
+## Context
+{Brief description of sprint objective and outcome}
+
+## Keep (What Went Well)
+- **K1**: {What to continue doing}
+- **K2**: {What to continue doing}
+
+## Problems (What Went Wrong)
+- **P1**: {Issue encountered}
+- **P2**: {Issue encountered}
+
+## Learnings (What We Learned)
+- **L1**: {Insight gained}
+- **L2**: {Insight gained}
+
+## Actions (What to Do Differently)
+- **A1**: {Concrete action for next sprint} → Assigned to: {who}
+- **A2**: {Concrete action for next sprint} → Assigned to: {who}
+
+## Metrics
+
+| Metric | Planned | Actual | Delta | Status |
+|--------|---------|--------|-------|--------|
+| Tasks completed | {planned} | {actual} | {delta} | {status} |
+| {Custom metric} | {target} | {actual} | {delta} | {status} |
+
+## Signals to Watch
+- {Early warning indicator for next sprint}
+
+## Verdict
+{Was the sprint successful? Key takeaway.}
+
+## Referencias
+
+**Parent:** [[PROGRESS]]
+**Input Documents:** [[SPRINT-{N}-name]]
+**Siblings:** [[RETRO-{N-1}-name]], [[RETRO-{N+1}-name]]
+```
+
+2. Update PROGRESS.md: add `retro_refs: ["[[RETRO-{N}-name]]"]` to frontmatter (or append to existing array)
+3. Update the completed sprint's `related` field to include `[[RETRO-{N}-name]]`
+4. Include carried-forward items from the sprint in the `## Actions` section of the retro
+
+**If the user declines:** Skip and proceed to Step 3c (Identify Next Sprint).
 
 ### Step 4: Project Completion
 
@@ -329,6 +442,8 @@ When making decisions not explicitly covered by the plan, document them in the s
 - **Decision**: {What was chosen}
 - **Reasoning**: {Why this aligns with the project's conventions and the plan's intent}
 - **Impact**: {What this affects}
+- **Sprint**: [[SPRINT-{N}-name]]
+- **Task**: [[SPRINT-{N}-name#T-{task-id}]]
 ```
 
 ---
@@ -495,4 +610,5 @@ Always check CONVENTIONS.md first. If the answer isn't there, check the project'
 
 | Version | Date | Changes |
 |---------|------|---------|
+| 2.0 | 2026-02-11 | Obsidian-native standard — frontmatter maintenance, graduation gates, optional retrospectives, wiki-linked decision logs |
 | 1.0 | 2026-02-04 | Initial release — companion executor for universal-planner |
