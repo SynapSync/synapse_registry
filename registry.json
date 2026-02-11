@@ -1,8 +1,8 @@
 {
   "$schema": "https://synapsync.dev/schemas/registry.json",
   "version": "1.0.0",
-  "lastUpdated": "2026-02-04T00:00:00Z",
-  "totalCognitives": 7,
+  "lastUpdated": "2026-02-10T00:00:00Z",
+  "totalCognitives": 9,
   "cognitives": [
     {
       "name": "skill-creator",
@@ -203,6 +203,52 @@
       ],
       "downloads": 0,
       "path": "cognitives/skills/planning/universal-planner-executor"
+    },
+    {
+      "name": "obsidian-sync",
+      "type": "skill",
+      "version": "1.0.0",
+      "description": "Syncs markdown reports, plans, and documents from the workspace to an Obsidian vault via MCP",
+      "author": "synapsync",
+      "category": "integrations",
+      "tags": [
+        "obsidian",
+        "sync",
+        "documentation",
+        "reports",
+        "vault",
+        "mcp",
+        "knowledge-base",
+        "notes"
+      ],
+      "providers": [
+        "claude"
+      ],
+      "downloads": 0,
+      "path": "cognitives/skills/integrations/obsidian-sync"
+    },
+    {
+      "name": "obsidian-reader",
+      "type": "skill",
+      "version": "1.0.0",
+      "description": "Reads, searches, and reasons over Obsidian vault notes as a contextual knowledge source",
+      "author": "synapsync",
+      "category": "integrations",
+      "tags": [
+        "obsidian",
+        "knowledge",
+        "context",
+        "reading",
+        "search",
+        "vault",
+        "mcp",
+        "memory"
+      ],
+      "providers": [
+        "claude"
+      ],
+      "downloads": 0,
+      "path": "cognitives/skills/integrations/obsidian-reader"
     }
   ]
 }

@@ -1,0 +1,35 @@
+{
+  "$schema": "https://synapsync.dev/schemas/cognitive-manifest.json",
+  "name": "obsidian-reader",
+  "type": "skill",
+  "version": "1.0.0",
+  "description": "Reads, searches, and reasons over Obsidian vault notes as a contextual knowledge source",
+  "author": {
+    "name": "SynapSync",
+    "url": "https://github.com/SynapSync",
+    "email": "hello@synapsync.dev"
+  },
+  "license": "Apache-2.0",
+  "category": "integrations",
+  "tags": [
+    "obsidian",
+    "knowledge",
+    "context",
+    "reading",
+    "search",
+    "vault",
+    "mcp",
+    "memory"
+  ],
+  "providers": [
+    "claude"
+  ],
+  "file": "SKILL.md",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/SynapSync/synapse-registry"
+  },
+  "homepage": "https://synapsync.dev/cognitives/obsidian-reader",
+  "createdAt": "2026-02-10T00:00:00Z",
+  "updatedAt": "2026-02-10T00:00:00Z"
+}
