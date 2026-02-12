@@ -44,6 +44,20 @@ allowed-tools: Read, Edit, Write, Glob, Grep, Bash, Task
 
 # Universal Planner
 
+## Assets
+
+This skill uses the [assets pattern](../../../docs/standards/skill-assets-pattern.md). Detailed documentation, templates, and helpers are in the [assets/](assets/) directory:
+
+- **[assets/modes/](assets/modes/)** - 6 planning modes with detailed workflows
+- **[assets/helpers/](assets/helpers/)** - Config resolution and shared workflows
+- **[assets/templates/](assets/templates/)** - Document templates with frontmatter
+- **[assets/validators/](assets/validators/)** - Output validation schemas
+- **[assets/examples/](assets/examples/)** - Test cases and examples
+
+See [assets/README.md](assets/README.md) for full directory documentation.
+
+---
+
 ## Purpose
 
 Produce professional, structured planning documentation for **any** software engineering scenario. This skill adapts its workflow, depth, and output structure based on the type of work — from full SDLC documentation for a new product idea to a focused root-cause analysis and fix plan for a bug.
@@ -167,24 +181,14 @@ Use kebab-case for `{project-name}`, inferred from the user's input:
 
 ## Configuration Resolution
 
-Before starting any workflow step, resolve the `{output_base}` path that determines where all output documents are stored.
+See [assets/helpers/config-resolver.md](assets/helpers/config-resolver.md) for the standardized resolution workflow.
 
-1. **Check** for `cognitive.config.json` in the project root (current working directory)
-2. **If found**: read the `output_base` value and use it for all `{output_base}` references in this skill
-3. **If NOT found**:
-   a. Infer the project name from the current directory name or git repository name
-   b. Ask the user: _"Where should I store output documents for this project?"_ — suggest `~/obsidian-vault/{project-name}/` as the default
-   c. Create `cognitive.config.json` in the project root with their chosen path
-   d. Inform the user the config was saved for future skill runs
+**Quick summary:**
+1. Check `cognitive.config.json` in project root → read `output_base`
+2. If not found → ask user, suggest `~/obsidian-vault/{project-name}/`, create config
+3. Use `{output_base}/` for all output paths
 
-**Config file format** (`cognitive.config.json`):
-```json
-{
-  "output_base": "~/obsidian-vault/my-project"
-}
-```
-
-> **IMPORTANT**: Every `{output_base}` reference in this skill depends on this resolution. If the config file cannot be read or created, ask the user for an explicit path before proceeding.
+All `{output_base}` references depend on this resolution.
 
 ## Obsidian Output Standard
 
@@ -366,143 +370,25 @@ Summarize all produced documents and their locations. Indicate the plan is ready
 
 ## Mode-Specific Workflows
 
-### NEW_PROJECT Mode
+Each mode has a dedicated workflow documented in [assets/modes/](assets/modes/):
 
-For building a product from scratch. Produces the most comprehensive documentation.
+- **[NEW_PROJECT](assets/modes/NEW_PROJECT.md)** — Full SDLC for greenfield projects (Requirements + Design + Analysis + Planning + Execution)
+- **[NEW_FEATURE](assets/modes/NEW_FEATURE.md)** — Codebase-aware feature planning (Discovery + Analysis + Planning + Execution)
+- **[REFACTOR](assets/modes/REFACTOR.md)** — Technical improvement planning (Discovery + Analysis + Planning + Execution)
+- **[BUG_FIX](assets/modes/BUG_FIX.md)** — Bug investigation & fix planning (Discovery + Root Cause Analysis + Solution Design)
+- **[TECH_DEBT](assets/modes/TECH_DEBT.md)** — Technical debt reduction (Discovery + Debt Inventory + Prioritization + Modernization)
+- **[ARCHITECTURE](assets/modes/ARCHITECTURE.md)** — Architecture evolution (Discovery + Target Design + Gap Analysis + Migration Plan)
 
-**Workflow**: Analyze Idea → Requirements → System Design → Analysis → Planning → Execution → Sprints → Handoff
+Each mode file includes:
+- When to use the mode
+- Output structure (which documents are generated)
+- Mode-specific frontmatter fields
+- Detailed workflow steps
+- Recommended sprint structure
+- Analysis focus areas
+- Examples
 
-**Additional Step: Adaptive Architecture Detection**
-
-Before writing documentation, detect the product domain and adapt:
-
-| Domain | Typical Architecture |
-|--------|---------------------|
-| Web app | SPA/SSR + REST/GraphQL API + Database |
-| Mobile app | Native/Cross-platform + Backend API + Push notifications |
-| Backend/API | Microservices or monolith + Message queues + Database |
-| CLI tool | Single binary + Config files + Local storage |
-| CI/CD pipeline | Pipeline stages + Artifact registry + Environment configs |
-| Data platform | ETL pipelines + Data warehouse + Analytics layer |
-| IoT system | Edge devices + Gateway + Cloud backend + Telemetry |
-| Desktop app | Native UI framework + Local DB + Optional cloud sync |
-| Browser extension | Content/background scripts + Popup UI + Storage API |
-| SaaS platform | Multi-tenant architecture + Auth + Billing + API |
-| E-commerce | Storefront + Cart/Checkout + Payment + Inventory |
-| Real-time system | WebSockets/SSE + Event bus + State synchronization |
-
-**Additional Step: Requirements Analysis** (7 files in `requirements/`)
-
-Generate all 7 requirement files. See Requirements Specifications below.
-
-**Additional Step: System Design** (6 files in `design/`)
-
-Generate all 6 design files. See Design Specifications below.
-
-**Analysis adapts to**: Product feasibility, technology selection, resource assessment, market analysis.
-
-**Scale adaptation**:
-| Scale | Indicators | Depth |
-|-------|-----------|-------|
-| Small | Personal tool, single user, simple domain | 2 personas, 3-4 ADRs, simpler architecture |
-| Medium | Team tool, multiple user types, integrations | 3 personas, 5-6 ADRs, standard architecture |
-| Large | Platform, multi-tenant, complex domain | 4+ personas, 7+ ADRs, detailed architecture |
-
-### NEW_FEATURE Mode
-
-For adding functionality to an existing project.
-
-**Workflow**: Discovery → Analysis → Planning → Execution → Sprints → Handoff
-
-**Analysis adapts to**:
-- Feature architecture and component breakdown
-- Integration points with existing modules
-- Data flow and interface definitions
-- Dependencies on existing code and shared utilities
-
-**Recommended sprint structure**:
-- Sprint 1: Setup — scaffolding, models, interfaces
-- Sprint 2: Core — business logic, services
-- Sprint 3: UI/Integration — components, views, integration
-- Sprint 4: Testing — unit, e2e, polish
-
-### REFACTOR Mode
-
-For restructuring existing code without changing behavior.
-
-**Workflow**: Discovery → Analysis → Planning → Execution → Sprints → Handoff
-
-**Analysis adapts to**:
-- Current vs target architecture comparison
-- Code duplication identification (percentage where possible)
-- Architectural inconsistencies and pattern violations
-- Folder responsibility definitions (what SHOULD go where vs what IS where)
-- Missing abstractions or over-engineering
-- Dependency issues (circular, incorrect layering)
-
-**Recommended sprint structure**:
-- Sprint 1: Cleanup — delete legacy code, consolidate duplicates
-- Sprint 2: Migration — state/architecture migration
-- Sprint 3: Extraction — logic extraction and pattern enforcement
-- Sprint 4: Verification — testing and documentation
-
-### BUG_FIX Mode
-
-For investigating and planning a fix for a specific issue.
-
-**Workflow**: Discovery → Analysis → Planning → Execution → Sprints → Handoff
-
-**Analysis adapts to**:
-- **Root Cause Analysis**: Trace the bug to its source, identify all affected code paths
-- **Impact Assessment**: Severity (Critical/High/Medium/Low), affected features/users, regression risk
-- **Solution Design**: Proposed fix approach, alternative solutions, trade-offs
-- **Test Cases**: Verification tests and regression prevention tests
-
-**Recommended sprint structure**:
-- Sprint 1: Investigation — reproduce, trace, identify root cause
-- Sprint 2: Implementation — implement fix, refactor if needed
-- Sprint 3: Verification — test, review, deploy
-
-### TECH_DEBT Mode
-
-For reducing technical debt in an existing codebase.
-
-**Workflow**: Discovery → Analysis → Planning → Execution → Sprints → Handoff
-
-**Analysis adapts to**:
-- **Debt Inventory**: Dead code, deprecated dependencies, outdated patterns, code duplication, missing tests, documentation gaps
-- **Impact vs Effort Matrix**: Categorize items as Quick Wins (high impact, low effort), Critical Fixes, Strategic Improvements, Nice-to-Have
-- **Prioritization**: Ordered by impact on maintainability, developer experience, and risk
-- **Modernization Path**: Patterns to migrate to, dependencies to update, code to sunset
-
-**Recommended sprint structure**:
-- Sprint 1: Quick Wins — easy fixes with high impact
-- Sprint 2: Cleanup — delete dead code, consolidate duplicates
-- Sprint 3: Modernization — update patterns, upgrade dependencies
-- Sprint 4: Testing — add missing test coverage
-
-### ARCHITECTURE Mode
-
-For evolving system architecture or planning major structural changes.
-
-**Workflow**: Discovery → System Design → Analysis → Planning → Execution → Sprints → Handoff
-
-**Additional Step: System Design** (6 files in `design/`)
-
-Same as NEW_PROJECT, but for an existing system. The design documents describe the **target** architecture, while CONVENTIONS.md documents the **current** architecture.
-
-**Analysis adapts to**:
-- Current vs target architecture gap analysis
-- Migration path and backwards compatibility strategy
-- Risk assessment for each architectural change
-- Feature flag and rollback strategies
-- Data migration requirements
-
-**Recommended sprint structure**:
-- Sprint 1: Foundation — infrastructure, base patterns, feature flags
-- Sprint 2: Migration — core component migration
-- Sprint 3: Integration — reconnect migrated components
-- Sprint 4: Cleanup — remove legacy code, feature flags, verification
+**See the mode files for complete workflows, architecture guidance, and examples.**
 
 ---
 
