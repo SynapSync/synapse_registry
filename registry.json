@@ -1,7 +1,7 @@
 {
   "$schema": "https://synapsync.dev/schemas/registry.json",
   "version": "1.0.0",
-  "lastUpdated": "2026-02-11T00:00:00Z",
+  "lastUpdated": "2026-02-12T00:00:00Z",
   "totalCognitives": 10,
   "cognitives": [
     {
@@ -145,7 +145,7 @@
     {
       "name": "universal-planner",
       "type": "skill",
-      "version": "2.0.0",
+      "version": "2.1.0",
       "description": "Adaptive planning skill for any software scenario: new projects, features, refactors, and more",
       "author": "synapsync",
       "category": "planning",
