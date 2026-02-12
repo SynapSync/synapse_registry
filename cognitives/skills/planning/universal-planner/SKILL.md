@@ -392,363 +392,57 @@ Each mode file includes:
 
 ---
 
-## Requirements Specifications (NEW_PROJECT mode)
+## Output Templates
 
-### problem-definition.md
-| Section | Content |
-|---------|---------|
-| Problem Statement | 2-3 paragraphs describing the problem in concrete terms |
-| Current Alternatives | How users solve this today and why those solutions fall short |
-| Proposed Solution | High-level description of what the product will do |
-| Value Proposition | Why this solution is better than alternatives |
+All documents follow standardized templates in [assets/templates/](assets/templates/):
 
-### goals-and-metrics.md
-| Section | Content |
-|---------|---------|
-| Primary Goals | 3-5 measurable goals using SMART criteria |
-| Success Metrics | Specific KPIs with target values |
-| Timeline Goals | MVP, v1.0, and long-term milestones |
-| Business Impact | Expected outcomes for stakeholders |
+- **[ANALYSIS.md](assets/templates/ANALYSIS.md)** — Strategic analysis with mode-specific sections
+- **[PLANNING.md](assets/templates/PLANNING.md)** — Work plan with strategy and timeline
+- **[CONVENTIONS.md](assets/templates/CONVENTIONS.md)** — Codebase conventions (for existing projects)
+- **[EXECUTION.md](assets/templates/EXECUTION.md)** — Task breakdown with verification commands
+- **[SPRINT.md](assets/templates/SPRINT.md)** — Sprint plan with daily progress tracking
 
-### stakeholders-and-personas.md
-| Section | Content |
-|---------|---------|
-| Stakeholders | Table: role, interest, influence level |
-| User Personas | 2-4 detailed personas: name, role, goals, pain points, tech proficiency |
-| User Journey Summary | High-level journey per persona |
+Each template includes:
+- Complete frontmatter schema with placeholders
+- Section structure with descriptions
+- Variable substitution markers (`{{variable_name}}`)
+- Inline guidance and examples
 
-### functional-requirements.md
-
-Use MoSCoW prioritization: **Must Have**, **Should Have**, **Could Have**, **Won't Have (this release)**.
-
-| Section | Content |
-|---------|---------|
-| Requirements Table | ID, description, priority, persona |
-| Feature Groups | Organize requirements into logical groups |
-| Acceptance Criteria | 2-3 criteria per Must-Have requirement |
-| Dependencies | Requirements that depend on other requirements |
-
-### non-functional-requirements.md
-| Category | What to Specify |
-|----------|----------------|
-| Performance | Response times, throughput, concurrent users |
-| Scalability | Growth projections, horizontal/vertical scaling needs |
-| Security | Authentication, authorization, encryption, compliance |
-| Reliability | Uptime targets, disaster recovery, data backup |
-| Usability | Accessibility standards, supported devices/browsers |
-| Maintainability | Code standards, documentation, monitoring |
-| Compatibility | Integration requirements, API versioning |
-
-### assumptions-and-constraints.md
-| Section | Content |
-|---------|---------|
-| Technical Assumptions | Stack, infrastructure, third-party services assumed |
-| Business Assumptions | Market, user behavior, budget assumptions |
-| Constraints | Technical, legal, resource, and timeline constraints |
-| Risks | Known risks with probability and mitigation |
-
-This file is critical — it captures everything inferred from vague input.
-
-### out-of-scope.md
-| Section | Content |
-|---------|---------|
-| Excluded Features | Features explicitly not included in this phase |
-| Future Considerations | Features deferred to later phases with reasoning |
-| Boundary Definitions | What the system will and won't do |
+**Use these templates** when generating output documents. Substitute placeholders with project-specific values.
 
 ---
 
-## Design Specifications (NEW_PROJECT + ARCHITECTURE modes)
+## Requirements & Design Specifications (NEW_PROJECT mode)
 
-### system-overview.md
-| Section | Content |
-|---------|---------|
-| System Context | Where this system sits in the larger ecosystem |
-| Key Components | Major system components with one-line descriptions |
-| Technology Recommendations | Suggested technologies with justification |
-| System Boundaries | What the system controls vs delegates |
+NEW_PROJECT mode generates **7 requirements files** and **6 design files**.
 
-### architecture-decisions.md
+**Complete specifications** are documented in [assets/modes/NEW_PROJECT.md](assets/modes/NEW_PROJECT.md) under "Requirements Specifications" and "Design Specifications" sections.
 
-Document each key decision using ADR format:
+**Quick reference:**
+- **Requirements:** problem-definition, goals-and-metrics, stakeholders-and-personas, functional-requirements (MoSCoW), non-functional-requirements, assumptions-and-constraints, out-of-scope
+- **Design:** system-overview, architecture-decisions (ADRs), high-level-architecture, data-model (ER diagrams), core-flows (sequence diagrams), non-functional-design
 
-```markdown
-### ADR-{N}: {Decision Title}
+---
 
-**Status:** Proposed
-**Context:** {Why this decision is needed}
-**Decision:** {What was decided}
-**Alternatives Considered:**
-- {Alternative 1}: {Why rejected}
-- {Alternative 2}: {Why rejected}
-**Consequences:** {Trade-offs and implications}
-```
-
-Include ADRs for: application architecture style, frontend framework (if applicable), database selection, authentication approach, API design style, hosting and deployment strategy.
-
-### high-level-architecture.md
-| Section | Content |
-|---------|---------|
-| Architecture Diagram | Mermaid diagram showing major components |
-| Component Descriptions | Each component's responsibility, inputs, outputs |
-| Communication Patterns | How components interact (sync, async, event-driven) |
-| External Integrations | Third-party services and connections |
-
-### data-model.md
-| Section | Content |
-|---------|---------|
-| Entity Descriptions | Each entity with attributes and descriptions |
-| Relationships | Entity relationships with cardinality |
-| ER Diagram | Mermaid ER diagram |
-| Data Flow | How data moves through the system |
-| Storage Strategy | Where different data types are stored and why |
-
-### core-flows.md
-
-Document the 3-5 most critical flows using:
-
-```markdown
-### Flow: {Flow Name}
-
-**Actor:** {Who initiates}
-**Trigger:** {What starts this flow}
-**Preconditions:** {What must be true}
-
-**Steps:**
-1. {Step description}
-2. {Step description}
-
-**Postconditions:** {What is true after completion}
-**Error Scenarios:** {What can go wrong and how to handle it}
-```
-
-Include a Mermaid sequence diagram for each flow.
-
-### non-functional-design.md
-| Section | Content |
-|---------|---------|
-| Performance Design | Caching, CDN, query optimization, lazy loading |
-| Security Design | Auth flow, encryption, input validation, CORS, rate limiting |
-| Scalability Design | Load balancing, horizontal scaling, database sharding/replication |
-| Monitoring & Observability | Logging, metrics, alerting, health checks |
-| Error Handling | Global error strategy, retry policies, circuit breakers |
-| Disaster Recovery | Backup strategy, failover, RTO/RPO targets |
+See [assets/modes/NEW_PROJECT.md](assets/modes/NEW_PROJECT.md) and [assets/modes/ARCHITECTURE.md](assets/modes/ARCHITECTURE.md) for complete design specifications.
 
 ---
 
 ## Sprint Structure Standards
 
-All sprint documents across all modes MUST follow these standards.
+All sprint documents follow the Obsidian-native markdown standard with structured frontmatter, progress tracking, and cross-references.
 
-### PROGRESS.md Format
+**Complete sprint formats:** See [assets/templates/SPRINT.md](assets/templates/SPRINT.md) for:
+- **PROGRESS.md** — Progress dashboard with sprint overview, metrics, blockers, document index
+- **SPRINT-{N}-{name}.md** — Individual sprint plans with phases, tasks, verification commands, graduation gates
 
-```markdown
----
-title: "Progress: {Project Name}"
-date: "YYYY-MM-DD"
-updated: "YYYY-MM-DD"
-project: "{project-name}"
-type: "progress"
-status: "active"
-version: "1.0"
-progress: 0
-tags: ["{project-name}", "progress", "dashboard"]
-changelog:
-  - version: "1.0"
-    date: "YYYY-MM-DD"
-    changes: ["Initial progress dashboard"]
-related:
-  - "[[EXECUTION]]"
-  - "[[PLANNING]]"
-  - "[[SPRINT-1-{name}]]"
----
+**Task granularity:**
+- **L1 - Sprint**: Major milestone (3-7 days)
+- **L2 - Phase**: Logical grouping (0.5-2 days)
+- **L3 - Task**: Discrete work item (1-4 hours) with file paths, before/after code, verification
+- **L4 - Subtask**: Single action (5-30 min)
 
-# Progress: {Project Name}
-
-## Executive Summary
-{One paragraph describing the project and current status}
-
-## Sprint Overview
-
-| Sprint | Name | Status | Objectives |
-|--------|------|--------|------------|
-| 1 | {Name} | NOT_STARTED / IN_PROGRESS / COMPLETED | {One-line objective} |
-| 2 | {Name} | NOT_STARTED / IN_PROGRESS / COMPLETED | {One-line objective} |
-
-## Global Metrics
-
-| Metric | Target | Current | Status |
-|--------|--------|---------|--------|
-| {Metric 1} | {Goal} | {Current} | NOT_STARTED / IN_PROGRESS / COMPLETED |
-
-## Blockers & Issues
-
-| Issue | Impact | Resolution | Status |
-|-------|--------|------------|--------|
-| {Issue} | {What it blocks} | {Mitigation} | OPEN / RESOLVED |
-
-## Document Index
-- [[CONVENTIONS]] (if applicable)
-- [[ANALYSIS]]
-- [[PLANNING]]
-- [[EXECUTION]]
-- Sprint plans: [[SPRINT-1-{name}]], [[SPRINT-2-{name}]], ...
-
-## Referencias
-
-**Children:** [[SPRINT-1-{name}]], [[SPRINT-2-{name}]], ...
-**Input Documents:** [[EXECUTION]], [[PLANNING]]
-```
-
-### SPRINT-{N}-{name}.md Format
-
-```markdown
----
-title: "Sprint {N}: {Sprint Name}"
-date: "YYYY-MM-DD"
-updated: "YYYY-MM-DD"
-project: "{project-name}"
-type: "sprint-plan"
-status: "draft"
-version: "1.0"
-sprint: {N}
-phase: "{active-phases}"
-progress: 0
-previous_doc: "[[SPRINT-{N-1}-name]]"
-next_doc: "[[SPRINT-{N+1}-name]]"
-parent_doc: "[[PROGRESS]]"
-tags: ["{project-name}", "sprint-{N}", "sprint-plan"]
-changelog:
-  - version: "1.0"
-    date: "YYYY-MM-DD"
-    changes: ["Initial sprint plan"]
-related:
-  - "[[PROGRESS]]"
-  - "[[EXECUTION]]"
----
-
-# Sprint {N}: {Sprint Name}
-
-**Duration:** {X-Y days}
-**Objective:** {Clear one-line objective}
-**Status:** NOT_STARTED | IN_PROGRESS | COMPLETED
-**Dependencies:** {Prerequisites from other sprints}
-
-<!-- For Sprint 2+, include this section: -->
-## Carried Forward from [[SPRINT-{N-1}-name]]
-
-- [ ] {Incomplete tasks from previous sprint with original T- IDs}
-
-**Decisions inherited:**
-- {Decisions from previous sprint that affect this one}
-
----
-
-## Phase {N}.1: {Phase Name}
-
-**Objective:** {What this phase achieves}
-
-### Prerequisites
-- [ ] {Required items before starting}
-
-### Tasks
-
-#### Task {N}.1.1: {Task Description}
-**File(s):** `{paths}`
-**Convention:** {Which existing pattern/component to use, if applicable}
-
-**Changes:**
-```{language}
-// BEFORE
-{existing code}
-
-// AFTER
-{proposed code}
-```
-
-**Steps:**
-- [ ] {N}.1.1.1 — {Specific action}
-- [ ] {N}.1.1.2 — {Specific action}
-
-**Verification:**
-```bash
-{command to verify task completion}
-# Expected: {what should happen}
-```
-
----
-
-## Phase {N}.2: Final Verification
-
-### Code Verifications
-- [ ] {Verification 1}: `{command}` — Expected: {result}
-- [ ] {Verification 2}: `{command}` — Expected: {result}
-
-### Functional Verifications
-- [ ] Build succeeds
-- [ ] Tests pass
-- [ ] Manual smoke test passes
-
----
-
-## Definition of Done
-
-Sprint {N} is completed when:
-- [ ] {Criterion 1}
-- [ ] {Criterion 2}
-- [ ] {Criterion N}
-
-## Risks
-
-| Risk | Probability | Impact | Mitigation |
-|------|------------|--------|------------|
-| {Risk 1} | High/Medium/Low | {Impact} | {Strategy} |
-
-## Rollback Strategy
-{How to revert changes from this sprint if something goes wrong}
-
-## Notes
-{Space for implementation notes during execution}
-
-## Graduation Gate
-
-Sprint {N} is approved for completion when ALL criteria are met:
-
-- [ ] All tasks marked complete with passing verification
-- [ ] No open P0/P1 blockers
-- [ ] Code reviewed and approved
-- [ ] Tests passing
-- [ ] PROGRESS.md updated with final metrics
-
-## Metrics
-
-| Metric | Target | Current | Delta | Status |
-|--------|--------|---------|-------|--------|
-| Tasks completed | {total} | 0 | -{total} | NOT_STARTED |
-| {Custom metric} | {target} | {current} | {delta} | {status} |
-
-## Referencias
-
-**Parent:** [[PROGRESS]]
-**Siblings:** [[SPRINT-{N-1}-name]], [[SPRINT-{N+1}-name]]
-**Input Documents:** [[EXECUTION]], [[PLANNING]]
-```
-
-### Task Granularity
-
-| Level | Name | Scope | Example |
-|-------|------|-------|---------|
-| L1 | Sprint | Major milestone (3-7 days) | "Sprint 1: Foundation Setup" |
-| L2 | Phase | Logical grouping (0.5-2 days) | "Phase 1.1: Database Schema" |
-| L3 | Task | Discrete work item (1-4 hours) | "Task 1.1.1: Create users table" |
-| L4 | Subtask | Single action (5-30 min) | "1.1.1.1: Define column types" |
-
-Every task must:
-- Have a checkboxed action
-- Include file paths when applicable
-- Show before/after code snippets for changes
-- Include a verification command
-- Reference which existing patterns/components to use (when applicable)
+Every task must include: checkbox, file paths (when applicable), before/after code snippets, verification command, and reference to existing patterns/components.
 
 ---
 
