@@ -146,92 +146,33 @@ Before starting any workflow step, resolve the `{output_base}` path that determi
 
 ## Obsidian Output Standard
 
-When syncing documents to Obsidian, follow the `obsidian-md-standard`:
+When syncing documents to Obsidian, follow the `obsidian-md-standard` Sync Profile:
 
 1. **Frontmatter enrichment**: If a document has minimal frontmatter (only title/date/project/type/tags), enrich it with the full universal schema (add updated, status, version, changelog, related)
 2. **Frontmatter preservation**: If a document already has rich frontmatter, preserve all existing fields — only add missing ones
-3. **Frontmatter generation**: If a document has no frontmatter, generate the complete universal schema
+3. **Frontmatter generation**: If a document has no frontmatter, generate the complete universal schema (see [assets/helpers/frontmatter-generator.md](assets/helpers/frontmatter-generator.md))
 4. **Wiki-link preservation**: Never convert `[[wiki-links]]` to `[markdown](links)` — preserve them exactly
-5. **Type inference**: Map document content to the 14-type taxonomy defined in the standard
-6. **Cross-reference validation**: After syncing a batch of files, verify that `related` fields and `## Referencias` sections are bidirectional — if A references B, B should reference A
+5. **Type inference**: Map document content to the 14-type taxonomy defined in [obsidian-md-standard](../obsidian-md-standard/SKILL.md#2-document-type-taxonomy)
+6. **Cross-reference validation**: After syncing a batch of files, verify that `related` fields and `## Referencias` sections are bidirectional (see [assets/helpers/cross-ref-validator.md](assets/helpers/cross-ref-validator.md))
 7. **Status**: New documents get `status: "active"`, documents with existing status are preserved
 
 ## Workflow
 
 ### Step 1: Identify What to Sync
 
-Determine the source files from the user's request:
-
-| User Says | Action |
-|-----------|--------|
-| "sync this report to obsidian" | Identify the most recently created/discussed report in context |
-| "move {output_base}/planning/ to obsidian" | Glob all `.md` files in that directory |
-| "save 00-strategic-analysis.md to obsidian" | Sync that specific file |
-| "sync all reports from today to obsidian" | Find today's `.md` files in `{output_base}/` or similar |
-| "create plan X and save to obsidian" | Wait for plan creation, then sync the output |
-
-**Discovery commands:**
-
-```
-# Find all markdown files in a directory
-Glob pattern: "{output_base}/planning/**/*.md"
-
-# Find recently created reports
-Glob pattern: "{output_base}/**/*.md"
-
-# Find specific file
-Glob pattern: "**/{filename}.md"
-```
+Use `Glob` to discover source files based on user request (specific file, directory, pattern, or recent output).
 
 ### Step 2: Load Obsidian MCP Tools
 
-Always load the required tools before using them:
-
-```
-ToolSearch query: "+obsidian list"     # Loads mcp__obsidian__list_directory
-ToolSearch query: "+obsidian write"    # Loads mcp__obsidian__write_note
-```
-
-Load both in parallel if possible. Only load `read` or `search` if you need to check existing content.
+Load required tools: `ToolSearch query: "+obsidian list"` and `ToolSearch query: "+obsidian write"`
 
 ### Step 3: Browse Vault and Present Options
 
-List the vault structure and present folder options to the user:
-
-```
-mcp__obsidian__list_directory(path: "/")           # Root level
-mcp__obsidian__list_directory(path: "/work")        # One level deeper if needed
-```
-
-Build a folder tree and present it using `AskUserQuestion`:
-
-```
-AskUserQuestion:
-  question: "Where should I save the documents in your Obsidian vault?"
-  header: "Vault folder"
-  options:
-    - label: "work/project-name/plans"
-      description: "Inside your project's plans folder"
-    - label: "work/project-name/"
-      description: "At the project root in your vault"
-    - label: "Create new folder"
-      description: "I'll create a new folder path for you"
-```
-
-**Important behaviors:**
-- If the user already specified a destination (e.g., "save to work/agent-sync-sdk/plans"), skip the question and use that path directly
-- If a project folder already exists in the vault, suggest it as the first (recommended) option
-- Always include "Create new folder" as an option
-- If user picks "Create new folder" or "Other", ask for the desired path
+List vault structure with `mcp__obsidian__list_directory`, build folder tree, present options via `AskUserQuestion`. If user specified destination, use it directly. Always include "Create new folder" option.
 
 ### Step 4: Read Source Files
 
-For each file to sync:
-
-1. Read the full content using the `Read` tool
-2. Check if frontmatter already exists (starts with `---`)
-3. Extract the first H1 heading for the title
-4. Determine the project name from cwd or git
+Read all files in parallel using `Read` tool. Check for existing frontmatter, extract metadata.
 
 ### Step 5: Write to Obsidian
 
@@ -252,37 +193,13 @@ mcp__obsidian__write_note(
 )
 ```
 
-**Frontmatter generation logic:**
+**Frontmatter generation:**
 
-| Field | Source | Fallback |
-|-------|--------|----------|
-| `title` | First `# Heading` in document | Filename without extension, titlecased |
-| `date` | Date in filename or directory path (e.g., `2026-02-10`) | Today's date |
-| `project` | Git repo name or directory name | Working directory basename |
-| `type` | Infer from content keywords (see table below) | `"note"` |
-| `source` | Relative path from workspace root | Absolute path |
-| `tags` | Project name + type + key content topics | `[project-name]` |
+See [assets/helpers/frontmatter-generator.md](assets/helpers/frontmatter-generator.md) for the complete frontmatter generation workflow.
 
-**Type inference (expanded taxonomy):**
+**Type inference:**
 
-| Content Contains | Type |
-|-----------------|------|
-| "analysis", "analisis", "report" | `"analysis"` |
-| "conventions", "patterns", "convenciones" | `"conventions"` |
-| "requirements", "requisitos", "functional" | `"requirements"` |
-| "architecture", "arquitectura", "ADR" | `"architecture"` |
-| "planning", "plan de trabajo", "strategy", "estrategico" | `"plan"` |
-| "execution", "task breakdown", "ejecucion" | `"execution-plan"` |
-| "sprint", "todo", "checklist" | `"sprint-plan"` |
-| "progress", "dashboard", "tracking" | `"progress"` |
-| "technical report", "module analysis", "code analysis" | `"technical-report"` |
-| "refactor", "refactoring", "improvement" | `"refactor-plan"` |
-| "retrospective", "retro", "keep/problem/learning" | `"retrospective"` |
-| "decision", "decision log", "DEC-" | `"decision-log"` |
-| "data model", "entity", "ER diagram", "modelo de datos" | `"data-model"` |
-| "flow", "sequence diagram", "core flows" | `"flow-diagram"` |
-| "deuda tecnica", "technical debt", "code quality" | `"technical-report"` |
-| "crecimiento", "growth", "vision" | `"plan"` |
+Refer to [obsidian-md-standard](../obsidian-md-standard/SKILL.md#2-document-type-taxonomy) for the 14-type document taxonomy used in type inference.
 
 **Wiki-link handling:**
 - Preserve all existing `[[wiki-links]]` in document content exactly as-is
@@ -291,23 +208,17 @@ mcp__obsidian__write_note(
 
 ### Step 5.5: Cross-Reference Validation
 
-After syncing a batch of files (2+ files), validate bidirectional references:
+After syncing a batch of files (2+ files), validate bidirectional references.
 
-1. **Collect all `related` fields** from the frontmatter of synced files
-2. **Collect all `[[wiki-links]]`** found in `## Referencias` sections
-3. **For each reference A→B**: Verify that document B also references A
-4. **If a reference is one-directional**: Add the missing reverse reference to the document's `related` array and `## Referencias` section
-5. **Report any fixes made** in the sync summary
+See [assets/helpers/cross-ref-validator.md](assets/helpers/cross-ref-validator.md) for the complete cross-reference validation workflow.
 
-**Example:**
+**Example output:**
 ```
 Cross-reference validation:
 - SPRINT-1-foundation.md references [[PROGRESS]] ✓ (PROGRESS references back)
 - ANALYSIS.md references [[CONVENTIONS]] ✓ (CONVENTIONS references back)
 - PLANNING.md references [[ANALYSIS]] ⚠ Fixed: added [[PLANNING]] to ANALYSIS.md related
 ```
-
-This step ensures the knowledge graph has no broken links when documents are synced in batches.
 
 ### Step 6: Report Results
 
@@ -324,70 +235,34 @@ Synced to Obsidian:
 
 ## Batch Sync Pattern
 
-When syncing an entire folder, process files efficiently:
+When syncing an entire folder, process files efficiently to minimize latency and user interaction.
 
-1. **Glob** all `.md` files in the source directory
-2. **Read** all files in parallel (multiple Read calls in one message)
-3. **Load** MCP tools once (ToolSearch)
-4. **List** vault directory once to build options
-5. **Ask** user once for destination (not per file)
-6. **Write** all files in sequence (Obsidian MCP may not support parallel writes safely)
-7. **Report** all results at the end
+See [assets/helpers/batch-sync-pattern.md](assets/helpers/batch-sync-pattern.md) for the complete optimized batch sync workflow.
+
+**Key principles:**
+1. **Glob** all `.md` files once
+2. **Read** all files in parallel
+3. **Load** MCP tools once
+4. **List** vault directory once
+5. **Ask** user once for destination
+6. **Write** all files sequentially
+7. **Validate** cross-references after all writes
+8. **Report** all results at the end
 
 ## Integration with Other Skills
 
-This skill is designed to be the **output handler** for other skills:
-
-| Producing Skill | What It Creates | obsidian-sync Role |
-|----------------|-----------------|-------------------|
-| `project-planner` | `{output_base}/planning/{project}/` plans | Sync planning docs to Obsidian |
-| `code-analyzer` | `{output_base}/technical/module-analysis/` reports | Sync analysis reports to Obsidian |
-| `sdlc-planner` | SDLC Phase 1 & 2 documents | Sync requirements & design docs |
-| `universal-planner` | Adaptive planning documents | Sync any planning output |
-| Custom team analysis | `{output_base}/planning/` reports | Sync team-generated reports |
-
-**Composition pattern:** When the user says "create a plan and save it to obsidian":
-1. The planner skill runs first and produces documents locally
-2. This skill then picks up those documents and syncs them to the vault
-3. The user only needs one instruction; the skills compose naturally
+This skill is the **output handler** for planning, analysis, and reporting skills. Composition pattern: producer skill generates documents locally → obsidian-sync picks them up and syncs to vault. User says "create X and save to obsidian" — both steps happen automatically.
 
 ## Configuration Options
 
-### By Sync Scope
-
-| Scope | Command | Behavior |
-|-------|---------|----------|
-| **Single file** | "sync this file to obsidian" | Sync one specific file |
-| **Directory** | "sync {output_base}/planning/ to obsidian" | Sync all .md files in directory |
-| **Pattern** | "sync all reports from today" | Glob and sync matching files |
-| **Output** | "create X and save to obsidian" | Wait for creation, then sync |
-
-### By Destination Logic
-
-| Scenario | Behavior |
-|----------|----------|
-| User specifies path | Use it directly, create folders if needed |
-| Project folder exists in vault | Suggest it as recommended option |
-| Project folder doesn't exist | Offer to create `work/{project-name}/` |
-| Multiple projects in vault | List all and let user choose |
+**Sync Scope**: Single file, directory, glob pattern, or output from another skill.
+**Destination Logic**: Use user-specified path, suggest existing project folder, offer to create new folder, or list multiple projects for selection.
 
 ## Best Practices
 
-### Before Sync
-- Verify the source files exist and are readable
-- Check that the Obsidian MCP server is connected (ToolSearch will fail if not)
-- If syncing output from another skill, ensure that skill has completed
-
-### During Sync
-- Never modify document content -- only add/merge frontmatter
-- Use the `mcp__obsidian__write_note` with `mode: "overwrite"` for clean writes
-- If a note already exists at the destination, warn the user before overwriting
-- Process files sequentially to avoid MCP race conditions
-
-### After Sync
-- Always report the full list of synced paths
-- If any files failed, report which ones and why
-- Suggest the user check the notes in Obsidian for visual verification
+- **Before Sync**: Verify source files exist, MCP server connected, producer skill completed
+- **During Sync**: Never modify content (only frontmatter), process writes sequentially, warn before overwriting
+- **After Sync**: Report all synced paths, any failures, and suggest visual verification in Obsidian
 
 ## Limitations
 
@@ -410,61 +285,7 @@ This skill is designed to be the **output handler** for other skills:
 
 ## Example: Full Sync Flow
 
-**User says:** "sincroniza los reportes de {output_base}/planning/2026-02-10/ a obsidian"
-
-**Step 1 - Discover files:**
-```
-Glob("{output_base}/planning/2026-02-10/**/*.md")
-# Found: 00-strategic-analysis.md, 01-technical-debt.md, 02-growth-vision.md
-```
-
-**Step 2 - Load MCP tools:**
-```
-ToolSearch("+obsidian list")
-ToolSearch("+obsidian write")
-```
-
-**Step 3 - Browse vault:**
-```
-mcp__obsidian__list_directory(path: "/")
-# Found: work/
-mcp__obsidian__list_directory(path: "/work")
-# Found: agent-sync-sdk/, bmtz/, wdt/
-```
-
-**Step 4 - Ask user:**
-```
-AskUserQuestion:
-  "Where should I save the 3 reports in your Obsidian vault?"
-  options:
-    - "work/agent-sync-sdk/plans (Recommended)"  # Project folder exists
-    - "work/agent-sync-sdk/"                       # Project root
-    - "Create new folder"
-```
-
-**Step 5 - Read & Write:**
-```
-# Read all 3 files in parallel
-Read("{output_base}/planning/2026-02-10/00-strategic-analysis.md")
-Read("{output_base}/planning/2026-02-10/01-technical-debt.md")
-Read("{output_base}/planning/2026-02-10/02-growth-vision.md")
-
-# Write each to Obsidian with generated frontmatter
-mcp__obsidian__write_note(
-  path: "work/agent-sync-sdk/plans/00-strategic-analysis.md",
-  content: "...",
-  frontmatter: { title: "Analisis Estrategico...", date: "2026-02-10", project: "agent-sync-sdk", type: "strategic-analysis", tags: [...] }
-)
-# ... repeat for each file
-```
-
-**Step 6 - Report:**
-```
-Synced 3 files to Obsidian:
-  - work/agent-sync-sdk/plans/00-strategic-analysis.md
-  - work/agent-sync-sdk/plans/01-technical-debt.md
-  - work/agent-sync-sdk/plans/02-growth-vision.md
-```
+See [assets/examples/smoke-test.md](assets/examples/smoke-test.md) for a complete end-to-end sync example with verification steps.
 
 ## Version History
 
