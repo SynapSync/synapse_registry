@@ -417,15 +417,21 @@ Recently modified: [list of 5-10 most recent]
 
 #### COMPLIANCE_CHECK - Standard Compliance Report
 
-Analyze documents in a project folder against the obsidian-md-standard:
+Analyze documents in a project folder against the obsidian-md-standard.
 
+**Validation rules:** See [obsidian-md-standard/assets/validators/obsidian-linter.md](../../obsidian-md-standard/assets/validators/obsidian-linter.md) for complete validation rules and procedures.
+
+**Quick summary of what to validate:**
+1. **Frontmatter schema**: Required fields (title, date, updated, project, type, status, version, tags, changelog, related) with correct types and formats
+2. **Wiki-link syntax**: `[[note-name]]` format, no spaces, no `.md` extensions
+3. **Tag format**: `#tag` or `#multi-word-tag`, no spaces or underscores
+4. **Bidirectional cross-references**: If A→B exists in `related`, verify B→A exists
+5. **Type taxonomy**: Must be one of the 14 approved types (analysis, conventions, requirements, architecture, plan, execution-plan, sprint-plan, progress, technical-report, refactor-plan, retrospective, decision-log, data-model, flow-diagram)
+6. **Required sections**: Contains `## Referencias` section
+
+**Workflow:**
 1. **List all .md files** in the project folder
-2. **For each file**, check:
-   - Has YAML frontmatter with required fields (title, date, updated, project, type, status, version, tags, changelog, related)
-   - `type` matches the 14-type taxonomy
-   - Contains `## Referencias` section
-   - All `[[wiki-links]]` have reciprocal references (bidirectionality)
-   - No `[text](relative-path.md)` inter-document links
+2. **For each file**, apply validation checks from obsidian-linter
 3. **Generate compliance report:**
 
 ```markdown
@@ -521,7 +527,11 @@ Glob(pattern: "/path/to/vault/**/*.md")
 
 ## Frontmatter Parsing
 
-This skill relies heavily on frontmatter for intelligent filtering. Expected fields:
+This skill relies heavily on frontmatter for intelligent filtering.
+
+**For validation rules and schema requirements**, see [obsidian-md-standard/assets/validators/obsidian-linter.md](../../obsidian-md-standard/assets/validators/obsidian-linter.md).
+
+**Expected fields for reading/filtering:**
 
 ```yaml
 ---
