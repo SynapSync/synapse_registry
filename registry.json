@@ -1,7 +1,7 @@
 {
   "$schema": "https://synapsync.dev/schemas/registry.json",
   "version": "1.0.0",
-  "lastUpdated": "2026-02-12T00:00:00Z",
+  "lastUpdated": "2026-02-12T12:00:00Z",
   "totalCognitives": 9,
   "cognitives": [
     {
@@ -87,7 +87,7 @@
     {
       "name": "code-analyzer",
       "type": "skill",
-      "version": "2.0.0",
+      "version": "2.1.0",
       "description": "Analyzes code modules and generates structured technical reports with architecture diagrams",
       "author": "synapsync",
       "category": "analytics",
@@ -178,7 +178,7 @@
     {
       "name": "obsidian-sync",
       "type": "skill",
-      "version": "2.0.0",
+      "version": "2.1.0",
       "description": "Syncs markdown reports, plans, and documents from the workspace to an Obsidian vault via MCP",
       "author": "synapsync",
       "category": "integrations",
@@ -201,7 +201,7 @@
     {
       "name": "obsidian-reader",
       "type": "skill",
-      "version": "1.1.0",
+      "version": "1.2.0",
       "description": "Reads, searches, and reasons over Obsidian vault notes as a contextual knowledge source",
       "author": "synapsync",
       "category": "integrations",
@@ -224,7 +224,7 @@
     {
       "name": "obsidian-md-standard",
       "type": "skill",
-      "version": "1.0.0",
+      "version": "1.1.0",
       "description": "Obsidian-native markdown output standard for all SynapSync skills that produce documents",
       "author": "synapsync",
       "category": "integrations",
