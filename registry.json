@@ -1,8 +1,8 @@
 {
   "$schema": "https://synapsync.dev/schemas/registry.json",
   "version": "1.0.0",
-  "lastUpdated": "2026-02-12T12:00:00Z",
-  "totalCognitives": 9,
+  "lastUpdated": "2026-02-12T18:00:00Z",
+  "totalCognitives": 8,
   "cognitives": [
     {
       "name": "skill-creator",
@@ -56,33 +56,6 @@
       ],
       "downloads": 0,
       "path": "cognitives/agents/general/feature-branch-manager"
-    },
-    {
-      "name": "project-planner",
-      "type": "skill",
-      "version": "2.0.0",
-      "description": "Planning-only framework that produces analysis, planning, and execution-plan documents",
-      "author": "synapsync",
-      "category": "planning",
-      "tags": [
-        "planning",
-        "project-management",
-        "workflow",
-        "analysis",
-        "execution",
-        "sprints",
-        "tracking"
-      ],
-      "providers": [
-        "claude",
-        "openai",
-        "cursor",
-        "windsurf",
-        "copilot",
-        "gemini"
-      ],
-      "downloads": 0,
-      "path": "cognitives/skills/planning/project-planner"
     },
     {
       "name": "code-analyzer",
@@ -147,7 +120,7 @@
     {
       "name": "universal-planner-executor",
       "type": "skill",
-      "version": "2.0.0",
+      "version": "2.1.0",
       "description": "Senior developer executor that implements universal-planner sprints and tracks progress",
       "author": "synapsync",
       "category": "planning",

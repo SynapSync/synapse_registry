@@ -7,7 +7,7 @@ description: >
 license: Apache-2.0
 metadata:
   author: synapsync
-  version: "2.0"
+  version: "2.1"
   scope: [root]
   auto_invoke:
     - "Execute the project plan"
@@ -15,6 +15,13 @@ metadata:
     - "Work on the next sprint from the planning"
     - "Continue executing the plan"
   changelog:
+    - version: "2.1"
+      date: "2026-02-12"
+      changes:
+        - "Refactored to use assets pattern"
+        - "Reduced SKILL.md from 615 to ~468 LOC (-24%)"
+        - "Extracted RETRO template to assets/templates/"
+        - "Extracted 3 helpers to assets/helpers/"
     - version: "2.0"
       date: "2026-02-11"
       changes:
@@ -282,80 +289,9 @@ After all phases in a sprint are complete:
 
 ### Step 3.5: Retrospective Generation (Optional)
 
-After completing a sprint, offer to generate a retrospective:
+After completing a sprint, offer to generate a retrospective to capture learnings, metrics, and action items. The retrospective follows a structured format with Keep/Problems/Learnings/Actions sections, metrics comparison table, and cross-links to related documents.
 
-> _"Sprint {N} is complete. Would you like to generate a retrospective document (RETRO-{N}-{name}.md) to capture learnings and metrics?"_
-
-**If the user accepts:**
-
-1. Create `sprints/RETRO-{N}-{name}.md` with this structure:
-
-```markdown
----
-title: "Retrospective: Sprint {N} — {Sprint Name}"
-date: "YYYY-MM-DD"
-updated: "YYYY-MM-DD"
-project: "{project-name}"
-type: "retrospective"
-status: "active"
-version: "1.0"
-sprint: {N}
-previous_doc: "[[SPRINT-{N}-name]]"
-tags: ["{project-name}", "retrospective", "sprint-{N}"]
-changelog:
-  - version: "1.0"
-    date: "YYYY-MM-DD"
-    changes: ["Initial retrospective"]
-related:
-  - "[[SPRINT-{N}-name]]"
-  - "[[SPRINT-{N+1}-name]]"
-  - "[[PROGRESS]]"
----
-
-# Retrospective: Sprint {N} — {Sprint Name}
-
-## Context
-{Brief description of sprint objective and outcome}
-
-## Keep (What Went Well)
-- **K1**: {What to continue doing}
-- **K2**: {What to continue doing}
-
-## Problems (What Went Wrong)
-- **P1**: {Issue encountered}
-- **P2**: {Issue encountered}
-
-## Learnings (What We Learned)
-- **L1**: {Insight gained}
-- **L2**: {Insight gained}
-
-## Actions (What to Do Differently)
-- **A1**: {Concrete action for next sprint} → Assigned to: {who}
-- **A2**: {Concrete action for next sprint} → Assigned to: {who}
-
-## Metrics
-
-| Metric | Planned | Actual | Delta | Status |
-|--------|---------|--------|-------|--------|
-| Tasks completed | {planned} | {actual} | {delta} | {status} |
-| {Custom metric} | {target} | {actual} | {delta} | {status} |
-
-## Signals to Watch
-- {Early warning indicator for next sprint}
-
-## Verdict
-{Was the sprint successful? Key takeaway.}
-
-## Referencias
-
-**Parent:** [[PROGRESS]]
-**Input Documents:** [[SPRINT-{N}-name]]
-**Siblings:** [[RETRO-{N-1}-name]], [[RETRO-{N+1}-name]]
-```
-
-2. Update PROGRESS.md: add `retro_refs: ["[[RETRO-{N}-name]]"]` to frontmatter (or append to existing array)
-3. Update the completed sprint's `related` field to include `[[RETRO-{N}-name]]`
-4. Include carried-forward items from the sprint in the `## Actions` section of the retro
+**Full template and usage details:** See [assets/templates/RETRO.md](assets/templates/RETRO.md)
 
 **If the user declines:** Skip and proceed to Step 3c (Identify Next Sprint).
 
@@ -429,69 +365,17 @@ When an implementation breaks something and needs to be reverted:
 
 ## Decision Log Format
 
-When making decisions not explicitly covered by the plan, document them in the sprint file's Notes section:
+When making decisions not explicitly covered by the plan, document them in the sprint file's Notes section with context, options considered, chosen decision, reasoning, and impact. Each decision includes wiki-links to the sprint and specific task.
 
-```markdown
-### Decision Log
-
-#### DEC-{N}: {Short Title}
-- **Context**: {What was ambiguous or conflicting}
-- **Options Considered**:
-  1. {Option A}: {Pros/cons}
-  2. {Option B}: {Pros/cons}
-- **Decision**: {What was chosen}
-- **Reasoning**: {Why this aligns with the project's conventions and the plan's intent}
-- **Impact**: {What this affects}
-- **Sprint**: [[SPRINT-{N}-name]]
-- **Task**: [[SPRINT-{N}-name#T-{task-id}]]
-```
+**Full format and examples:** See [assets/helpers/decision-log.md](assets/helpers/decision-log.md)
 
 ---
 
 ## Code Quality Standards
 
-### General
+As a Senior Fullstack Developer, write production-quality code following the project's existing patterns. Standards cover general principles, frontend/backend specifics, testing approaches, and git practices. Always defer to CONVENTIONS.md for project-specific patterns.
 
-- Follow the project's existing code style — do not impose a different style
-- Use meaningful variable and function names consistent with CONVENTIONS.md naming patterns
-- Keep functions focused — one responsibility per function
-- Handle errors at system boundaries (user input, API calls, file I/O)
-- No magic numbers — use named constants
-- No dead code — if something is removed, it's gone completely
-
-### Frontend (when applicable)
-
-- Use the project's existing component library — never create raw HTML elements when a component exists
-- Follow the existing state management pattern
-- Follow the existing styling approach (CSS modules, Tailwind, styled-components — whatever CONVENTIONS.md says)
-- Ensure accessibility basics (semantic HTML, aria labels, keyboard navigation)
-- Follow responsive patterns already established in the project
-
-### Backend (when applicable)
-
-- Follow the existing API route patterns and conventions
-- Use the existing error handling approach (custom error classes, middleware, etc.)
-- Follow the existing validation pattern (Zod, Joi, class-validator — whatever is in use)
-- Use existing database access patterns (ORM, query builder, raw SQL — match what exists)
-- Follow existing authentication and authorization patterns
-
-### Testing (when applicable)
-
-- Write tests using the project's testing framework and patterns
-- Place test files where CONVENTIONS.md says they go
-- Follow existing mocking and fixture patterns
-- Test the behavior described in the task's acceptance criteria
-- Run the existing test suite after changes to ensure no regressions
-
-### Git Practices
-
-- Commit after each completed phase (not after each subtask — too granular)
-- Use conventional commit messages that reference the sprint and phase:
-  ```
-  feat(sprint-1): complete Phase 1.1 — database schema setup
-  ```
-- Do not commit broken code — verification must pass before committing
-- Do not push to remote unless explicitly requested
+**Full standards reference:** See [assets/helpers/code-quality-standards.md](assets/helpers/code-quality-standards.md)
 
 ---
 
@@ -572,26 +456,9 @@ Default behavior: **Per phase** — balances granularity with practicality.
 
 ## Troubleshooting
 
-### "Plan directory not found"
-Verify the path `{output_base}/planning/{project-name}/` exists. The user may need to run `universal-planner` first or specify the correct project name.
+Common execution issues include missing plan directories, outdated CONVENTIONS.md references, verification failures, dependency ordering problems, incomplete sprints, build breaks, and ambiguous technical choices.
 
-### "CONVENTIONS.md references components that don't exist"
-The codebase may have changed since the plan was written. Verify the current state of the codebase, adapt the implementation to use what actually exists, and document the discrepancy in the Decision Log.
-
-### "Verification command fails but the implementation is correct"
-The verification command may be outdated or have incorrect expectations. Fix the verification command in the sprint file, document the correction in Notes, and proceed.
-
-### "Task depends on something from a future sprint"
-This is a planning error. Log it as a blocker, skip the task, and report it. The planner may need to reorder tasks.
-
-### "Sprint has no tasks — only headers"
-The plan is incomplete. Stop execution and report that the sprint file needs to be populated by `universal-planner`.
-
-### "Build breaks after implementing a task"
-Diagnose the failure. If the task's implementation is correct but breaks something else, the plan may have missed a dependency. Fix the regression, document it in the Decision Log, and continue.
-
-### "Not sure what framework/library to use"
-Always check CONVENTIONS.md first. If the answer isn't there, check the project's `package.json` (or equivalent dependency file). Match what the project already uses. Never introduce a new library when the plan doesn't call for it.
+**Full troubleshooting guide:** See [assets/helpers/troubleshooting.md](assets/helpers/troubleshooting.md)
 
 ---
 
@@ -610,5 +477,6 @@ Always check CONVENTIONS.md first. If the answer isn't there, check the project'
 
 | Version | Date | Changes |
 |---------|------|---------|
+| 2.1 | 2026-02-12 | Assets pattern migration — extracted templates and helpers, reduced SKILL.md by 24% |
 | 2.0 | 2026-02-11 | Obsidian-native standard — frontmatter maintenance, graduation gates, optional retrospectives, wiki-linked decision logs |
 | 1.0 | 2026-02-04 | Initial release — companion executor for universal-planner |
