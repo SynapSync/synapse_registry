@@ -361,7 +361,7 @@ Every project that uses output-producing skills has a `cognitive.config.json` at
 
 ```json
 {
-  "output_base": "~/obsidian-vault/my-project"
+  "output_base": "~/.agents/my-project"
 }
 ```
 

@@ -113,14 +113,14 @@ Before starting any workflow step, resolve the `{output_base}` path that determi
 2. **If found**: read the `output_base` value and use it for all `{output_base}` references in this skill
 3. **If NOT found**:
    a. Infer the project name from the current directory name or git repository name
-   b. Ask the user: _"Where should I store output documents for this project?"_ — suggest `~/obsidian-vault/{project-name}/` as the default
+   b. Ask the user: _"Where should I store output documents for this project?"_ — suggest `~/.agents/{project-name}/` as the default
    c. Create `cognitive.config.json` in the project root with their chosen path
    d. Inform the user the config was saved for future skill runs
 
 **Config file format** (`cognitive.config.json`):
 ```json
 {
-  "output_base": "~/obsidian-vault/my-project"
+  "output_base": "~/.agents/my-project"
 }
 ```
 

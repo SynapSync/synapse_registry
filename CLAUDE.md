@@ -115,14 +115,14 @@ Skills that produce output documents (reports, plans, analysis, etc.) use a `{ou
 
 ```json
 {
-  "output_base": "~/obsidian-vault/my-project"
+  "output_base": "~/.agents/my-project"
 }
 ```
 
 **How skills resolve `{output_base}`**:
 1. Check for `cognitive.config.json` in the project root
 2. If found — read `output_base` and use it
-3. If not found — ask the user for a path (suggest `~/obsidian-vault/{project-name}/`), create the config file, proceed
+3. If not found — ask the user for a path (suggest `~/.agents/{project-name}/`), create the config file, proceed
 
 **When creating a new skill that produces output**, you MUST:
 1. Use `{output_base}` for all output paths (e.g., `{output_base}/planning/`, `{output_base}/technical/`)
@@ -140,7 +140,7 @@ Before starting any workflow step, resolve the `{output_base}` path that determi
 2. **If found**: read the `output_base` value and use it for all `{output_base}` references in this skill
 3. **If NOT found**:
    a. Infer the project name from the current directory name or git repository name
-   b. Ask the user: _"Where should I store output documents for this project?"_ — suggest `~/obsidian-vault/{project-name}/` as the default
+   b. Ask the user: _"Where should I store output documents for this project?"_ — suggest `~/.agents/{project-name}/` as the default
    c. Create `cognitive.config.json` in the project root with their chosen path
    d. Inform the user the config was saved for future skill runs
 ```

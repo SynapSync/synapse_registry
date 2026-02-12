@@ -185,7 +185,7 @@ See [assets/helpers/config-resolver.md](assets/helpers/config-resolver.md) for t
 
 **Quick summary:**
 1. Check `cognitive.config.json` in project root → read `output_base`
-2. If not found → ask user, suggest `~/obsidian-vault/{project-name}/`, create config
+2. If not found → ask user, suggest `~/.agents/{project-name}/`, create config
 3. Use `{output_base}/` for all output paths
 
 All `{output_base}` references depend on this resolution.
