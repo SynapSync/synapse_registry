@@ -85,7 +85,7 @@ When syncing documents to Obsidian, follow the `obsidian-md-standard` Sync Profi
 2. **Frontmatter preservation**: If a document already has rich frontmatter, preserve all existing fields — only add missing ones
 3. **Frontmatter generation**: If a document has no frontmatter, generate the complete universal schema (see [../helpers/frontmatter-generator.md](../helpers/frontmatter-generator.md))
 4. **Wiki-link preservation**: Never convert `[[wiki-links]]` to `[markdown](links)` — preserve them exactly
-5. **Type inference**: Map document content to the 14-type taxonomy defined in [obsidian-md-standard](../../obsidian-md-standard/SKILL.md#2-document-type-taxonomy)
+5. **Type inference**: Map document content to the 14-type taxonomy defined in the `obsidian-md-standard` skill
 6. **Cross-reference validation**: After syncing a batch of files, verify that `related` fields and `## Referencias` sections are bidirectional (see [../helpers/cross-ref-validator.md](../helpers/cross-ref-validator.md))
 7. **Status**: New documents get `status: "active"`, documents with existing status are preserved
 
@@ -134,7 +134,7 @@ See [../helpers/frontmatter-generator.md](../helpers/frontmatter-generator.md) f
 
 **Type inference:**
 
-Refer to [obsidian-md-standard](../../obsidian-md-standard/SKILL.md#2-document-type-taxonomy) for the 14-type document taxonomy used in type inference.
+Refer to the `obsidian-md-standard` skill for the 14-type document taxonomy used in type inference.
 
 **Wiki-link handling:**
 - Preserve all existing `[[wiki-links]]` in document content exactly as-is

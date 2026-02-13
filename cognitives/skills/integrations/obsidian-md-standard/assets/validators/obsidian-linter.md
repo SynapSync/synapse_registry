@@ -144,7 +144,7 @@ Documents must use one of these 14 approved types:
 When performing a COMPLIANCE_CHECK operation:
 
 ```markdown
-See [obsidian-md-standard validators](../../obsidian-md-standard/assets/validators/obsidian-linter.md) for complete validation rules.
+See this document for complete validation rules.
 ```
 
 Apply these validation checks:

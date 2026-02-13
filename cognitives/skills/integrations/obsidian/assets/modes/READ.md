@@ -358,7 +358,7 @@ Recently modified: [list of 5-10 most recent]
 
 Analyze documents in a project folder against the obsidian-md-standard.
 
-**Validation rules:** See [obsidian-md-standard/assets/validators/obsidian-linter.md](../../obsidian-md-standard/assets/validators/obsidian-linter.md) for complete validation rules and procedures.
+**Validation rules:** See the `obsidian-md-standard` skill (validators section) for complete validation rules and procedures.
 
 **Quick summary of what to validate:**
 1. **Frontmatter schema**: Required fields (title, date, updated, project, type, status, version, tags, changelog, related) with correct types and formats
@@ -472,7 +472,7 @@ Glob(pattern: "/path/to/vault/**/*.md")
 
 This mode relies heavily on frontmatter for intelligent filtering.
 
-**For validation rules and schema requirements**, see [obsidian-md-standard/assets/validators/obsidian-linter.md](../../obsidian-md-standard/assets/validators/obsidian-linter.md).
+**For validation rules and schema requirements**, see the `obsidian-md-standard` skill (validators section).
 
 **Expected fields for reading/filtering:**
 

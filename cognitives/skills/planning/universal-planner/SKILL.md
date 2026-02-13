@@ -46,7 +46,7 @@ allowed-tools: Read, Edit, Write, Glob, Grep, Bash, Task
 
 ## Assets
 
-This skill uses the [assets pattern](../../../docs/standards/skill-assets-pattern.md). Detailed documentation, templates, and helpers are in the [assets/](assets/) directory:
+This skill uses a modular assets architecture. Detailed documentation, templates, and helpers are in the [assets/](assets/) directory:
 
 - **[assets/modes/](assets/modes/)** - 6 planning modes with detailed workflows
 - **[assets/helpers/](assets/helpers/)** - Config resolution and shared workflows
