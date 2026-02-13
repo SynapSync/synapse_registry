@@ -34,13 +34,10 @@ Every cognitive lives in `cognitives/{type}s/{category}/{name}/` and must contai
 
 ### Skills
 - **skill-creator** (`cognitives/skills/general/skill-creator/`) — Meta-skill for creating new skills with templates. Includes `assets/` with basic and advanced templates.
-- **project-planner** (`cognitives/skills/planning/project-planner/`) — Planning-only framework that produces analysis, planning, and execution-plan documents.
-- **universal-planner** (`cognitives/skills/planning/universal-planner/`) — Adaptive planning skill for any software scenario: new projects, features, refactors, bug fixes, tech debt, architecture changes.
+- **universal-planner** (`cognitives/skills/planning/universal-planner/`) — Adaptive planning skill for any software scenario: new projects, features, refactors, bug fixes, tech debt, architecture changes. Uses modular assets pattern with 6 modes.
 - **universal-planner-executor** (`cognitives/skills/planning/universal-planner-executor/`) — Sprint-by-sprint executor companion for universal-planner output.
 - **code-analyzer** (`cognitives/skills/analytics/code-analyzer/`) — Analyzes code modules and generates structured technical reports with architecture diagrams.
-- **sdlc-planner** (`cognitives/skills/planning/sdlc-planner/`) — Generates SDLC Phase 1 (Requirements) and Phase 2 (Design) documentation from a product idea.
-- **obsidian-sync** (`cognitives/skills/integrations/obsidian-sync/`) — Syncs markdown reports, plans, and documents from the workspace to an Obsidian vault via MCP.
-- **obsidian-reader** (`cognitives/skills/integrations/obsidian-reader/`) — Reads, searches, and reasons over Obsidian vault notes as contextual knowledge source.
+- **obsidian** (`cognitives/skills/integrations/obsidian/`) — Unified Obsidian vault manager with SYNC and READ modes. Syncs documents to vault and reads/searches notes via MCP. Claude-only.
 - **obsidian-md-standard** (`cognitives/skills/integrations/obsidian-md-standard/`) — Obsidian-native markdown output standard for all SynapSync skills that produce documents.
 
 ### Agents

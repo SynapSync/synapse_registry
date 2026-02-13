@@ -171,7 +171,7 @@ Before any operation, resolve `{output_base}` path:
 
 ## Obsidian Output Standard
 
-All operations follow [obsidian-md-standard](../obsidian-md-standard/SKILL.md):
+All operations follow the `obsidian-md-standard` skill:
 
 1. **Frontmatter**: Universal schema with title, date, project, type, status, version, tags, changelog, related
 2. **Type taxonomy**: 14 document types (analysis, plan, sprint-plan, technical-report, etc.)

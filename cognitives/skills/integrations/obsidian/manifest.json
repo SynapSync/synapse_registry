@@ -3,7 +3,7 @@
   "name": "obsidian",
   "type": "skill",
   "version": "3.0.0",
-  "description": "Unified Obsidian vault operations: sync documents to vault, read notes for context, search knowledge via MCP",
+  "description": "Unified Obsidian vault manager: sync documents, read notes, and search knowledge via MCP",
   "author": {
     "name": "SynapSync",
     "url": "https://github.com/SynapSync",

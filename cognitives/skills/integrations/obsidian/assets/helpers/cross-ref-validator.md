@@ -246,7 +246,7 @@ If the vault has multiple documents with the same name in different folders (e.g
 
 ## Integration with Obsidian-Sync Workflow
 
-This helper is invoked at **Step 5.5: Cross-Reference Validation** in the main obsidian-sync workflow, immediately after writing all files but before reporting results.
+This helper is invoked at **Step 5.5: Cross-Reference Validation** in the SYNC mode workflow, immediately after writing all files but before reporting results.
 
 ```
 Step 5: Write to Obsidian

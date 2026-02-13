@@ -47,12 +47,7 @@
         "devops"
       ],
       "providers": [
-        "claude",
-        "openai",
-        "cursor",
-        "windsurf",
-        "copilot",
-        "gemini"
+        "claude"
       ],
       "downloads": 0,
       "path": "cognitives/agents/general/feature-branch-manager"
@@ -152,7 +147,7 @@
       "name": "obsidian",
       "type": "skill",
       "version": "3.0.0",
-      "description": "Unified Obsidian vault operations: sync documents to vault, read notes for context, search knowledge via MCP",
+      "description": "Unified Obsidian vault manager: sync documents, read notes, and search knowledge via MCP",
       "author": "synapsync",
       "category": "integrations",
       "tags": [

@@ -6,10 +6,15 @@ description: >
 license: Apache-2.0
 metadata:
   author: synapsync
-  version: "2.0"
+  version: "2.1"
   scope: [root]
   auto_invoke: "When the user asks to analyze, explain, or document a code module or file"
   changelog:
+    - version: "2.1"
+      date: "2026-02-12"
+      changes:
+        - "Migrated to modular assets pattern"
+        - "Removed all external path references for self-containment"
     - version: "2.0"
       date: "2026-02-11"
       changes:
@@ -305,11 +310,11 @@ The analysis framework works for any language or framework. Adapt terminology to
 
 ## Integration with Other Skills
 
-### With `project-planner`
-Use `code-analyzer` during the Analysis Phase (Step 1) of project-planner to understand the current state of modules that will be affected by the planned work.
+### With `universal-planner`
+Use `code-analyzer` during the Analysis Phase (Step 1) of universal-planner to understand the current state of modules that will be affected by the planned work.
 
-### With `project-executor` (future)
-Before executing a phase that modifies a module, run `code-analyzer` to document the "before" state for comparison.
+### With `universal-planner-executor`
+Before executing a sprint that modifies a module, run `code-analyzer` to document the "before" state for comparison.
 
 ## Limitations
 

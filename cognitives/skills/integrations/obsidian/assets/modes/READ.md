@@ -594,10 +594,9 @@ Grep(pattern: "agent-sync-sdk", path: "/path/to/vault", type: "md")
 | Skill | How READ mode Integrates |
 |-------|--------------------------|
 | `obsidian` SYNC mode | Read notes that were previously synced; verify sync status |
-| `project-planner` | Provide existing project context before planning begins |
+| `universal-planner` | Provide existing project context and feed historical plans as input |
 | `code-analyzer` | Supply architecture notes as reference for analysis |
-| `universal-planner` | Feed historical plans and decisions as input context |
-| `sdlc-planner` | Provide requirements docs and previous SDLC phases |
+| `universal-planner-executor` | Provide sprint history and retrospectives as context |
 
 ---
 
