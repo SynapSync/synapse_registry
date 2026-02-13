@@ -265,7 +265,7 @@ Step 6: Use output_base
 
 ## Related
 
-- See `obsidian-md-standard` for output format specifications
+- Output format follows the Obsidian markdown conventions (frontmatter, wiki-links, type taxonomy)
 - See `obsidian` skill (SYNC mode) for syncing output to Obsidian vault via MCP
 
 ## Version

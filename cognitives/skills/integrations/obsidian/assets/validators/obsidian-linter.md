@@ -2,7 +2,7 @@
 
 ## Purpose
 
-Validate markdown documents for Obsidian compliance according to the `obsidian-md-standard`. This linter ensures documents follow consistent frontmatter schemas, use proper wiki-link syntax, maintain bidirectional cross-references, and adhere to the 14-type taxonomy.
+Validate markdown documents for Obsidian compliance according to the Obsidian markdown standard defined in [../standards/obsidian-md-standard.md](../standards/obsidian-md-standard.md). This linter ensures documents follow consistent frontmatter schemas, use proper wiki-link syntax, maintain bidirectional cross-references, and adhere to the 14-type taxonomy.
 
 ## What It Validates
 
@@ -139,7 +139,7 @@ Documents must use one of these 14 approved types:
 
 ## How to Use
 
-### In obsidian (READ mode)
+### In READ mode
 
 When performing a COMPLIANCE_CHECK operation:
 
@@ -157,7 +157,7 @@ Apply these validation checks:
 7. Check type taxonomy compliance
 8. Verify `## Referencias` section exists
 
-### In obsidian (SYNC mode)
+### In SYNC mode
 
 When syncing documents from workspace to vault:
 
@@ -172,21 +172,6 @@ Before writing a document:
 4. Normalize tags (lowercase, kebab-case)
 5. Verify type is in the 14-type taxonomy
 6. Add `## Referencias` section if not present
-
-### In universal-planner and other skills
-
-When generating documents for Obsidian:
-
-```markdown
-Generate documents following obsidian-md-standard validation rules.
-```
-
-Use this linter as a checklist:
-- Include all required frontmatter fields
-- Use wiki-links for cross-references
-- Use proper tag format
-- Select type from the 14-type taxonomy
-- Include `## Referencias` section
 
 ## Validation Errors
 
@@ -437,15 +422,10 @@ related:
 
 ## Integration Notes
 
-This validator is designed to be reusable across all SynapSync skills that produce or consume Obsidian markdown documents:
+This validator is used internally by the obsidian skill:
 
-- **obsidian** (READ mode): Use for COMPLIANCE_CHECK operation
-- **obsidian** (SYNC mode): Apply rules when syncing documents
-- **universal-planner**: Generate documents that pass validation
-- **universal-planner-executor**: Generate sprint and retrospective documents that pass validation
-- **code-analyzer**: Generate reports that pass validation
-
-By extracting these rules into a shared validator, we ensure consistency across all skills and make it easy to update validation logic in one place.
+- **READ mode**: Use for COMPLIANCE_CHECK operation
+- **SYNC mode**: Apply rules when syncing documents
 
 ## Version History
 

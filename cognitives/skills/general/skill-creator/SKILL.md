@@ -510,7 +510,7 @@ When generating a new skill, include sections based on complexity:
 - **Example Output**: Show realistic output (with proper formatting)
 - **Version History**: Track evolution over time
 - **Future Enhancements**: Planned improvements (checkbox format)
-- **Obsidian Output Standard**: If the skill writes `.md` files to `{output_base}`, it MUST include a `## Obsidian Output Standard` section referencing `obsidian-md-standard` with the appropriate domain profile
+- **Obsidian Output Standard**: If the skill writes `.md` files to `{output_base}`, it MUST include a `## Obsidian Output Standard` section with the appropriate Obsidian output rules inline (frontmatter schema, wiki-links, type taxonomy, bidirectional references)
 
 ---
 

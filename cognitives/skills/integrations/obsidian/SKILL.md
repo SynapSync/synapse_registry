@@ -78,9 +78,9 @@ Combines the capabilities of the former `obsidian-sync` and `obsidian-reader` sk
 >
 > Only report information that exists verbatim in notes. Quote sources with paths. Distinguish between "the note says X" and "I interpret X based on notes".
 
-> **RULE 5 — FOLLOW OBSIDIAN-MD-STANDARD**
+> **RULE 5 — FOLLOW OBSIDIAN MARKDOWN STANDARD**
 >
-> All operations follow the `obsidian-md-standard` specification for frontmatter, wiki-links, types, and cross-references.
+> All operations follow the [Obsidian markdown standard](assets/standards/obsidian-md-standard.md) specification for frontmatter, wiki-links, types, and cross-references.
 
 ---
 
@@ -171,13 +171,15 @@ Before any operation, resolve `{output_base}` path:
 
 ## Obsidian Output Standard
 
-All operations follow the `obsidian-md-standard` skill:
+All operations follow the internal [Obsidian markdown standard](assets/standards/obsidian-md-standard.md):
 
 1. **Frontmatter**: Universal schema with title, date, project, type, status, version, tags, changelog, related
 2. **Type taxonomy**: 14 document types (analysis, plan, sprint-plan, technical-report, etc.)
 3. **Wiki-links**: `[[note-name]]` format, never markdown links
 4. **Bidirectional refs**: If A→B, then B→A
 5. **Status transitions**: draft → active → completed → archived
+
+For compliance validation, see [assets/validators/obsidian-linter.md](assets/validators/obsidian-linter.md).
 
 ---
 

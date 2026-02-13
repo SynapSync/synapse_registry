@@ -105,7 +105,7 @@ When another skill or agent requests knowledge, return structured summaries:
 - Surface notes related to the current working directory/project
 
 ### Standard Compliance Check
-- Report which documents follow the `obsidian-md-standard`
+- Report which documents follow the Obsidian markdown standard
 - Identify documents missing required frontmatter fields
 - Flag one-directional references (A→B exists but B→A missing)
 - List documents without `## Referencias` sections
@@ -356,9 +356,9 @@ Recently modified: [list of 5-10 most recent]
 
 #### COMPLIANCE_CHECK - Standard Compliance Report
 
-Analyze documents in a project folder against the obsidian-md-standard.
+Analyze documents in a project folder against the Obsidian markdown standard.
 
-**Validation rules:** See the `obsidian-md-standard` skill (validators section) for complete validation rules and procedures.
+**Validation rules:** See [../validators/obsidian-linter.md](../validators/obsidian-linter.md) for complete validation rules and procedures.
 
 **Quick summary of what to validate:**
 1. **Frontmatter schema**: Required fields (title, date, updated, project, type, status, version, tags, changelog, related) with correct types and formats
@@ -472,7 +472,7 @@ Glob(pattern: "/path/to/vault/**/*.md")
 
 This mode relies heavily on frontmatter for intelligent filtering.
 
-**For validation rules and schema requirements**, see the `obsidian-md-standard` skill (validators section).
+**For validation rules and schema requirements**, see [../validators/obsidian-linter.md](../validators/obsidian-linter.md).
 
 **Expected fields for reading/filtering:**
 
@@ -506,7 +506,7 @@ source: "{output_base}/planning/2026-02-10/"
 ---
 ```
 
-### Type Taxonomy (aligned with obsidian-md-standard)
+### Type Taxonomy (aligned with [Obsidian markdown standard](../standards/obsidian-md-standard.md))
 
 Use these types for filtering and prioritization:
 
@@ -536,7 +536,7 @@ Use these types for filtering and prioritization:
 
 ### Related Field (Primary Source)
 
-The `related` field in frontmatter is the **primary source** of document relationships in the obsidian-md-standard:
+The `related` field in frontmatter is the **primary source** of document relationships in the Obsidian markdown standard:
 
 ```yaml
 related:

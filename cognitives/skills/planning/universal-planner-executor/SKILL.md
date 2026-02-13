@@ -160,7 +160,7 @@ Before starting any workflow step, resolve the `{output_base}` path that determi
 
 ## Obsidian Output Standard
 
-When modifying sprint documents and PROGRESS.md, follow the `obsidian-md-standard`:
+When modifying sprint documents and PROGRESS.md, follow these Obsidian output rules:
 
 1. **Frontmatter maintenance**: When updating a sprint file, bump `version`, update `updated` date, add `changelog` entry, update `status` and `progress`
 2. **Status transitions**: Move status through `draft → active → completed` as work progresses

@@ -2,7 +2,7 @@
   "$schema": "https://synapsync.dev/schemas/registry.json",
   "version": "1.0.0",
   "lastUpdated": "2026-02-12T20:00:00Z",
-  "totalCognitives": 7,
+  "totalCognitives": 6,
   "cognitives": [
     {
       "name": "skill-creator",
@@ -166,35 +166,6 @@
       ],
       "downloads": 0,
       "path": "cognitives/skills/integrations/obsidian"
-    },
-    {
-      "name": "obsidian-md-standard",
-      "type": "skill",
-      "version": "1.1.0",
-      "description": "Obsidian-native markdown output standard for all SynapSync skills that produce documents",
-      "author": "synapsync",
-      "category": "integrations",
-      "tags": [
-        "obsidian",
-        "markdown",
-        "standard",
-        "frontmatter",
-        "wiki-links",
-        "knowledge-graph",
-        "documentation",
-        "output-format"
-      ],
-      "providers": [
-        "claude",
-        "openai",
-        "cursor",
-        "windsurf",
-        "copilot",
-        "gemini",
-        "codex"
-      ],
-      "downloads": 0,
-      "path": "cognitives/skills/integrations/obsidian-md-standard"
     }
   ]
 }
