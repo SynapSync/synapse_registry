@@ -3,7 +3,7 @@
 ## When to Use This Mode
 
 - User explicitly asks to **sync**, **save**, **move**, or **store** files to Obsidian
-- User says "guardar en obsidian", "sincronizar a obsidian", or similar in Spanish
+- (ES) User says "guardar en obsidian", "sincronizar a obsidian", or similar in Spanish
 - User asks to **create a report/plan AND save it to Obsidian** (this mode handles the Obsidian part after creation)
 - User wants to **browse their vault** to choose where to place documents
 - User asks to move an entire folder (e.g., `{output_base}/planning/`) to their Obsidian vault
@@ -29,9 +29,10 @@ Never assume the destination folder. Always:
 **RULE 2 - PRESERVE CONTENT INTEGRITY**
 
 - Read the source file completely before writing to Obsidian
-- Never modify the document content (headings, tables, code blocks, etc.)
-- Only ADD frontmatter metadata if the file doesn't already have it
+- Never modify the document body content (headings, paragraphs, tables, code blocks, `## Referencias` section)
+- Only ADD or MERGE frontmatter metadata — never edit anything below the closing `---`
 - If the file already has frontmatter, merge Obsidian-specific fields without overwriting existing ones
+- Cross-reference fixes (via cross-ref-validator) update the `related` frontmatter array only
 
 **RULE 3 - GENERATE MEANINGFUL FRONTMATTER**
 
@@ -113,17 +114,24 @@ Read all files in parallel using `Read` tool. Check for existing frontmatter, ex
 
 For each file, call `mcp__obsidian__write_note` with:
 
+> **Important**: `content` is the raw markdown body **without** the `---` frontmatter block. `frontmatter` is a **separate JSON object** — the MCP server serializes it as YAML and prepends it to the content automatically. If the `path` includes directories that don't exist, they are created.
+
 ```
 mcp__obsidian__write_note(
   path: "{vault-destination}/{filename}.md",
-  content: "{file-content-without-frontmatter}",
+  content: "{markdown-body-without-frontmatter-block}",
   frontmatter: {
     "title": "Document Title",
     "date": "2026-02-10",
+    "updated": "2026-02-12",
     "project": "agent-sync-sdk",
-    "type": "strategic-analysis",
+    "type": "analysis",
+    "status": "active",
+    "version": "1.0",
     "source": "{output_base}/planning/2026-02-10/00-strategic-analysis.md",
-    "tags": ["agent-sync-sdk", "strategy", "plan"]
+    "tags": ["agent-sync-sdk", "analysis", "strategy"],
+    "changelog": [{"version": "1.0", "date": "2026-02-12", "changes": ["Synced to Obsidian"]}],
+    "related": ["[[01-technical-debt]]", "[[02-growth-vision]]"]
   }
 )
 ```
@@ -198,6 +206,42 @@ This mode is the **output handler** for planning, analysis, and reporting skills
 
 **Sync Scope**: Single file, directory, glob pattern, or output from another skill.
 **Destination Logic**: Use user-specified path, suggest existing project folder, offer to create new folder, or list multiple projects for selection.
+
+---
+
+## Output Format Contract
+
+Every SYNC operation MUST produce a response with these sections in this order:
+
+```markdown
+### Source Files
+- {N} files detected in `{source_path}`
+- [list each filename]
+
+### Destination
+- Vault folder: `{vault_destination}`
+- [Created / Already existed]
+
+### Write Results
+| File | Status | Vault Path |
+|------|--------|------------|
+| {filename} | Synced | {vault_path} |
+| {filename} | Skipped (already exists) | — |
+| {filename} | Failed: {reason} | — |
+
+### Cross-Reference Validation
+- {N} bidirectional references verified
+- {N} frontmatter fixes applied
+- [list each fix if any]
+
+### Warnings
+- [any overwrites, missing sources, MCP issues — or "None"]
+```
+
+**Rules:**
+- Always include all 5 sections, even if empty (use "None" or "N/A")
+- Never omit Write Results — the user must know exactly what was written and where
+- Failed writes must include the reason
 
 ---
 

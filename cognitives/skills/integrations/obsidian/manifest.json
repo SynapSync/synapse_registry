@@ -2,7 +2,7 @@
   "$schema": "https://synapsync.dev/schemas/cognitive-manifest.json",
   "name": "obsidian",
   "type": "skill",
-  "version": "3.0.0",
+  "version": "3.1.0",
   "description": "Unified Obsidian vault manager: sync documents, read notes, and search knowledge via MCP",
   "author": {
     "name": "SynapSync",
@@ -38,6 +38,23 @@
   },
   "changelog": [
     {
+      "version": "3.1.0",
+      "date": "2026-02-13",
+      "changes": [
+        "Audit remediation: 12 findings across 3 priority levels",
+        "Added i18n documentation for bilingual (EN/ES) design",
+        "Added Tool Dependencies section with MCP tool parameter contracts",
+        "Reconciled type taxonomy to 14 types (removed note, meeting, reference)",
+        "Added ambiguous intent disambiguation step in mode detection",
+        "Slimmed assets/README.md from 299 to 27 lines",
+        "Added batch size limits (max 20 files per batch)",
+        "Added Windows path support in fallback vault discovery",
+        "Added negative weights for superseded/archived in priority ranking",
+        "Versioned the Obsidian markdown standard (v1.0)",
+        "Clarified cognitive.config.json schema and mcp__obsidian__write_note contract"
+      ]
+    },
+    {
       "version": "3.0.0",
       "date": "2026-02-12",
       "changes": [
@@ -51,5 +68,5 @@
     }
   ],
   "createdAt": "2026-02-12T00:00:00Z",
-  "updatedAt": "2026-02-12T00:00:00Z"
+  "updatedAt": "2026-02-13T00:00:00Z"
 }

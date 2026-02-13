@@ -62,7 +62,7 @@ Refer to the [Obsidian markdown standard](../standards/obsidian-md-standard.md) 
 | "data model", "entity", "ER diagram" | `data-model` |
 | "flow", "sequence diagram" | `flow-diagram` |
 
-**Fallback:** If no keywords match, use `"note"`.
+**Fallback:** If no keywords match, use `"analysis"` (the most general type in the 14-type taxonomy).
 
 ### Step 4: Generate Field Mappings
 
@@ -72,7 +72,7 @@ Refer to the [Obsidian markdown standard](../standards/obsidian-md-standard.md) 
 | `date` | Filename/path date pattern | Today's date (YYYY-MM-DD) |
 | `updated` | N/A | Today's date (sync date) |
 | `project` | Git repo name or cwd basename | Working directory basename |
-| `type` | Content inference (Step 3) | `"note"` |
+| `type` | Content inference (Step 3) | `"analysis"` |
 | `status` | Preserve existing or `"active"` for new | `"active"` |
 | `version` | Preserve existing or `"1.0"` for new | `"1.0"` |
 | `tags` | `[project, type, ...topics]` | `[project]` |

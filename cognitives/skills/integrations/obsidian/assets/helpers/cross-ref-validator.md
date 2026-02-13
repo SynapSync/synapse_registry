@@ -85,8 +85,9 @@ For each missing reverse reference B → A:
 
 1. **Read document B** from Obsidian (use `mcp__obsidian__read_note`)
 2. **Add `[[A]]` to the `related` array** in frontmatter
-3. **Add `[[A]]` to the appropriate category in `## Referencias`** section
-4. **Write updated document B** back to Obsidian
+3. **Write updated document B** back to Obsidian with the updated frontmatter
+
+> **Important**: Only update the `related` array in frontmatter. Never edit the `## Referencias` body section — that section is populated at document creation time and is the author's curated navigation. The `related` frontmatter array is the machine-maintained source of truth for bidirectional references.
 
 **Frontmatter update:**
 ```yaml
@@ -100,34 +101,6 @@ related:
   - "[[A]]"  # Added reverse reference
 ```
 
-**Referencias update:**
-```markdown
-# Before
-## Referencias
-
-**Parent:** [[PROGRESS]]
-
-# After
-## Referencias
-
-**Parent:** [[PROGRESS]]
-**Related:** [[A]]  # Added reverse reference
-```
-
-### Step 5: Determine Appropriate Category
-
-When adding a reference to `## Referencias`, choose the correct category based on relationship type:
-
-| Relationship | Category | Example |
-|-------------|----------|---------|
-| A is a sprint, B is PROGRESS | Parent | Add `[[PROGRESS]]` to A's Referencias |
-| A and B are both sprints | Siblings | Add `[[SPRINT-2]]` to SPRINT-1's Siblings |
-| A generated B (e.g., sprint → retro) | Children (in A), Parent (in B) | Add `[[RETRO-1]]` to SPRINT-1's Children |
-| A used B as input | Input Documents | Add `[[ANALYSIS]]` to PLAN's Input Documents |
-| General reference | Related | Add to a generic "Related" category |
-
-**Default:** If the relationship type is unclear, add to `**Related:**` category.
-
 ### Step 6: Report Validation Results
 
 After all fixes are applied, report a summary:
@@ -137,11 +110,11 @@ Cross-reference validation complete:
 
 ✓ SPRINT-1 ↔ PROGRESS (bidirectional)
 ✓ ANALYSIS ↔ CONVENTIONS (bidirectional)
-⚠ Fixed: Added [[PLANNING]] to ANALYSIS related field
-⚠ Fixed: Added [[SPRINT-2]] to SPRINT-1 Siblings section
-⚠ Fixed: Added [[PROGRESS]] to SPRINT-2 Parent field
+⚠ Fixed: Added [[PLANNING]] to ANALYSIS frontmatter related array
+⚠ Fixed: Added [[SPRINT-2]] to SPRINT-1 frontmatter related array
+⚠ Fixed: Added [[PROGRESS]] to SPRINT-2 frontmatter related array
 
-3 files validated, 3 fixes applied.
+3 files validated, 3 frontmatter fixes applied.
 ```
 
 ## Example: Full Validation Flow
@@ -184,7 +157,7 @@ PROGRESS → [SPRINT-1]
 ✗ SPRINT-2 → PROGRESS (PROGRESS frontmatter does NOT include SPRINT-2)
 ```
 
-**Step 4: Fix**
+**Step 4: Fix (frontmatter only)**
 
 Read `PROGRESS.md`, add `"[[SPRINT-2]]"` to frontmatter `related` array:
 
@@ -199,15 +172,17 @@ related:
   - "[[SPRINT-2]]"
 ```
 
+> Note: The `## Referencias` section in PROGRESS.md already lists `[[SPRINT-2]]` under Children. Only the frontmatter `related` array was missing it. We fix frontmatter only; the body is untouched.
+
 **Step 5: Report**
 
 ```
 Cross-reference validation:
 ✓ SPRINT-1 ↔ PROGRESS (bidirectional)
 ✓ SPRINT-1 ↔ SPRINT-2 (bidirectional)
-⚠ Fixed: Added [[SPRINT-2]] to PROGRESS frontmatter related field
+⚠ Fixed: Added [[SPRINT-2]] to PROGRESS frontmatter related array
 
-3 files validated, 1 fix applied.
+3 files validated, 1 frontmatter fix applied.
 ```
 
 ## Edge Cases
@@ -240,9 +215,8 @@ If the vault has multiple documents with the same name in different folders (e.g
 
 1. **Run validation after every batch sync** — ensure consistency as soon as files are synced
 2. **Report all fixes to the user** — transparency helps users understand what changed
-3. **Validate both frontmatter and Referencias section** — ensure consistency in both locations
-4. **Use appropriate relationship categories** — Parent/Siblings/Children provide more structure than generic "Related"
-5. **Don't fix external references** — only validate and fix wiki-links to documents in the vault
+3. **Collect from both sources, fix only frontmatter** — read references from both `related` array and `## Referencias` section, but only fix the `related` frontmatter array (never edit the document body)
+4. **Don't fix external references** — only validate and fix wiki-links to documents in the vault
 
 ## Integration with Obsidian-Sync Workflow
 

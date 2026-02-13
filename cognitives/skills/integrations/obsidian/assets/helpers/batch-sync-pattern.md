@@ -240,6 +240,22 @@ Synced 3 files to Obsidian:
 3 files synced successfully to vault folder: work/agent-sync-sdk/plans/
 ```
 
+## Limits
+
+| Limit | Value | Rationale |
+|-------|-------|-----------|
+| Max files per batch | **20** | Beyond 20, sequential MCP writes become slow and context window fills with parallel reads |
+| Max parallel reads | **10** | Claude Code supports multiple parallel tool calls but 10+ risks context overflow |
+| Max total content | **~50,000 tokens** | Reading 20 large files may approach context limits; summarize or split if needed |
+
+**For batches exceeding 20 files:**
+1. Split into sub-batches of 20
+2. Process each sub-batch with the full batch pattern (Steps 1-8)
+3. Run cross-reference validation once after all sub-batches complete
+4. Report consolidated results
+
+---
+
 ## Edge Cases
 
 ### Single File Sync

@@ -1,6 +1,9 @@
 # Obsidian Markdown Standard
 
-This is the authoritative specification for Obsidian-native markdown output. All operations in this skill (SYNC and READ modes) follow these rules.
+**Version:** 1.0
+**Last updated:** 2026-02-13
+
+This is the authoritative specification for Obsidian-native markdown output. All operations in this skill (SYNC and READ modes) follow these rules. The linter validates against this version of the standard.
 
 ---
 
@@ -160,12 +163,14 @@ Trackable IDs provide stable anchors for cross-referencing within and across doc
 
 If document A references document B, then document B MUST reference document A.
 
-**Implementation:**
-1. `related` array in frontmatter of both documents
-2. `## Referencias` section at the end of both documents
-3. When generating multiple documents, ensure bidirectionality before finishing
+**Source of truth:** The `related` array in frontmatter is the **machine-maintained source of truth** for bidirectional references. The `## Referencias` section is the **author-curated navigation** populated at document creation time.
 
-**Verification:** After generating a batch of documents, check that for every `[[X]]` in document Y, document X contains `[[Y]]` in its `related` field or `## Referencias` section.
+**Implementation:**
+1. `related` array in frontmatter of both documents (mandatory, maintained by cross-ref-validator)
+2. `## Referencias` section at the end of both documents (populated at creation, not modified by automated tools)
+3. When generating multiple documents, ensure bidirectionality in `related` frontmatter before finishing
+
+**Verification:** After generating a batch of documents, check that for every `[[X]]` in document Y's `related` frontmatter, document X contains `[[Y]]` in its `related` frontmatter. Automated fixes only update frontmatter — never the `## Referencias` body section.
 
 ### 8. Metric Tables
 

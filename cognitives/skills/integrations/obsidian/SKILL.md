@@ -7,7 +7,7 @@ description: >
 license: Apache-2.0
 metadata:
   author: synapsync
-  version: "3.0"
+  version: "3.1"
   scope: [root]
   auto_invoke:
     - "sync * to obsidian"
@@ -19,6 +19,19 @@ metadata:
     - "lee de obsidian"
     - "busca en obsidian"
   changelog:
+    - version: "3.1"
+      date: "2026-02-13"
+      changes:
+        - "Added i18n documentation for bilingual (EN/ES) design"
+        - "Added Tool Dependencies section with MCP tool contracts"
+        - "Reconciled type taxonomy to 14 types (removed note, meeting, reference)"
+        - "Added ambiguous intent disambiguation step"
+        - "Slimmed assets/README.md to minimal index"
+        - "Added batch size limits (max 20 files)"
+        - "Added Windows path support in fallback mode"
+        - "Added negative weights for superseded/archived in priority ranking"
+        - "Versioned the Obsidian markdown standard (v1.0)"
+        - "Clarified cognitive.config.json and mcp__obsidian__write_note contracts"
     - version: "3.0"
       date: "2026-02-12"
       changes:
@@ -39,7 +52,9 @@ This skill uses a modular assets architecture. Detailed workflows, templates, an
 - **[assets/modes/](assets/modes/)** - 2 operation modes with detailed workflows
 - **[assets/helpers/](assets/helpers/)** - Shared helpers for frontmatter, cross-refs, ranking, batch operations
 
-See [assets/README.md](assets/README.md) for full directory documentation.
+See [assets/README.md](assets/README.md) for the directory index.
+
+> **Metadata note**: This file's YAML frontmatter defines runtime behavior (auto_invoke triggers, allowed-tools, scope). The `manifest.json` defines registry metadata (version, tags, providers, dependencies). The frontmatter is consumed by the Claude Code skill loader; the manifest is consumed by the `skills` CLI for installation and updates.
 
 ---
 
@@ -51,6 +66,19 @@ Unified skill for all Obsidian vault operations via MCP. Acts as a **bidirection
 - **READ mode**: Read, search, and reason over vault notes as contextual knowledge source
 
 Combines the capabilities of the former `obsidian-sync` and `obsidian-reader` skills into one cohesive tool with progressive disclosure.
+
+---
+
+## Language Support (i18n)
+
+This skill supports **bilingual operation** (English + Spanish):
+
+- **Trigger keywords**: Both English (`sync`, `read`, `search`) and Spanish (`guardar`, `lee`, `busca`) are recognized for mode detection.
+- **`## Referencias` section header**: Uses the Spanish form intentionally as an Obsidian convention adopted by this project. All documents produced by this skill use `## Referencias` (not `## References`).
+- **Example queries**: Documentation includes examples in both languages to reflect real bilingual usage.
+- **Output language**: The skill responds in the **same language the user uses**. If the user writes in Spanish, respond in Spanish. If in English, respond in English. Document content is never translated — it is synced/read exactly as-is.
+
+> **Convention**: `## Referencias` is a fixed section header. Never translate it to `## References` in generated documents.
 
 ---
 
@@ -72,7 +100,7 @@ Combines the capabilities of the former `obsidian-sync` and `obsidian-reader` sk
 
 > **RULE 3 — PRESERVE CONTENT INTEGRITY (SYNC mode)**
 >
-> Read source files completely before writing. Never modify document content. Only add/merge frontmatter metadata.
+> Read source files completely before writing. Never modify document body content (headings, paragraphs, tables, code blocks, `## Referencias` section). Only add/merge frontmatter metadata. Cross-reference fixes update the `related` frontmatter array only — never the document body.
 
 > **RULE 4 — NEVER FABRICATE CONTENT (READ mode)**
 >
@@ -84,16 +112,65 @@ Combines the capabilities of the former `obsidian-sync` and `obsidian-reader` sk
 
 ---
 
+## Tool Dependencies
+
+This skill depends on two categories of tools:
+
+### Native Claude Code Tools (provided by runtime)
+
+These tools are part of the Claude Code environment and require no special setup:
+
+| Tool | Usage in This Skill |
+|------|-------------------|
+| `ToolSearch` | Load deferred MCP tools before first use. Input: `query` string (e.g., `"+obsidian write"`). Output: loaded tool definitions. |
+| `AskUserQuestion` | Prompt user for choices (vault destination, config paths). Input: `questions` array with `question`, `header`, `options`. Output: user selection. |
+| `Read` | Read local files. Input: `file_path` (absolute). Output: file content with line numbers. |
+| `Write` | Create/overwrite files. Input: `file_path`, `content`. |
+| `Glob` | Find files by pattern. Input: `pattern` (e.g., `"**/*.md"`). Output: matching file paths. |
+| `Grep` | Search file contents. Input: `pattern`, `path`, `type`. Output: matching lines/files. |
+| `Bash` | Run shell commands. Input: `command` string. Output: stdout/stderr. |
+
+### MCP Tools (require Obsidian REST API server)
+
+These tools are **deferred** — they must be loaded via `ToolSearch` before first use. They will fail if called without loading.
+
+| Tool | Parameters | Description |
+|------|-----------|-------------|
+| `mcp__obsidian__write_note` | `path` (string): vault-relative path. `content` (string): markdown body **without** frontmatter YAML block. `frontmatter` (object): key-value pairs to serialize as YAML. | Write a note to the vault. The MCP server handles serializing frontmatter and prepending it to content. |
+| `mcp__obsidian__read_note` | `path` (string): vault-relative path. | Read a note. Returns content with frontmatter. |
+| `mcp__obsidian__read_multiple_notes` | `paths` (string[]): array of vault-relative paths. | Read multiple notes in one call. |
+| `mcp__obsidian__search_notes` | `query` (string): search query. | Full-text search across the vault. |
+| `mcp__obsidian__list_directory` | `path` (string): vault-relative directory path. | List files and subdirectories. |
+| `mcp__obsidian__get_vault_stats` | `recentCount` (number, optional): how many recent notes to return. | Get vault statistics and recently modified notes. |
+| `mcp__obsidian__manage_tags` | `action` (string): `"list"`. | List all tags in the vault. |
+
+> **Note**: The `mcp__obsidian__write_note` tool accepts `frontmatter` as a **separate parameter** (a JSON object), not as part of `content`. Pass raw markdown body in `content` and structured metadata in `frontmatter`. The MCP server serializes the frontmatter into YAML and prepends it. If directories in `path` don't exist, they are created automatically.
+
+---
+
 ## Operation Modes
 
 ### Mode Detection
 
 Auto-detect from user intent using these signals:
 
-| Mode | Signals | Example Inputs |
-|------|---------|----------------|
-| **SYNC** | "sync", "save", "store", "write", "move", "guardar", "sincronizar" + "obsidian" | "sync this report to obsidian", "save the analysis to my vault", "guardar en obsidian" |
-| **READ** | "read", "search", "find", "check", "consult", "what do my notes say", "lee", "busca", "consulta" + "obsidian"/"vault"/"notes" | "read my vault notes about X", "search obsidian for decisions", "what do my notes say about the project?" |
+| Mode | Signals (EN) | Signals (ES) | Example Inputs |
+|------|-------------|-------------|----------------|
+| **SYNC** | "sync", "save", "store", "write", "move" + "obsidian" | "guardar", "sincronizar" + "obsidian" | "sync this report to obsidian", "guardar en obsidian" |
+| **READ** | "read", "search", "find", "check", "consult", "what do my notes say" + "obsidian"/"vault"/"notes" | "lee", "busca", "consulta" + "obsidian"/"vault"/"notas" | "read my vault notes about X", "busca en obsidian" |
+
+**Ambiguous intent resolution:** If the user's intent does not clearly match SYNC or READ signals (e.g., "help me with obsidian", "manage my notes", "obsidian" with no verb), ask the user to clarify:
+
+```
+AskUserQuestion:
+  question: "What would you like to do with your Obsidian vault?"
+  header: "Mode"
+  options:
+    - label: "Read / Search"
+      description: "Read notes, search for information, or get project context from your vault"
+    - label: "Sync / Write"
+      description: "Save or sync documents from your workspace to your vault"
+```
 
 ### Mode Capabilities Matrix
 
@@ -103,7 +180,8 @@ Auto-detect from user intent using these signals:
 | Read from vault | ❌ | ✅ |
 | Search vault | ❌ | ✅ |
 | Generate frontmatter | ✅ | ❌ |
-| Cross-ref validation | ✅ | ✅ |
+| Cross-ref fix (frontmatter) | ✅ | ❌ |
+| Cross-ref diagnose | ✅ | ✅ |
 | Batch operations | ✅ | ✅ |
 | Vault browsing | ✅ | ✅ |
 | Priority ranking | ❌ | ✅ |
@@ -146,17 +224,20 @@ Read, search, and reason over vault notes to provide contextual knowledge for de
 
 ## Configuration Resolution
 
-Before any operation, resolve `{output_base}` path:
+Before any operation, resolve `{output_base}` — the directory where skills store output documents (reports, plans, analysis). This is a **registry-wide convention** used by all SynapSync skills that produce output.
 
-1. Check `cognitive.config.json` in project root
-2. If found → use `output_base` value
-3. If not found → ask user, suggest `~/.agents/{project-name}/`, create config
+**Config file:** `cognitive.config.json` in the project root (current working directory).
 
 ```json
 {
   "output_base": "~/.agents/my-project"
 }
 ```
+
+**Resolution steps:**
+1. Check for `cognitive.config.json` in the project root
+2. If found → read `output_base` and use it for all `{output_base}` references
+3. If not found → infer project name from directory/git repo, ask user with `AskUserQuestion` (suggest `~/.agents/{project-name}/`), create the config file
 
 ---
 
@@ -241,6 +322,7 @@ Agent needs context → obsidian READ mode retrieves from vault
 
 | Version | Date | Changes |
 |---------|------|---------|
+| 3.1 | 2026-02-13 | Audit remediation: i18n docs, tool contracts, taxonomy reconciliation (14 types), disambiguation, batch limits, negative weights. |
 | 3.0 | 2026-02-12 | Consolidated obsidian-sync + obsidian-reader. Mode-based architecture (SYNC + READ). Shared helpers. |
 | 2.x | 2026-02-11 | (obsidian-sync v2.1.0) Assets pattern, cross-ref validation |
 | 1.x | 2026-02-10 | (obsidian-reader v1.2.0) Compliance check, priority ranking |
