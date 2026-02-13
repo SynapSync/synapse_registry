@@ -1,0 +1,56 @@
+{
+  "$schema": "https://synapsync.dev/schemas/cognitive-manifest.json",
+  "name": "obsidian",
+  "type": "skill",
+  "version": "3.0.0",
+  "description": "Unified Obsidian vault operations: sync documents to vault, read notes for context, search knowledge via MCP",
+  "author": {
+    "name": "SynapSync",
+    "url": "https://github.com/SynapSync",
+    "email": "hello@synapsync.dev"
+  },
+  "license": "Apache-2.0",
+  "category": "integrations",
+  "tags": [
+    "obsidian",
+    "sync",
+    "read",
+    "search",
+    "vault",
+    "mcp",
+    "knowledge-base",
+    "notes",
+    "markdown"
+  ],
+  "providers": ["claude"],
+  "file": "SKILL.md",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/SynapSync/synapse-registry"
+  },
+  "homepage": "https://synapsync.dev/cognitives/obsidian",
+  "assets": {
+    "modes": 2,
+    "helpers": 4
+  },
+  "dependencies": {
+    "skills": ["obsidian-md-standard"],
+    "mcp": ["obsidian"]
+  },
+  "changelog": [
+    {
+      "version": "3.0.0",
+      "date": "2026-02-12",
+      "changes": [
+        "Consolidated obsidian-sync + obsidian-reader into unified skill",
+        "Mode-based architecture: SYNC (write) + READ (read/search)",
+        "Progressive disclosure pattern for efficient context usage",
+        "4 shared helpers extracted to assets/helpers/",
+        "Reduced total LOC by eliminating duplication",
+        "Breaking change: replaces obsidian-sync v2.1.0 and obsidian-reader v1.2.0"
+      ]
+    }
+  ],
+  "createdAt": "2026-02-12T00:00:00Z",
+  "updatedAt": "2026-02-12T00:00:00Z"
+}

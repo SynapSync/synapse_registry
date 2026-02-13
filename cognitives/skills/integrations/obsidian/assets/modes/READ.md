@@ -1,52 +1,6 @@
----
-name: obsidian-reader
-description: >
-  Reads, searches, and reasons over Obsidian vault notes as a contextual knowledge source for the agent.
-  Trigger: When the user asks to read, search, consult, summarize, or use Obsidian notes as context for decisions.
-license: Apache-2.0
-metadata:
-  author: synapsync
-  version: "1.1"
-  scope: [root]
-  auto_invoke:
-    - "read from obsidian"
-    - "search obsidian"
-    - "check my notes"
-    - "use obsidian as context"
-    - "what do my notes say about"
-    - "find in obsidian"
-    - "resume my plans from obsidian"
-    - "lee de obsidian"
-    - "busca en obsidian"
-    - "consulta mis notas"
-    - "que dicen mis notas sobre"
-  changelog:
-    - version: "1.1"
-      date: "2026-02-11"
-      changes:
-        - "Expanded frontmatter parsing: version, changelog, related, sprint, phase, progress, metrics"
-        - "Priority ranking: status active > completed > archived, higher version ranks better"
-        - "Relationship mapping: related field as primary source of relationships"
-        - "New capability: Standard Compliance Check"
-    - version: "1.0"
-      date: "2026-02-10"
-      changes:
-        - "Initial release with MCP-first reading, search, and contextual reasoning"
-        - "Frontmatter-aware reading with tag, date, and type filtering"
-        - "Relationship mapping via wikilinks and backlinks"
-        - "Priority ranking: active plans > recent > historical"
-        - "Graceful fallback to filesystem when MCP is unavailable"
-        - "Multi-agent compatible: structured output for orchestrated workflows"
-allowed-tools: Read, Glob, Grep, Bash, ToolSearch, AskUserQuestion
----
+# READ Mode - Read from Obsidian Vault
 
-## Purpose
-
-Act as the agent's **primary knowledge retrieval layer** over an Obsidian vault. This skill reads, searches, interprets, and reasons about markdown notes stored in Obsidian, turning the vault into a **living memory** that informs decisions, provides project context, and surfaces relevant knowledge on demand.
-
-This is the **read complement** to `obsidian-sync` (which writes). Together they form a bidirectional knowledge bridge between the agent workspace and the user's Obsidian vault.
-
-## When to Use This Skill
+## When to Use This Mode
 
 - User asks to **read, consult, or check** notes in Obsidian
 - User asks "what do my notes say about X?" or "check my plans in obsidian"
@@ -58,12 +12,14 @@ This is the **read complement** to `obsidian-sync` (which writes). Together they
 - User asks "what was the status of X?" referencing previously synced documents
 - User says "lee de obsidian", "busca en mis notas", "consulta obsidian"
 
-### When NOT to Use
+## When NOT to Use This Mode
 
-- User wants to **write** to Obsidian (use `obsidian-sync` instead)
+- User wants to **write** to Obsidian (use SYNC mode instead)
 - User wants to **edit** an existing note in-place (use MCP tools directly)
 - The information is already in the current workspace (use Read/Grep/Glob directly)
 - User asks about files that are clearly local to the project, not in the vault
+
+---
 
 ## Critical Rules
 
@@ -116,6 +72,8 @@ When another skill or agent requests knowledge, return structured summaries:
 - Confidence level (exact match vs. inferred)
 - Related notes that may contain additional context
 
+---
+
 ## Capabilities
 
 ### Reading
@@ -153,26 +111,7 @@ When another skill or agent requests knowledge, return structured summaries:
 - List documents without `## Referencias` sections
 - Check that `type` values match the 14-type taxonomy
 
-## Configuration Resolution
-
-Before starting any workflow step, resolve the `{output_base}` path that determines where project documents are stored.
-
-1. **Check** for `cognitive.config.json` in the project root (current working directory)
-2. **If found**: read the `output_base` value and use it for all `{output_base}` references in this skill
-3. **If NOT found**:
-   a. Infer the project name from the current directory name or git repository name
-   b. Ask the user: _"Where are your output documents stored for this project?"_ — suggest `~/.agents/{project-name}/` as the default
-   c. Create `cognitive.config.json` in the project root with their chosen path
-   d. Inform the user the config was saved for future skill runs
-
-**Config file format** (`cognitive.config.json`):
-```json
-{
-  "output_base": "~/.agents/my-project"
-}
-```
-
-> **IMPORTANT**: Every `{output_base}` reference in this skill depends on this resolution. If the config file cannot be read or created, ask the user for an explicit path before proceeding.
+---
 
 ## Workflow
 
@@ -478,9 +417,11 @@ Always structure output clearly:
 - Caveats about information completeness
 - Suggestions for where to find more information
 
+---
+
 ## Fallback Strategy (No MCP)
 
-When the Obsidian MCP server is not available, the skill operates in filesystem mode:
+When the Obsidian MCP server is not available, the mode operates in filesystem mode:
 
 ### Vault Discovery
 
@@ -525,9 +466,11 @@ Glob(pattern: "/path/to/vault/**/*.md")
 | Vault stats | Native API | Bash wc/find |
 | Note metadata | Native API | Parsed from frontmatter |
 
+---
+
 ## Frontmatter Parsing
 
-This skill relies heavily on frontmatter for intelligent filtering.
+This mode relies heavily on frontmatter for intelligent filtering.
 
 **For validation rules and schema requirements**, see [obsidian-md-standard/assets/validators/obsidian-linter.md](../../obsidian-md-standard/assets/validators/obsidian-linter.md).
 
@@ -587,41 +530,7 @@ Use these types for filtering and prioritization:
 | `meeting` | Low | Meeting notes |
 | `reference` | Low | Reference material |
 
-### Priority Ranking Algorithm
-
-When multiple notes are found, rank them using this weighted score:
-
-```
-score = recency_weight + type_weight + relevance_weight + status_weight + version_weight
-
-recency_weight:
-  - Today:       +3
-  - This week:   +2
-  - This month:  +1
-  - Older:       +0
-
-type_weight:
-  - High types:   +3
-  - Medium types:  +2
-  - Low types:     +1
-
-relevance_weight:
-  - Exact match in title:     +3
-  - Match in frontmatter:     +2
-  - Match in body:            +1
-  - Match in linked note:     +0.5
-
-status_weight:
-  - active:      +3
-  - draft:       +2
-  - completed:   +1
-  - superseded:  +0
-  - archived:    +0
-
-version_weight:
-  - Higher version number: +1 per major version
-  - Example: v2.0 scores +2, v1.0 scores +1
-```
+---
 
 ## Relationship Mapping
 
@@ -678,79 +587,19 @@ Tags create cross-cutting relationships:
 Grep(pattern: "agent-sync-sdk", path: "/path/to/vault", type: "md")
 ```
 
+---
+
 ## Integration with Other Skills
 
-| Skill | How obsidian-reader Integrates |
-|-------|-------------------------------|
-| `obsidian-sync` | Read notes that were previously synced; verify sync status |
+| Skill | How READ mode Integrates |
+|-------|--------------------------|
+| `obsidian` SYNC mode | Read notes that were previously synced; verify sync status |
 | `project-planner` | Provide existing project context before planning begins |
 | `code-analyzer` | Supply architecture notes as reference for analysis |
 | `universal-planner` | Feed historical plans and decisions as input context |
 | `sdlc-planner` | Provide requirements docs and previous SDLC phases |
 
-### Multi-Agent Composition
-
-When used by another agent or skill, return a structured context object:
-
-```
-## Context from Obsidian Vault
-### Project: {project-name}
-### Retrieved: {timestamp}
-### Notes Read: {count}
-
-#### Summary
-{2-3 sentence summary of what was found}
-
-#### Key Documents
-| Note | Type | Date | Relevance |
-|------|------|------|-----------|
-| path/to/note.md | strategic-analysis | 2026-02-10 | High |
-
-#### Key Findings
-1. {Finding 1 with source citation}
-2. {Finding 2 with source citation}
-
-#### Active Decisions
-- {Decision from notes with source}
-
-#### Open Questions
-- {Anything the notes don't answer but might be relevant}
-```
-
-## Input / Output Specification
-
-### Inputs
-
-| Input | Type | Required | Description |
-|-------|------|----------|-------------|
-| `query` | string | Yes | What to read/search/answer (natural language) |
-| `scope` | string | No | Vault path to limit search (e.g., "work/agent-sync-sdk") |
-| `filters` | object | No | Frontmatter filters: `{ project, type, tags, date_from, date_to }` |
-| `depth` | enum | No | `summary` (default), `detailed`, `full` |
-| `max_notes` | number | No | Maximum notes to read (default: 10) |
-
-### Outputs
-
-| Output | Type | Description |
-|--------|------|-------------|
-| `notes_found` | number | Count of matching notes |
-| `results` | array | List of `{ path, title, type, date, summary, relevance_score }` |
-| `answer` | string | Synthesized answer (for REASON operations) |
-| `sources` | array | List of source note paths with relevant sections |
-| `related` | array | Notes linked from results that may contain additional context |
-
-## Error Handling
-
-| Error | Cause | Recovery |
-|-------|-------|----------|
-| MCP tools not found | Obsidian MCP not configured | Switch to fallback mode, ask for vault path |
-| MCP connection refused | Obsidian app not running or REST API disabled | Inform user, switch to fallback mode |
-| Note not found | Wrong path or note deleted | Search for similar note names, suggest alternatives |
-| Empty vault path | User's vault location unknown | Ask user with AskUserQuestion |
-| Large vault (>1000 notes) | Performance concern | Use targeted searches, avoid full vault reads |
-| Frontmatter parse error | Malformed YAML | Read as plain text, warn user about metadata loss |
-| No results found | Query too specific or content doesn't exist | Broaden search, suggest alternative terms, check different folders |
-| Permission denied | File access restrictions | Inform user, suggest checking vault permissions |
+---
 
 ## Best Practices
 
@@ -778,9 +627,11 @@ When used by another agent or skill, return a structured context object:
 - For PROJECT_CONTEXT, cache the folder listing and reuse within the same conversation
 - Avoid reading more than 10 full notes in a single operation unless explicitly requested
 
+---
+
 ## Limitations
 
-- **Read-only**: This skill does not modify vault content (use `obsidian-sync` for writing)
+- **Read-only**: This mode does not modify vault content (use SYNC mode for writing)
 - **No real-time sync**: Reads the vault state at query time; doesn't watch for changes
 - **Markdown only**: Processes `.md` files; ignores images, PDFs, and other attachments
 - **No graph view**: Cannot render Obsidian's graph view; provides text-based relationship mapping
@@ -788,114 +639,3 @@ When used by another agent or skill, return a structured context object:
 - **No plugin data**: Cannot access Obsidian plugin-specific data (Dataview queries, Kanban boards, etc.)
 - **Single vault**: Operates on one vault at a time (the one connected via MCP or specified by the user)
 - **Context window**: Very large vaults may require targeted queries; reading everything is not feasible
-
-## Example: Full Context Retrieval
-
-**User says:** "What's the current state of agent-sync-sdk according to my Obsidian notes?"
-
-**Step 0:** Load MCP tools
-```
-ToolSearch("+obsidian read")
-ToolSearch("+obsidian search")
-ToolSearch("+obsidian list")
-```
-
-**Step 1:** Locate project folder
-```
-mcp__obsidian__list_directory(path: "work")
-# Found: agent-sync-sdk/, bmtz/, wdt/
-
-mcp__obsidian__list_directory(path: "work/agent-sync-sdk")
-# Found: plans/
-
-mcp__obsidian__list_directory(path: "work/agent-sync-sdk/plans")
-# Found: 00-strategic-analysis.md, 01-technical-debt.md, 02-growth-vision.md
-```
-
-**Step 2:** Read all project notes (parallel)
-```
-mcp__obsidian__read_note(path: "work/agent-sync-sdk/plans/00-strategic-analysis.md")
-mcp__obsidian__read_note(path: "work/agent-sync-sdk/plans/01-technical-debt.md")
-mcp__obsidian__read_note(path: "work/agent-sync-sdk/plans/02-growth-vision.md")
-```
-
-**Step 3:** Parse frontmatter, extract key info, rank by relevance
-
-**Step 4:** Present synthesized answer:
-
-```
-Based on your Obsidian notes (3 documents, last updated 2026-02-10):
-
-## Project Status: agent-sync-sdk
-
-**Maturity Score:** 3.0/5 -- "Motor excelente, carroceria incompleta"
-
-**Fortalezas:**
-- TypeScript strict con 0 `any`, 458 tests, 92%+ coverage
-- Arquitectura en capas con composition root, branded types, Result pattern
-- 39 agentes soportados, 4 providers funcionales
-
-**Problemas Criticos (P0):**
-1. Race condition en LockFileManager (riesgo de corrupcion de datos)
-2. 3 providers stub que fallan silenciosamente
-3. AgentType desincronizado (16 de 39 agentes en tipo publico)
-
-**Proximas Acciones (esta semana):**
-1. Corregir race condition (2-4h)
-2. Resolver providers stub (1h)
-3. Unificar AgentType (30min)
-4. Implementar dispose() (2h)
-5. Agregar timeouts a fetch() (2h)
-
-**Vision:** Publicar CLI + SDK en npm, crear starter-cognitives,
-establecer release pipeline. Ventana: 4-6 semanas.
-
-Sources:
-- work/agent-sync-sdk/plans/00-strategic-analysis.md (Sections 1, 2, 5)
-- work/agent-sync-sdk/plans/01-technical-debt.md (Sections 3, 7)
-- work/agent-sync-sdk/plans/02-growth-vision.md (Sections 2, 7)
-```
-
-## Example: Cross-Note Search
-
-**User says:** "Busca en obsidian todas las menciones de race condition"
-
-```
-mcp__obsidian__search_notes(query: "race condition")
-
-# Results:
-Found 2 notes matching "race condition":
-
-1. work/agent-sync-sdk/plans/01-technical-debt.md
-   > "Condicion de carrera en LockFileManager (read-modify-write sin proteccion)"
-   > "Si dos operaciones addEntry() se ejecutan concurrentemente, una puede
-   >  sobreescribir los cambios de la otra."
-   Type: technical-debt | Date: 2026-02-10 | Priority: P0
-
-2. work/agent-sync-sdk/plans/00-strategic-analysis.md
-   > "Condicion de carrera en LockFileManager (P0) - Hace inviable el uso del
-   >  SDK en pipelines de CI/CD"
-   > Solucion recomendada: mutex async o optimistic locking
-   Type: strategic-analysis | Date: 2026-02-10
-
-Recommendation: The technical-debt document (01) has the most detailed
-analysis. The strategic document (00) summarizes the business impact.
-```
-
-## Version History
-
-| Version | Date | Changes |
-|---------|------|---------|
-| 1.0 | 2026-02-10 | Initial release with MCP-first reading, search, and contextual reasoning |
-| 1.1 | 2026-02-11 | Expanded frontmatter parsing, status/version-aware ranking, related field mapping, standard compliance check |
-
-## Future Enhancements
-
-- **Vault indexing**: Build a local index of vault structure and frontmatter for faster queries
-- **Semantic search**: Use embeddings for meaning-based search beyond keyword matching
-- **Change detection**: Track what changed in the vault since last read
-- **Dataview compatibility**: Parse Dataview queries and present their results
-- **Canvas support**: Read and interpret Obsidian Canvas files (`.canvas`)
-- **Multi-vault**: Support reading from multiple vaults simultaneously
-- **Obsidian URI**: Generate `obsidian://` URIs for direct note opening from terminal
-- **Knowledge graph export**: Generate a relationship map of the vault in Mermaid format
