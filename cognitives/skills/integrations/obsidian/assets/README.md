@@ -1,6 +1,6 @@
 # Obsidian Skill Assets
 
-This directory contains the detailed documentation, workflows, and helpers for the unified `obsidian` skill following the [assets pattern](../../../../docs/standards/skill-assets-pattern.md).
+This directory contains the detailed documentation, workflows, and helpers for the unified `obsidian` skill following the modular assets pattern.
 
 ## Directory Structure
 

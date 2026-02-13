@@ -1,6 +1,6 @@
 # Universal Planner Assets
 
-This directory contains supporting files for the universal-planner skill following the [assets pattern](../../../../docs/standards/skill-assets-pattern.md).
+This directory contains supporting files for the universal-planner skill following the modular assets pattern.
 
 ## Directory Structure
 
@@ -82,4 +82,4 @@ Click through to access the detailed documentation.
 ## Version
 
 Assets structure created: 2026-02-12 (v2.1.0)
-Pattern specification: [skill-assets-pattern.md](../../../../docs/standards/skill-assets-pattern.md)
+Pattern: modular assets architecture (modes, helpers, templates, validators, examples)

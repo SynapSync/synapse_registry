@@ -56,7 +56,7 @@
         "Extracted config-resolver to assets/helpers/",
         "Extracted 5 templates to assets/templates/",
         "Added output validator JSON schema",
-        "Documented pattern in docs/standards/skill-assets-pattern.md",
+        "Documented modular assets pattern for skill organization",
         "All smoke tests passed — no breaking changes"
       ]
     },

@@ -34,7 +34,7 @@ allowed-tools: Read, Write, Glob, Grep, Bash, ToolSearch, AskUserQuestion
 
 ## Assets
 
-This skill uses the [assets pattern](../../../../docs/standards/skill-assets-pattern.md). Detailed workflows, templates, and helpers are in the [assets/](assets/) directory:
+This skill uses a modular assets architecture. Detailed workflows, templates, and helpers are in the [assets/](assets/) directory:
 
 - **[assets/modes/](assets/modes/)** - 2 operation modes with detailed workflows
 - **[assets/helpers/](assets/helpers/)** - Shared helpers for frontmatter, cross-refs, ranking, batch operations

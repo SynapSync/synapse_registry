@@ -41,7 +41,7 @@ existing: "frontmatter"
 
 ### Step 3: Infer Document Type
 
-Refer to **[obsidian-md-standard](../../obsidian-md-standard/SKILL.md#2-document-type-taxonomy)** for the complete 14-type taxonomy.
+Refer to the **`obsidian-md-standard`** skill for the complete 14-type taxonomy.
 
 **Quick mapping table** (see full taxonomy in obsidian-md-standard):
 
