@@ -53,7 +53,7 @@ version_weight:
 
 ## Type Weight Mapping
 
-Based on the 14-type taxonomy from obsidian-md-standard:
+Based on the 14-type taxonomy from the [Obsidian markdown standard](../standards/obsidian-md-standard.md):
 
 | Type | Weight | Rationale |
 |------|--------|-----------|

@@ -2,7 +2,7 @@
 
 ## Purpose
 
-Generate Obsidian-native YAML frontmatter for markdown documents following the universal schema defined in `obsidian-md-standard`. This helper extracts metadata from document content and infers missing fields using intelligent fallbacks.
+Generate Obsidian-native YAML frontmatter for markdown documents following the universal schema defined in the [Obsidian markdown standard](../standards/obsidian-md-standard.md). This helper extracts metadata from document content and infers missing fields using intelligent fallbacks.
 
 ## When to Use
 
@@ -41,9 +41,9 @@ existing: "frontmatter"
 
 ### Step 3: Infer Document Type
 
-Refer to the **`obsidian-md-standard`** skill for the complete 14-type taxonomy.
+Refer to the [Obsidian markdown standard](../standards/obsidian-md-standard.md) for the complete 14-type taxonomy.
 
-**Quick mapping table** (see full taxonomy in obsidian-md-standard):
+**Quick mapping table** (see full taxonomy in [standards/obsidian-md-standard.md](../standards/obsidian-md-standard.md)):
 
 | Content Keywords | Type |
 |-----------------|------|
@@ -108,7 +108,7 @@ related:
 
 ### Step 6: Handle Extended Fields (Optional)
 
-For specific document types, add extended fields as defined in obsidian-md-standard:
+For specific document types, add extended fields as defined in the [Obsidian markdown standard](../standards/obsidian-md-standard.md):
 
 | Field | Applicable Types | Extraction |
 |-------|-----------------|------------|
@@ -221,7 +221,7 @@ related: []
 
 ## Best Practices
 
-1. **Always reference obsidian-md-standard for type taxonomy** — do not duplicate the 14-type table in this skill
+1. **Always reference the Obsidian markdown standard for type taxonomy** — see [../standards/obsidian-md-standard.md](../standards/obsidian-md-standard.md)
 2. **Extract wiki-links from content** — scan for `[[filename]]` patterns and add to `related` array
 3. **Preserve content integrity** — never modify document content, only add/merge frontmatter
 4. **Use intelligent fallbacks** — infer missing data from context rather than leaving fields empty

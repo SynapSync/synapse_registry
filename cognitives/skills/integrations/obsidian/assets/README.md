@@ -10,11 +10,15 @@ assets/
 ├── modes/
 │   ├── SYNC.md     - Write documents to Obsidian vault
 │   └── READ.md     - Read, search, and reason over vault notes
-└── helpers/
-    ├── frontmatter-generator.md  - Generate Obsidian frontmatter
-    ├── cross-ref-validator.md    - Validate bidirectional references
-    ├── batch-sync-pattern.md     - Optimized batch file sync
-    └── priority-ranking.md       - Rank search results by relevance
+├── helpers/
+│   ├── frontmatter-generator.md  - Generate Obsidian frontmatter
+│   ├── cross-ref-validator.md    - Validate bidirectional references
+│   ├── batch-sync-pattern.md     - Optimized batch file sync
+│   └── priority-ranking.md       - Rank search results by relevance
+├── standards/
+│   └── obsidian-md-standard.md   - Full specification (sections 1-12)
+└── validators/
+    └── obsidian-linter.md        - Compliance validation rules
 ```
 
 ---
@@ -71,7 +75,7 @@ The `obsidian` skill has two primary operation modes, each with its own detailed
 - PROJECT_CONTEXT - Build comprehensive project context
 - REASON - Answer questions using vault content
 - DISCOVER - Explore vault structure
-- COMPLIANCE_CHECK - Validate obsidian-md-standard compliance
+- COMPLIANCE_CHECK - Validate Obsidian markdown standard compliance
 
 ---
 
@@ -157,6 +161,50 @@ score = recency_weight + type_weight + relevance_weight + status_weight + versio
 
 ---
 
+## Standards (Specification)
+
+### Obsidian Markdown Standard - [standards/obsidian-md-standard.md](standards/obsidian-md-standard.md)
+
+**Used by:** Both SYNC and READ modes, frontmatter-generator, cross-ref-validator
+
+**Purpose:** The authoritative specification for Obsidian-native markdown output. Defines the universal frontmatter schema, 14-type document taxonomy, wiki-link conventions, bidirectional references, living document patterns, ID system, metric tables, graduation gates, and sequential numbering.
+
+**Key sections:**
+1. Universal Frontmatter Schema (required/extended fields)
+2. Document Type Taxonomy (14 types)
+3. Wiki-Link Convention
+4. References Section (`## Referencias`)
+5. Living Document Pattern (status transitions, versioning)
+6. ID System (FR-, ADR-, T-, K-, P-, L-, A-, D-, M-)
+7. Bidirectional References
+8. Metric Tables
+9. Graduation Gates
+10. Sequential Numbering
+11. Carried Forward Rules
+12. Retrospective Template
+
+---
+
+## Validators (Compliance)
+
+### Obsidian Linter - [validators/obsidian-linter.md](validators/obsidian-linter.md)
+
+**Used by:** READ mode (COMPLIANCE_CHECK operation), SYNC mode (pre-write validation)
+
+**Purpose:** Validate markdown documents against the Obsidian markdown standard. Checks frontmatter schema, wiki-link syntax, tag format, bidirectional cross-references, type taxonomy, and required sections.
+
+**Key capabilities:**
+- Parse and validate YAML frontmatter (required fields, types, formats)
+- Check wiki-link syntax (`[[note-name]]` format, no spaces, no extensions)
+- Validate tag format (lowercase, kebab-case, max 10)
+- Verify bidirectional references between documents
+- Check type against 14-type taxonomy
+- Generate compliance reports with severity-based issue listing
+
+**Output:** Compliance report with PASS/PARTIAL/FAIL status and actionable recommendations
+
+---
+
 ## Migration Notes
 
 This unified `obsidian` skill (v3.0.0) consolidates the former:
@@ -168,7 +216,7 @@ This unified `obsidian` skill (v3.0.0) consolidates the former:
 2. **Shared helpers** — eliminated duplication between sync and reader
 3. **Reduced LOC** — main SKILL.md is ~450 LOC (vs. 294 + 902 = 1196 LOC combined)
 4. **Unified auto-invoke triggers** — both read and write operations in one skill
-5. **Consistent standards** — both modes follow obsidian-md-standard
+5. **Consistent standards** — both modes follow the internal Obsidian markdown standard (see [standards/obsidian-md-standard.md](standards/obsidian-md-standard.md))
 
 **Breaking change:** Users should install `obsidian` v3.0.0 and remove old `obsidian-sync` and `obsidian-reader` skills.
 
@@ -213,7 +261,7 @@ This unified `obsidian` skill (v3.0.0) consolidates the former:
 3. **Cite sources in READ mode** — always include exact vault paths for quotes
 4. **Validate after batch sync** — use cross-ref-validator for 2+ file syncs
 5. **Rank results in READ mode** — apply priority-ranking when 3+ notes are found
-6. **Follow obsidian-md-standard** — both modes comply with the standard for frontmatter, wiki-links, and types
+6. **Follow the Obsidian markdown standard** — both modes comply with the internal standard for frontmatter, wiki-links, and types (see [standards/obsidian-md-standard.md](standards/obsidian-md-standard.md))
 
 ---
 
@@ -228,7 +276,9 @@ This unified `obsidian` skill (v3.0.0) consolidates the former:
 | helpers/cross-ref-validator.md | ~270 | Cross-reference validation |
 | helpers/batch-sync-pattern.md | ~280 | Batch sync optimization |
 | helpers/priority-ranking.md | ~250 | Search result ranking |
-| **Total** | **~2230** | (vs. 1196 LOC combined in v2.x skills) |
+| standards/obsidian-md-standard.md | ~300 | Full Obsidian markdown specification |
+| validators/obsidian-linter.md | ~450 | Compliance validation rules |
+| **Total** | **~2980** | Self-contained skill with internal standard |
 
 **Note:** Total LOC increased slightly because:
 1. READ mode gained new operations (COMPLIANCE_CHECK, DISCOVER)

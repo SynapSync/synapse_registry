@@ -34,7 +34,6 @@
     "helpers": 4
   },
   "dependencies": {
-    "skills": ["obsidian-md-standard"],
     "mcp": ["obsidian"]
   },
   "changelog": [

@@ -37,8 +37,7 @@ Every cognitive lives in `cognitives/{type}s/{category}/{name}/` and must contai
 - **universal-planner** (`cognitives/skills/planning/universal-planner/`) — Adaptive planning skill for any software scenario: new projects, features, refactors, bug fixes, tech debt, architecture changes. Uses modular assets pattern with 6 modes.
 - **universal-planner-executor** (`cognitives/skills/planning/universal-planner-executor/`) — Sprint-by-sprint executor companion for universal-planner output.
 - **code-analyzer** (`cognitives/skills/analytics/code-analyzer/`) — Analyzes code modules and generates structured technical reports with architecture diagrams.
-- **obsidian** (`cognitives/skills/integrations/obsidian/`) — Unified Obsidian vault manager with SYNC and READ modes. Syncs documents to vault and reads/searches notes via MCP. Claude-only.
-- **obsidian-md-standard** (`cognitives/skills/integrations/obsidian-md-standard/`) — Obsidian-native markdown output standard for all SynapSync skills that produce documents.
+- **obsidian** (`cognitives/skills/integrations/obsidian/`) — Unified Obsidian vault manager with SYNC and READ modes. Syncs documents to vault and reads/searches notes via MCP. Includes the Obsidian markdown standard specification and linter as internal assets. Claude-only.
 
 ### Agents
 - **feature-branch-manager** (`cognitives/agents/general/feature-branch-manager/`) — Git workflow agent for branch creation, pushing, and PR creation. Claude-only.
