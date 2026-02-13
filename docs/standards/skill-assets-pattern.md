@@ -413,7 +413,7 @@ When a skill uses assets:
 
 ## Related Standards
 
-- **obsidian-md-standard** — Output format for markdown documents
+- **Obsidian markdown standard** — Output format for markdown documents (embedded in the obsidian skill at `assets/standards/obsidian-md-standard.md`)
 - **manifest.json schema** — Skill metadata structure
 - **SKILL.md frontmatter** — Skill configuration format
 
