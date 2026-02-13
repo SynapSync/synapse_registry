@@ -139,7 +139,7 @@ Documents must use one of these 14 approved types:
 
 ## How to Use
 
-### In obsidian-reader
+### In obsidian (READ mode)
 
 When performing a COMPLIANCE_CHECK operation:
 
@@ -157,7 +157,7 @@ Apply these validation checks:
 7. Check type taxonomy compliance
 8. Verify `## Referencias` section exists
 
-### In obsidian-sync
+### In obsidian (SYNC mode)
 
 When syncing documents from workspace to vault:
 
@@ -439,12 +439,11 @@ related:
 
 This validator is designed to be reusable across all SynapSync skills that produce or consume Obsidian markdown documents:
 
-- **obsidian-reader**: Use for COMPLIANCE_CHECK operation
-- **obsidian-sync**: Apply rules when syncing documents
+- **obsidian** (READ mode): Use for COMPLIANCE_CHECK operation
+- **obsidian** (SYNC mode): Apply rules when syncing documents
 - **universal-planner**: Generate documents that pass validation
-- **project-planner**: Generate documents that pass validation
+- **universal-planner-executor**: Generate sprint and retrospective documents that pass validation
 - **code-analyzer**: Generate reports that pass validation
-- **sdlc-planner**: Generate SDLC documents that pass validation
 
 By extracting these rules into a shared validator, we ensure consistency across all skills and make it easy to update validation logic in one place.
 
@@ -452,4 +451,4 @@ By extracting these rules into a shared validator, we ensure consistency across 
 
 | Version | Date | Changes |
 |---------|------|---------|
-| 1.0 | 2026-02-12 | Initial extraction from obsidian-reader COMPLIANCE_CHECK logic |
+| 1.0 | 2026-02-12 | Initial extraction from obsidian (READ mode) COMPLIANCE_CHECK logic |

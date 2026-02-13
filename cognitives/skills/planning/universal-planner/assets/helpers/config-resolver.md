@@ -266,7 +266,7 @@ Step 6: Use output_base
 ## Related
 
 - See `obsidian-md-standard` for output format specifications
-- See `obsidian-sync` for syncing output to Obsidian vault via MCP
+- See `obsidian` skill (SYNC mode) for syncing output to Obsidian vault via MCP
 
 ## Version
 

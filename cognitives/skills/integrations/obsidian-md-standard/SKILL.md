@@ -6,10 +6,15 @@ description: >
 license: Apache-2.0
 metadata:
   author: synapsync
-  version: "1.0"
+  version: "1.1"
   scope: [root]
   auto_invoke: "Referenced by skills that generate .md output documents"
   changelog:
+    - version: "1.1"
+      date: "2026-02-12"
+      changes:
+        - "Added obsidian-linter validator in assets/validators/"
+        - "Updated skill references to consolidated names"
     - version: "1.0"
       date: "2026-02-11"
       changes:
@@ -90,20 +95,20 @@ related:
 
 | Type | Description | Typical Skills |
 |------|-------------|----------------|
-| `analysis` | General analysis document | universal-planner, project-planner |
-| `conventions` | Project patterns and conventions | universal-planner, project-planner |
-| `requirements` | Functional/non-functional requirements | universal-planner (NEW_PROJECT), sdlc-planner |
-| `architecture` | Architecture decisions and design | universal-planner, sdlc-planner |
-| `plan` | Strategic planning document | universal-planner, project-planner |
-| `execution-plan` | Concrete task breakdown | universal-planner, project-planner |
-| `sprint-plan` | Sprint-level task plan | universal-planner, project-planner |
+| `analysis` | General analysis document | universal-planner |
+| `conventions` | Project patterns and conventions | universal-planner |
+| `requirements` | Functional/non-functional requirements | universal-planner (NEW_PROJECT) |
+| `architecture` | Architecture decisions and design | universal-planner (NEW_PROJECT, ARCHITECTURE) |
+| `plan` | Strategic planning document | universal-planner |
+| `execution-plan` | Concrete task breakdown | universal-planner |
+| `sprint-plan` | Sprint-level task plan | universal-planner |
 | `progress` | Master progress dashboard | universal-planner, universal-planner-executor |
 | `technical-report` | Code/module analysis report | code-analyzer |
 | `refactor-plan` | Refactoring recommendations | code-analyzer (v3) |
 | `retrospective` | Sprint/project retrospective | universal-planner, universal-planner-executor |
 | `decision-log` | Architecture/engineering decisions | universal-planner-executor |
-| `data-model` | Entity relationships and storage | sdlc-planner |
-| `flow-diagram` | Core flows and sequences | sdlc-planner |
+| `data-model` | Entity relationships and storage | universal-planner (NEW_PROJECT) |
+| `flow-diagram` | Core flows and sequences | universal-planner (NEW_PROJECT) |
 
 ### 3. Wiki-Link Convention
 
@@ -364,7 +369,7 @@ Each SynapSync skill that produces `.md` output embeds a **compact profile** fro
 
 ### Planning Profile
 
-**For:** `project-planner`, `universal-planner`
+**For:** `universal-planner`
 
 ```markdown
 ### Obsidian Output Rules (Planning)
@@ -453,7 +458,7 @@ related:
 
 ### SDLC Profile
 
-**For:** `sdlc-planner`
+**For:** `universal-planner` (NEW_PROJECT mode)
 
 ```markdown
 ### Obsidian Output Rules (SDLC)
@@ -544,7 +549,7 @@ See the full retrospective template in the obsidian-md-standard specification (S
 
 ### Sync Profile
 
-**For:** `obsidian-sync`
+**For:** `obsidian` (SYNC mode)
 
 ```markdown
 ### Obsidian Output Rules (Sync)
