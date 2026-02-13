@@ -10,7 +10,7 @@
 - User wants to **use Obsidian notes as context** for a current task or decision
 - Another skill or agent needs knowledge that resides in the vault (multi-agent context)
 - User asks "what was the status of X?" referencing previously synced documents
-- User says "lee de obsidian", "busca en mis notas", "consulta obsidian"
+- (ES) User says "lee de obsidian", "busca en mis notas", "consulta obsidian"
 
 ## When NOT to Use This Mode
 
@@ -63,7 +63,11 @@ When retrieving information, rank by:
 4. **Tagged/structured** over unstructured notes
 5. **Notes with more backlinks** often represent key concepts
 
-**RULE 5 - STRUCTURED OUTPUT FOR COMPOSABILITY**
+**RULE 5 - READ MODE IS STRICTLY READ-ONLY**
+
+This mode never writes to the vault. All operations are read, search, and diagnose. If compliance issues or missing cross-references are found, report them to the user — do not fix them. Fixes require SYNC mode.
+
+**RULE 6 - STRUCTURED OUTPUT FOR COMPOSABILITY**
 
 When another skill or agent requests knowledge, return structured summaries:
 - Source note path
@@ -142,17 +146,17 @@ directly from the filesystem. What is the path to your Obsidian vault?
 
 Parse the user's intent into one of these operations:
 
-| User Intent | Operation | Example |
-|-------------|-----------|---------|
-| Read specific note | `READ_NOTE` | "lee la nota de arquitectura del proyecto X" |
-| Read a folder | `READ_FOLDER` | "lee todos los planes en work/agent-sync-sdk/" |
-| Search by topic | `SEARCH_TEXT` | "busca decisiones sobre la base de datos" |
-| Search by tag | `SEARCH_TAG` | "encuentra notas con tag #strategy" |
-| Search by metadata | `SEARCH_META` | "dame los reportes de febrero 2026" |
-| Get project context | `PROJECT_CONTEXT` | "dame el contexto del proyecto agent-sync-sdk" |
-| Answer a question | `REASON` | "segun mis notas, cual es el estado del proyecto?" |
-| Explore structure | `DISCOVER` | "que tengo en mi vault?" |
-| Check standard compliance | `COMPLIANCE_CHECK` | "which notes follow the obsidian standard?" |
+| User Intent | Operation | Example (EN) | Example (ES) |
+|-------------|-----------|--------------|--------------|
+| Read specific note | `READ_NOTE` | "read the architecture note for project X" | "lee la nota de arquitectura del proyecto X" |
+| Read a folder | `READ_FOLDER` | "read all plans in work/agent-sync-sdk/" | "lee todos los planes en work/agent-sync-sdk/" |
+| Search by topic | `SEARCH_TEXT` | "search for database decisions" | "busca decisiones sobre la base de datos" |
+| Search by tag | `SEARCH_TAG` | "find notes with tag #strategy" | "encuentra notas con tag #strategy" |
+| Search by metadata | `SEARCH_META` | "give me the reports from February 2026" | "dame los reportes de febrero 2026" |
+| Get project context | `PROJECT_CONTEXT` | "give me the context for the agent-sync-sdk project" | "dame el contexto del proyecto agent-sync-sdk" |
+| Answer a question | `REASON` | "according to my notes, what is the project status?" | "segun mis notas, cual es el estado del proyecto?" |
+| Explore structure | `DISCOVER` | "what's in my vault?" | "que tengo en mi vault?" |
+| Check standard compliance | `COMPLIANCE_CHECK` | "which notes follow the obsidian standard?" | — |
 
 ### Step 2: Execute the Operation
 
@@ -358,13 +362,15 @@ Recently modified: [list of 5-10 most recent]
 
 Analyze documents in a project folder against the Obsidian markdown standard.
 
+> **Important**: READ mode is strictly read-only. COMPLIANCE_CHECK **diagnoses** issues and **reports** them — it never writes or fixes anything. To fix issues, the user must switch to SYNC mode or apply fixes manually.
+
 **Validation rules:** See [../validators/obsidian-linter.md](../validators/obsidian-linter.md) for complete validation rules and procedures.
 
 **Quick summary of what to validate:**
 1. **Frontmatter schema**: Required fields (title, date, updated, project, type, status, version, tags, changelog, related) with correct types and formats
 2. **Wiki-link syntax**: `[[note-name]]` format, no spaces, no `.md` extensions
 3. **Tag format**: `#tag` or `#multi-word-tag`, no spaces or underscores
-4. **Bidirectional cross-references**: If A→B exists in `related`, verify B→A exists
+4. **Bidirectional cross-references**: If A→B exists in `related`, verify B→A exists (report missing reverse references, do not fix)
 5. **Type taxonomy**: Must be one of the 14 approved types (analysis, conventions, requirements, architecture, plan, execution-plan, sprint-plan, progress, technical-report, refactor-plan, retrospective, decision-log, data-model, flow-diagram)
 6. **Required sections**: Contains `## Referencias` section
 
@@ -399,23 +405,106 @@ Date: {today}
 
 ### Step 3: Present Results
 
-Always structure output clearly:
+Every READ operation MUST produce a response following the format contract for its operation type:
 
-**For single notes:**
-- Show frontmatter metadata as a header table
-- Present content (full or summarized based on length)
-- List outgoing links and tags
+#### READ_NOTE / READ_FOLDER output:
 
-**For multiple notes:**
-- Table of contents first (title, type, date, path)
-- Then individual summaries
-- Highlight connections between notes
+```markdown
+### Note: {title}
+| Field | Value |
+|-------|-------|
+| Path | `{vault_path}` |
+| Type | {type} |
+| Date | {date} |
+| Status | {status} |
+| Tags | {tags} |
 
-**For questions/reasoning:**
-- Direct answer first
-- Supporting evidence with source citations
-- Caveats about information completeness
-- Suggestions for where to find more information
+{content — full or summarized if >500 lines}
+
+**Outgoing links:** [[link1]], [[link2]]
+```
+
+For READ_FOLDER, present a table of contents first, then individual note summaries.
+
+#### SEARCH_TEXT / SEARCH_TAG / SEARCH_META output:
+
+```markdown
+### Search Results: "{query}"
+Found {N} notes, showing top {M}:
+
+1. **{vault_path}** (Score: {score})
+   Type: {type} | Date: {date} | Status: {status}
+   > "{quoted passage}"
+
+2. ...
+
+{N - M} additional notes not shown.
+```
+
+#### PROJECT_CONTEXT output:
+
+```markdown
+### Project Context: {project-name}
+Last updated: {date}
+
+**Active Plans:** {count}
+- {title} — {one-line summary}
+
+**Known Issues:** {count}
+- {title} — {one-line summary}
+
+**Key Decisions:** {count}
+- {title} — {one-line summary}
+
+**Related Notes:** {count}
+- {title} ({path})
+```
+
+#### REASON output:
+
+```markdown
+### Answer
+{direct answer}
+
+### Sources
+- {vault_path} (Section: {section}) — "{quoted evidence}"
+- ...
+
+### Caveats
+- {information completeness, recency, confidence}
+```
+
+#### COMPLIANCE_CHECK output:
+
+```markdown
+### Compliance Report: {project-name}
+Date: {today}
+
+**Summary:** {total} documents, {compliant} compliant, {partial} partial, {non-compliant} non-compliant
+
+| Document | Issue | Severity |
+|----------|-------|----------|
+| {filename} | {issue description} | {High/Medium/Low} |
+
+### Recommendations
+1. {actionable fix}
+```
+
+#### DISCOVER output:
+
+```markdown
+### Vault Structure
+{folder tree — max 2 levels}
+
+**Stats:** {total_notes} notes, {total_folders} folders
+**Recently modified:** {list of 5-10 most recent}
+```
+
+**Rules:**
+- Always follow the format for the detected operation type
+- Never omit the Sources section in REASON output
+- Always include score in SEARCH results when ranking is applied
+- Use "No results found" with search suggestions if a query returns nothing
 
 ---
 
@@ -432,9 +521,11 @@ AskUserQuestion:
   header: "Vault path"
   options:
     - label: "~/obsidian-vault"
-      description: "Common default location"
+      description: "Common default (macOS/Linux)"
     - label: "~/Documents/Obsidian"
-      description: "Documents folder"
+      description: "Documents folder (macOS/Linux)"
+    - label: "C:\\Users\\{username}\\Documents\\Obsidian"
+      description: "Documents folder (Windows)"
 ```
 
 ### Reading Notes (Fallback)
@@ -526,9 +617,6 @@ Use these types for filtering and prioritization:
 | `decision-log` | Medium | Architecture/engineering decisions |
 | `data-model` | Low | Entity relationships and storage |
 | `flow-diagram` | Low | Core flows and sequences |
-| `note` | Low | Unstructured notes |
-| `meeting` | Low | Meeting notes |
-| `reference` | Low | Reference material |
 
 ---
 

@@ -41,8 +41,8 @@ status_weight:
   - active:      +3
   - draft:       +2
   - completed:   +1
-  - superseded:  +0
-  - archived:    +0
+  - superseded:  -1
+  - archived:    -1
 
 version_weight:
   - Higher version number: +1 per major version
@@ -71,9 +71,6 @@ Based on the 14-type taxonomy from the [Obsidian markdown standard](../standards
 | `decision-log` | Medium (+2) | Engineering decisions |
 | `data-model` | Low (+1) | Supporting diagrams |
 | `flow-diagram` | Low (+1) | Supporting diagrams |
-| `note` | Low (+1) | Unstructured content |
-| `meeting` | Low (+1) | Meeting notes |
-| `reference` | Low (+1) | External references |
 
 ---
 
@@ -146,8 +143,8 @@ status: "active"
 | `active` | +3 | Current work in progress |
 | `draft` | +2 | Being developed |
 | `completed` | +1 | Finished but still relevant |
-| `superseded` | +0 | Replaced by newer version |
-| `archived` | +0 | Historical only |
+| `superseded` | -1 | Replaced by newer version — demoted |
+| `archived` | -1 | Historical only — demoted |
 
 **Default:** If `status` is missing, assume `"active"` (+3).
 
