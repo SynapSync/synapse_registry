@@ -19,12 +19,17 @@
 
 ## Critical Rules
 
+**RULE 0 - USE THE EXACT PATH THE USER GIVES YOU**
+
+When the user specifies a vault destination path, use it **exactly as given**. Do not modify it, do not substitute it, do not "improve" it. The `~/.agents/` pattern found in skill examples is an `output_base` convention for other skills — it is NOT a vault folder and must NEVER be used as a vault destination. If the user says "save to `work/my-project/plans/`", write to `work/my-project/plans/` — never to `agents/`, `agents/{project-name}/`, or any variation.
+
 **RULE 1 - ALWAYS ASK WHERE TO SAVE**
 
 Never assume the destination folder. Always:
 1. List the vault's root directories
 2. Let the user pick or specify the destination
-3. If the user already specified a path (e.g., "save to work/my-project/plans"), confirm it exists or offer to create it
+3. If the user already specified a path, use it directly — confirm it exists or offer to create it
+4. NEVER default to `agents/` or any variation as a vault folder
 
 **RULE 2 - PRESERVE CONTENT INTEGRITY**
 
@@ -94,17 +99,65 @@ When syncing documents to Obsidian, follow the [Obsidian markdown standard](../s
 
 ## Workflow
 
+### Step 0: Detect Access Mode
+
+Before any vault operation, determine the access strategy:
+
+```
+# Attempt MCP connection
+ToolSearch query: "+obsidian write"
+ToolSearch query: "+obsidian list"
+```
+
+| Result | Mode | Behavior |
+|--------|------|----------|
+| Tools loaded successfully | **MCP Mode** | Use `mcp__obsidian__*` tools for all operations |
+| ToolSearch returns no obsidian tools | **Fallback Mode** | Ask user for vault path, use Write/Read/Edit/Glob/Bash |
+| Tools load but fail on call | **Fallback Mode** | Warn user MCP may be disconnected, switch to filesystem |
+
+**If entering Fallback Mode**, inform the user:
+
+```
+The Obsidian MCP server doesn't appear to be connected. I can still write to your vault
+directly on the filesystem. What is the path to your Obsidian vault?
+(e.g., ~/Documents/MyVault or ~/obsidian-vault)
+```
+
+Or use `AskUserQuestion`:
+```
+AskUserQuestion:
+  question: "What is the path to your Obsidian vault?"
+  header: "Vault path"
+  options:
+    - label: "~/obsidian-vault"
+      description: "Common default (macOS/Linux)"
+    - label: "~/Documents/Obsidian"
+      description: "Documents folder (macOS/Linux)"
+    - label: "C:\\Users\\{username}\\Documents\\Obsidian"
+      description: "Documents folder (Windows)"
+```
+
 ### Step 1: Identify What to Sync
 
 Use `Glob` to discover source files based on user request (specific file, directory, pattern, or recent output).
 
-### Step 2: Load Obsidian MCP Tools
+### Step 2: Load Obsidian MCP Tools (MCP Mode Only)
 
-Load required tools: `ToolSearch query: "+obsidian list"` and `ToolSearch query: "+obsidian write"`
+**MCP Mode:** Load required tools: `ToolSearch query: "+obsidian list"` and `ToolSearch query: "+obsidian write"`
+
+**Fallback Mode:** Skip this step — vault path was already obtained in Step 0.
 
 ### Step 3: Browse Vault and Present Options
 
-List vault structure with `mcp__obsidian__list_directory`, build folder tree, present options via `AskUserQuestion`. If user specified destination, use it directly. Always include "Create new folder" option.
+**MCP Mode:** List vault structure with `mcp__obsidian__list_directory`, build folder tree, present options via `AskUserQuestion`. If user specified destination, use it directly. Always include "Create new folder" option.
+
+**Fallback Mode:**
+```
+Glob(pattern: "{vault_path}/*")
+# Or for deeper browsing:
+Bash(command: "find {vault_path} -maxdepth 2 -type d | head -30")
+```
+Build folder tree from results, present options via `AskUserQuestion`.
 
 ### Step 4: Read Source Files
 
@@ -147,6 +200,60 @@ mcp__obsidian__write_note(
 )
 ```
 
+**Fallback Mode:**
+
+When writing without MCP, you must manually serialize frontmatter to YAML and prepend it to the content:
+
+1. Generate the frontmatter object using the frontmatter-generator helper
+2. Serialize it to YAML format
+3. Construct the full file content: `---\n{yaml}\n---\n\n{body}`
+4. Ensure the vault directory exists: `Bash(command: "mkdir -p {vault_path}/{destination}")`
+5. Write the file: `Write(file_path: "{vault_path}/{destination}/{filename}.md", content: "{full_content}")`
+
+**YAML Serialization Pattern:**
+
+Given a frontmatter object:
+```json
+{
+  "title": "Document Title",
+  "date": "2026-02-10",
+  "updated": "2026-02-14",
+  "project": "my-project",
+  "type": "analysis",
+  "status": "active",
+  "version": "1.0",
+  "tags": ["tag1", "tag2"],
+  "changelog": [{"version": "1.0", "date": "2026-02-14", "changes": ["Synced to Obsidian"]}],
+  "related": ["[[doc-a]]", "[[doc-b]]"]
+}
+```
+
+Serialize as:
+```yaml
+---
+title: "Document Title"
+date: "2026-02-10"
+updated: "2026-02-14"
+project: "my-project"
+type: "analysis"
+status: "active"
+version: "1.0"
+tags:
+  - tag1
+  - tag2
+changelog:
+  - version: "1.0"
+    date: "2026-02-14"
+    changes:
+      - "Synced to Obsidian"
+related:
+  - "[[doc-a]]"
+  - "[[doc-b]]"
+---
+```
+
+Then prepend to body content and use `Write` to save to `{vault_path}/{destination}/{filename}.md`.
+
 **Frontmatter generation:**
 
 See [../helpers/frontmatter-generator.md](../helpers/frontmatter-generator.md) for the complete frontmatter generation workflow.
@@ -178,6 +285,13 @@ mcp__obsidian__patch_note(
 - **write_note**: New notes, full re-syncs, or changes affecting >30% of the document.
 
 > With `replaceAll: false` (default), `patch_note` fails if `oldString` matches more than once, preventing unintended replacements. Set `replaceAll: true` only when you want to replace every occurrence.
+
+**Fallback Mode:**
+```
+Read(file_path: "{vault_path}/{file}")
+# Find the exact string to replace
+Edit(file_path: "{vault_path}/{file}", old_string: "status: IN_PROGRESS", new_string: "status: COMPLETED")
+```
 
 ### Step 5.5: Cross-Reference Validation
 
@@ -219,7 +333,7 @@ See [../helpers/batch-sync-pattern.md](../helpers/batch-sync-pattern.md) for the
 **Key principles:**
 1. **Glob** all `.md` files once
 2. **Read** all files in parallel
-3. **Load** MCP tools once
+3. **Load** MCP tools once (MCP Mode) or use vault path (Fallback Mode)
 4. **List** vault directory once
 5. **Ask** user once for destination
 6. **Write** all files sequentially
@@ -329,6 +443,22 @@ When the user asks to clean up, archive, or remove vault notes.
    ```
 3. **Report** the deletion and warn about broken references.
 
+**Fallback Mode (Archive):**
+```
+Bash(command: "mkdir -p {vault_path}/archive/{project}")
+Bash(command: "mv '{vault_path}/{old_path}' '{vault_path}/archive/{project}/{filename}'")
+# Then update frontmatter manually:
+Read(file_path: "{vault_path}/archive/{project}/{filename}")
+# Parse frontmatter, change status to "archived", update "updated" field
+Write(file_path: "{vault_path}/archive/{project}/{filename}", content: "{updated_content}")
+```
+
+**Fallback Mode (Delete):**
+```
+# Always confirm with user first via AskUserQuestion
+Bash(command: "rm '{vault_path}/{file}'")
+```
+
 ---
 
 ## Optional Workflow: Move and Reorganize
@@ -357,11 +487,99 @@ mcp__obsidian__move_note(
 
 > **Caution**: Moving a note breaks existing `[[wiki-links]]` if the filename changes. Obsidian handles this automatically if "Automatically update internal links" is enabled. If not, use `patch_note` to update references.
 
+**Fallback Mode (Move):**
+```
+Bash(command: "mv '{vault_path}/{old_path}' '{vault_path}/{new_path}'")
+
+# Update cross-references in other notes:
+Grep(pattern: "\\[\\[old-name\\]\\]", path: "{vault_path}", type: "md")
+# For each matching file:
+Edit(file_path: "{matching_file}", old_string: "[[old-name]]", new_string: "[[new-name]]")
+```
+
+---
+
+## Fallback Strategy (No MCP)
+
+When the Obsidian MCP server is not available, SYNC mode operates in filesystem mode:
+
+### Vault Discovery
+
+Ask the user for the vault path if not known (same as READ mode fallback):
+```
+AskUserQuestion:
+  question: "What is the path to your Obsidian vault?"
+  header: "Vault path"
+  options:
+    - label: "~/obsidian-vault"
+      description: "Common default (macOS/Linux)"
+    - label: "~/Documents/Obsidian"
+      description: "Documents folder (macOS/Linux)"
+    - label: "C:\\Users\\{username}\\Documents\\Obsidian"
+      description: "Documents folder (Windows)"
+```
+
+### Writing Notes (Fallback)
+
+```
+# Ensure destination directory exists
+Bash(command: "mkdir -p {vault_path}/{destination}")
+
+# Construct full file content (frontmatter + body)
+# See YAML Serialization Pattern in Step 5 above
+
+# Write the file
+Write(file_path: "{vault_path}/{destination}/{filename}.md", content: "{frontmatter_yaml}\n\n{body}")
+```
+
+### Browsing Vault (Fallback)
+
+```
+# List vault structure
+Glob(pattern: "{vault_path}/**/*.md")
+
+# Or browse directories
+Bash(command: "find {vault_path} -maxdepth 2 -type d")
+```
+
+### Patching Notes (Fallback)
+
+```
+Read(file_path: "{vault_path}/{note_path}")
+Edit(file_path: "{vault_path}/{note_path}", old_string: "...", new_string: "...")
+```
+
+### Moving/Archiving Notes (Fallback)
+
+```
+Bash(command: "mv '{vault_path}/{old}' '{vault_path}/{new}'")
+```
+
+### Deleting Notes (Fallback)
+
+```
+# Always confirm with AskUserQuestion first
+Bash(command: "rm '{vault_path}/{file}'")
+```
+
+### Limitations in Fallback Mode
+
+| Feature | MCP Mode | Fallback Mode |
+|---------|----------|---------------|
+| Write notes | Full support | Full support (manual YAML serialization) |
+| Browse vault | Full support | Full support (via Glob/Bash) |
+| Patch notes | Atomic string replace | Read + Edit (functionally equivalent) |
+| Move/rename | Native API | Bash mv (functionally equivalent) |
+| Delete | Double confirmation | Bash rm with AskUserQuestion confirmation |
+| Frontmatter serialization | Automatic (MCP handles) | Manual (construct YAML string) |
+| Auto-create directories | Automatic | Bash mkdir -p |
+| Cross-ref validation | Native API | Read + parse + Write (slower on large vaults) |
+
 ---
 
 ## Limitations
 
-- **Obsidian MCP required**: The Obsidian REST API MCP server must be configured and running
+- **MCP recommended**: The Obsidian MCP server provides optimized operations. When unavailable, filesystem fallback provides full functionality with manual YAML serialization.
 - **Markdown only**: This mode handles `.md` files. Binary assets, images, and non-text files are not synced
 - **No bidirectional sync**: This mode writes TO Obsidian, it does not pull changes back from Obsidian
 - **No conflict resolution**: If a note exists at the destination, it will be overwritten (with user confirmation)
