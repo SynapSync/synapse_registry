@@ -51,9 +51,9 @@ synapse-registry/
 | Name | Category | Version | Description |
 |------|----------|---------|-------------|
 | [skill-creator](cognitives/skills/general/skill-creator/) | general | 3.1.0 | Creates AI skills following SynapSync spec with templates and best practices |
-| [universal-planner](cognitives/skills/planning/universal-planner/) | planning | 3.0.0 | Unified planning and execution skill for any software scenario with PLAN and EXECUTE modes |
+| [universal-planner](cognitives/skills/planning/universal-planner/) | planning | 3.1.0 | Unified planning and execution skill for any software scenario with PLAN and EXECUTE modes |
 | [code-analyzer](cognitives/skills/analytics/code-analyzer/) | analytics | 2.1.0 | Analyzes code modules and generates structured technical reports with architecture diagrams |
-| [obsidian](cognitives/skills/integrations/obsidian/) | integrations | 3.0.0 | Unified Obsidian vault manager: sync documents, read notes, and search knowledge via MCP |
+| [obsidian](cognitives/skills/integrations/obsidian/) | integrations | 3.2.0 | Unified Obsidian vault manager: sync documents, read notes, and search knowledge via MCP |
 
 ### Agents
 
@@ -76,7 +76,7 @@ The obsidian skill operates in two modes, detected automatically from the user's
 | **Direction** | Workspace **-->** Vault | Vault **-->** Agent |
 | **Purpose** | Persist reports, plans, and docs into the vault | Retrieve knowledge from the vault to inform decisions |
 | **Trigger** | "sync to obsidian", "save plan to obsidian" | "read from obsidian", "what do my notes say about X?" |
-| **MCP Tools** | `write_note`, `list_directory` | `read_note`, `search_notes`, `list_directory`, `get_vault_stats` |
+| **MCP Tools** | `write_note`, `patch_note`, `delete_note`, `move_note`, `update_frontmatter`, `list_directory` | `read_note`, `read_multiple_notes`, `search_notes`, `get_frontmatter`, `get_notes_info`, `get_vault_stats`, `manage_tags`, `list_directory` |
 | **Fallback** | N/A (requires MCP to write) | Filesystem read via `Read`/`Glob`/`Grep` if MCP is unavailable |
 
 ### Architecture Overview
