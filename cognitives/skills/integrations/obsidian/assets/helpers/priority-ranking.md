@@ -71,6 +71,7 @@ Based on the 14-type taxonomy from the [Obsidian markdown standard](../standards
 | `decision-log` | Medium (+2) | Engineering decisions |
 | `data-model` | Low (+1) | Supporting diagrams |
 | `flow-diagram` | Low (+1) | Supporting diagrams |
+| *(any other type)* | Low (+1) | Unrecognized or legacy type — minimum weight |
 
 ---
 
@@ -184,7 +185,7 @@ Examples:
 title: "Technical Debt Analysis"
 date: "2026-02-10"
 updated: "2026-02-10"
-type: "technical-debt"
+type: "technical-report"
 status: "active"
 version: "1.0"
 tags: ["race-condition", "lockfile"]
@@ -206,7 +207,7 @@ tags: ["race-condition", "lockfile"]
 title: "Race Condition Fix for LockFileManager"
 date: "2026-01-15"
 updated: "2026-01-15"
-type: "note"
+type: "data-model"
 status: "completed"
 version: "1.0"
 ---
@@ -215,7 +216,7 @@ version: "1.0"
 
 **Score:**
 - Recency: 0 (older than 30 days)
-- Type: 1 (note is low)
+- Type: 1 (data-model is low)
 - Relevance: 3 (title) + 1 (body) = 4
 - Status: 1 (completed)
 - Version: 1 (v1.0)
@@ -331,7 +332,7 @@ If two notes have the same score, use these tiebreakers in order:
 ### Case 2: Missing Frontmatter
 
 If a note lacks frontmatter:
-- Assume defaults: `type: "note"`, `status: "active"`, `version: "1.0"`
+- Assume defaults: `type: "analysis"`, `status: "active"`, `version: "1.0"`
 - Use file modification date for recency
 - Relevance score still applies (search in body text)
 

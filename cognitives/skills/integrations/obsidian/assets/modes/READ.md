@@ -310,7 +310,7 @@ This is the **most powerful operation** -- it assembles a comprehensive context 
    - Sprint plans (type: sprint-plan)
    - Reports & analysis (type: analysis, growth-vision)
 
-4. **Build a context summary**:
+5. **Build a context summary**:
    ```
    ## Project Context: agent-sync-sdk
    Last updated: 2026-02-10
@@ -334,7 +334,7 @@ This is the **most powerful operation** -- it assembles a comprehensive context 
    - [any notes in other folders that link to this project]
    ```
 
-5. **Present to user** or pass to requesting agent/skill
+6. **Present to user** or pass to requesting agent/skill
 
 #### REASON - Answer Questions Using Vault
 
