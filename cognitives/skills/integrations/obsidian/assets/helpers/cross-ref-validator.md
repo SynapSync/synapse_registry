@@ -117,7 +117,7 @@ mcp__obsidian__update_frontmatter(
 
 > **Important**: Only update the `related` array in frontmatter. Never edit the `## Referencias` body section — that section is populated at document creation time and is the author's curated navigation. The `related` frontmatter array is the machine-maintained source of truth for bidirectional references.
 
-### Step 6: Report Validation Results
+### Step 5: Report Validation Results
 
 After all fixes are applied, report a summary:
 
