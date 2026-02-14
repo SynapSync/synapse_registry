@@ -29,9 +29,9 @@ drwxr-xr-x  validators/
 | `helpers/` | 4 | config-resolver, decision-log, code-quality-standards, troubleshooting | Verify |
 | `templates/` | 7 | ANALYSIS, PLANNING, CONVENTIONS, EXECUTION, SPRINT, RETRO, PROGRESS | Verify |
 | `validators/` | 2 | output-schema.json, README.md | Verify |
-| `examples/` | 1 | test-case-1.md (this file) | Verify |
+| `examples/` | 7 | test-case-1 (smoke test) + 6 mode validation tests (v3.1.1) | Verify |
 
-**Total assets:** 22 files + README.md = 23 files
+**Total assets:** 28 files + README.md = 29 files
 
 ---
 
@@ -343,15 +343,26 @@ $ grep -c "Step 3: If NOT Found" assets/helpers/config-resolver.md
 - Helpers: 4 files (config-resolver, decision-log, code-quality-standards, troubleshooting)
 - Templates: 7 files (ANALYSIS, PLANNING, CONVENTIONS, EXECUTION, SPRINT, RETRO, PROGRESS)
 - Validators: 2 files (output-schema.json, README.md)
-- Examples: 1 file (this file)
+- Examples: 7 files (test-case-1 smoke test + 6 mode validation tests added in v3.1.1)
 - Assets README: 1 file
-- **Total: 23 asset files**
+- **Total: 29 asset files**
 
 ### Conclusion
 
 **Status:** Run tests to verify v3.0.0 asset integrity
 
+### Note on Test Suite Expansion (v3.1.1)
+
+This test case validates the v3.0.0 assets pattern consolidation. For comprehensive mode-specific validation, see the expanded test suite added in v3.1.1:
+
+- **test-case-2.md** — NEW_FEATURE mode validation (6 files)
+- **test-case-3.md** — REFACTOR mode validation (6 files + scope_modules)
+- **test-case-4.md** — BUG_FIX mode validation (fast path + standard path)
+- **test-case-5.md** — TECH_DEBT mode validation (6 files + debt inventory)
+- **test-case-6.md** — NEW_PROJECT mode validation (18 files: requirements + design)
+- **test-case-7.md** — ARCHITECTURE mode validation (13 files + gap analysis)
+
 ---
 
-**Test Updated:** 2026-02-13
-**Version:** v3.0.0
+**Test Updated:** 2026-02-14
+**Version:** v3.0.0 (updated for v3.1.1 test suite expansion)

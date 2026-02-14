@@ -46,3 +46,15 @@ assets/
 | `SPRINT.md` | Sprint plan template |
 | `RETRO.md` | Sprint retrospective template |
 | `PROGRESS.md` | Progress dashboard template |
+
+## Examples
+
+| File | Purpose |
+|------|---------|
+| `test-case-1.md` | Assets pattern smoke test (v3.0.0) |
+| `test-case-2.md` | NEW_FEATURE mode validation (v3.1.0) |
+| `test-case-3.md` | REFACTOR mode validation (v3.1.0) |
+| `test-case-4.md` | BUG_FIX mode validation with fast path (v3.1.0) |
+| `test-case-5.md` | TECH_DEBT mode validation (v3.1.0) |
+| `test-case-6.md` | NEW_PROJECT mode validation (18 files) (v3.1.0) |
+| `test-case-7.md` | ARCHITECTURE mode validation (13 files) (v3.1.0) |
