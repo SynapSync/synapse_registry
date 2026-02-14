@@ -382,6 +382,7 @@ Every SYNC operation MUST produce a response with these sections in this order:
 
 ### Warnings
 - [any overwrites, missing sources, MCP issues — or "None"]
+- Operating in filesystem fallback mode (no MCP) — if applicable
 ```
 
 **Rules:**
@@ -393,7 +394,7 @@ Every SYNC operation MUST produce a response with these sections in this order:
 
 ## Best Practices
 
-- **Before Sync**: Verify source files exist, MCP server connected, producer skill completed
+- **Before Sync**: Verify source files exist, access mode detected (MCP or fallback), producer skill completed
 - **During Sync**: Never modify content (only frontmatter), process writes sequentially, warn before overwriting
 - **After Sync**: Report all synced paths, any failures, and suggest visual verification in Obsidian
 

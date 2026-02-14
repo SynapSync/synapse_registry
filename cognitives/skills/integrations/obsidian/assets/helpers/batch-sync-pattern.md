@@ -80,6 +80,12 @@ mcp__obsidian__list_directory(path: "/")
 mcp__obsidian__list_directory(path: "/work")
 ```
 
+**Fallback Mode:**
+```
+Glob(pattern: "{vault_path}/{destination}/**/*.md")
+# Or: Bash(command: "ls -la {vault_path}/{destination}/")
+```
+
 **Result:** Vault structure cached for all file destination decisions.
 
 ### Step 4.5: Pre-Check Existing Notes (v3.2)
@@ -92,6 +98,13 @@ mcp__obsidian__get_notes_info(paths: [
   "{destination}/01-technical-debt.md",
   "{destination}/02-growth-vision.md"
 ])
+```
+
+**Fallback Mode:**
+```
+# Check if files already exist at destination
+Glob(pattern: "{vault_path}/{destination}/{filename}.md")
+# For each existing file, Read and parse frontmatter to get version/status
 ```
 
 **Use the results to:**
@@ -128,6 +141,15 @@ For each file:
   )
 ```
 
+**Fallback Mode:**
+```
+# Ensure directory exists
+Bash(command: "mkdir -p {vault_path}/{destination}")
+# Serialize frontmatter to YAML (see frontmatter-generator Filesystem Serialization)
+# Write complete file
+Write(file_path: "{vault_path}/{destination}/{filename}.md", content: "{frontmatter_yaml}\n\n{body}")
+```
+
 **Why sequential?** The Obsidian MCP server may not safely support parallel writes. Sequential writes ensure data integrity.
 
 ### Step 7: Validate Cross-References (Batch Only)
@@ -141,6 +163,8 @@ For each synced file pair (A, B):
 ```
 
 > **Optimization (v3.2)**: Cross-reference fixes use `mcp__obsidian__update_frontmatter` to add missing reverse references instead of reading the full note and rewriting it. See [cross-ref-validator.md](cross-ref-validator.md) for details.
+>
+> **Fallback (v3.3)**: The cross-ref-validator now supports filesystem fallback mode, using Read + parse + Write for reference fixes when MCP is unavailable.
 
 **Result:** Knowledge graph integrity maintained across the batch.
 
@@ -299,6 +323,7 @@ If the MCP server becomes unresponsive during batch writes:
 - Report which files succeeded and which failed
 - Suggest user check Obsidian REST API status
 - Do not retry automatically (may cause duplicates)
+- If MCP fails mid-batch, offer to continue via filesystem fallback for remaining files
 
 ## Best Practices
 

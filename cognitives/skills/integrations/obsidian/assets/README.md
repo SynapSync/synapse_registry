@@ -1,6 +1,6 @@
 # Obsidian Skill Assets
 
-Modular assets for the unified `obsidian` skill. Detailed workflows, helpers, and standards load on-demand via progressive disclosure.
+Modular assets for the unified `obsidian` skill. Detailed workflows, helpers, and standards load on-demand via progressive disclosure. Both modes (SYNC and READ) support filesystem fallback when the Obsidian MCP server is unavailable.
 
 ## Directory Structure
 
@@ -20,6 +20,10 @@ assets/
 └── validators/
     └── obsidian-linter.md        — Compliance validation rules
 ```
+
+## Filesystem Fallback (v3.3.0)
+
+Both SYNC and READ modes detect access mode at startup (Step 0). If the Obsidian MCP server is unavailable, all operations fall back to native filesystem tools (Read, Write, Edit, Glob, Grep, Bash). Helpers (frontmatter-generator, cross-ref-validator, batch-sync-pattern, priority-ranking) all include fallback alternatives for each MCP tool call.
 
 ## Migration Notes (v3.0.0)
 

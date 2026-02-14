@@ -2,8 +2,8 @@
   "$schema": "https://synapsync.dev/schemas/cognitive-manifest.json",
   "name": "obsidian",
   "type": "skill",
-  "version": "3.2.0",
-  "description": "Unified Obsidian vault manager: sync documents, read notes, and search knowledge via MCP",
+  "version": "3.3.0",
+  "description": "Unified Obsidian vault manager: sync documents, read notes, and search knowledge",
   "author": {
     "name": "SynapSync",
     "url": "https://github.com/SynapSync",
@@ -17,7 +17,7 @@
     "read",
     "search",
     "vault",
-    "mcp",
+    "filesystem-fallback",
     "knowledge-base",
     "notes",
     "markdown"
@@ -33,10 +33,24 @@
     "modes": 2,
     "helpers": 4
   },
-  "dependencies": {
+  "optionalDependencies": {
     "mcp": ["obsidian"]
   },
   "changelog": [
+    {
+      "version": "3.3.0",
+      "date": "2026-02-14",
+      "changes": [
+        "SYNC mode filesystem fallback: full self-sufficiency without MCP",
+        "Added Step 0 access mode detection to SYNC (mirrors READ pattern)",
+        "Added YAML serialization guidance for filesystem write operations",
+        "Updated cross-ref-validator with filesystem fallback paths",
+        "Updated batch-sync-pattern with filesystem fallback paths",
+        "Updated priority-ranking Metadata Fast Path with filesystem fallback",
+        "MCP changed from hard dependency to optional (recommended)",
+        "Updated SKILL.md Rule 1 to conditional access mode detection"
+      ]
+    },
     {
       "version": "3.2.0",
       "date": "2026-02-13",
@@ -82,5 +96,5 @@
     }
   ],
   "createdAt": "2026-02-12T00:00:00Z",
-  "updatedAt": "2026-02-13T00:00:00Z"
+  "updatedAt": "2026-02-14T00:00:00Z"
 }
