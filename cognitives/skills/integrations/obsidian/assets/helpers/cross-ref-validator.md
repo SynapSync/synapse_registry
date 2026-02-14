@@ -27,6 +27,21 @@ Result: The graph shows ANALYSIS → CONVENTIONS but not CONVENTIONS → ANALYSI
 
 ## Workflow
 
+### Reference Collection Strategy (v3.2)
+
+> **Fast path** (frontmatter only): Use `mcp__obsidian__get_frontmatter` to extract the `related` array without reading the full document. Use when only frontmatter `related` needs validation.
+>
+> **Full path** (frontmatter + body): Use `mcp__obsidian__read_note` to parse both `frontmatter.related` and the `## Referencias` body section.
+
+```
+# Fast path — metadata only
+mcp__obsidian__get_frontmatter(path: "work/project/SPRINT-1.md")
+# Returns: { related: ["[[PROGRESS]]", "[[SPRINT-2]]"], ... }
+
+# Full path — when body section also needs checking
+mcp__obsidian__read_note(path: "work/project/SPRINT-1.md")
+```
+
 ### Step 1: Collect References from Synced Files
 
 For each document synced in the batch, collect references from two sources:
@@ -81,25 +96,26 @@ SPRINT-2 → SPRINT-1 ✗ (SPRINT-1 does NOT reference SPRINT-2)
 
 ### Step 4: Fix Missing Reverse References
 
-For each missing reverse reference B → A:
+For each missing reverse reference B → A, use `update_frontmatter` (v3.2 — preferred over full read+write):
 
-1. **Read document B** from Obsidian (use `mcp__obsidian__read_note`)
-2. **Add `[[A]]` to the `related` array** in frontmatter
-3. **Write updated document B** back to Obsidian with the updated frontmatter
+```
+# Step 1: Get current frontmatter to read existing related array
+mcp__obsidian__get_frontmatter(path: "work/project/PROGRESS.md")
+# Returns: { related: ["[[SPRINT-1]]"], ... }
+
+# Step 2: Update frontmatter with the missing reference appended
+mcp__obsidian__update_frontmatter(
+  path: "work/project/PROGRESS.md",
+  frontmatter: {
+    "related": ["[[SPRINT-1]]", "[[SPRINT-2]]"]
+  },
+  merge: true
+)
+```
+
+> **Why `update_frontmatter` instead of full read+write**: This tool modifies ONLY the frontmatter metadata, leaving the document body untouched. It is faster, safer, and directly implements the rule that cross-ref fixes only update the `related` frontmatter array — never the document body. With `merge: true`, other frontmatter fields are preserved.
 
 > **Important**: Only update the `related` array in frontmatter. Never edit the `## Referencias` body section — that section is populated at document creation time and is the author's curated navigation. The `related` frontmatter array is the machine-maintained source of truth for bidirectional references.
-
-**Frontmatter update:**
-```yaml
-# Before
-related:
-  - "[[OTHER-DOC]]"
-
-# After
-related:
-  - "[[OTHER-DOC]]"
-  - "[[A]]"  # Added reverse reference
-```
 
 ### Step 6: Report Validation Results
 
@@ -193,7 +209,14 @@ If a document references itself (`[[SELF]]`), ignore it. No action needed.
 
 ### Case 2: Missing Referenced Document
 
-If document A references `[[B]]` but document B was not synced and does not exist in the vault:
+If document A references `[[B]]` but document B was not synced and may not exist in the vault:
+
+**Check existence (v3.2):**
+```
+mcp__obsidian__get_notes_info(paths: ["work/project/B.md"])
+# If returns empty/error, the note does not exist
+```
+
 - **Report as warning** — "ANALYSIS references [[MISSING-DOC]] which does not exist in vault"
 - **Do not attempt to fix** — the reference may be intentional (forward reference to a future document)
 

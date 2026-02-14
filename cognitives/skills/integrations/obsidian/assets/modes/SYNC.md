@@ -116,10 +116,21 @@ For each file, call `mcp__obsidian__write_note` with:
 
 > **Important**: `content` is the raw markdown body **without** the `---` frontmatter block. `frontmatter` is a **separate JSON object** — the MCP server serializes it as YAML and prepends it to the content automatically. If the `path` includes directories that don't exist, they are created.
 
+**Write modes:**
+
+| Mode | Behavior | When to Use |
+|------|----------|-------------|
+| `"overwrite"` (default) | Replace entire note | New syncs, full document updates |
+| `"append"` | Add content to end of note | Adding entries to a log, appending sections |
+| `"prepend"` | Add content to beginning of note | Adding notices or headers to existing notes |
+
+> Always use `"overwrite"` for standard sync operations. Use `"append"` only when explicitly adding to an existing note.
+
 ```
 mcp__obsidian__write_note(
   path: "{vault-destination}/{filename}.md",
   content: "{markdown-body-without-frontmatter-block}",
+  mode: "overwrite",
   frontmatter: {
     "title": "Document Title",
     "date": "2026-02-10",
@@ -149,18 +160,39 @@ Refer to the [Obsidian markdown standard](../standards/obsidian-md-standard.md) 
 - Never convert `[[wiki-links]]` to `[markdown](relative-links)`
 - If a document contains `## Referencias` section, preserve it and add to `related` frontmatter field
 
+### Step 5a: Small Edits with patch_note (Optional)
+
+When a sync involves only a small change to an existing note (e.g., updating a status, fixing a typo), use `patch_note` instead of rewriting the entire note:
+
+```
+mcp__obsidian__patch_note(
+  path: "work/agent-sync-sdk/plans/PROGRESS.md",
+  oldString: "status: IN_PROGRESS",
+  newString: "status: COMPLETED",
+  replaceAll: false
+)
+```
+
+**When to use `patch_note` vs `write_note`:**
+- **patch_note**: Changing 1-3 specific strings in an existing note. Faster, preserves the rest exactly.
+- **write_note**: New notes, full re-syncs, or changes affecting >30% of the document.
+
+> With `replaceAll: false` (default), `patch_note` fails if `oldString` matches more than once, preventing unintended replacements. Set `replaceAll: true` only when you want to replace every occurrence.
+
 ### Step 5.5: Cross-Reference Validation
 
 After syncing a batch of files (2+ files), validate bidirectional references.
 
 See [../helpers/cross-ref-validator.md](../helpers/cross-ref-validator.md) for the complete cross-reference validation workflow.
 
+> **Optimization (v3.2)**: The cross-ref validator uses `mcp__obsidian__update_frontmatter` to fix missing reverse references instead of reading the full note and rewriting it. This is faster and safer since it only touches metadata.
+
 **Example output:**
 ```
 Cross-reference validation:
 - SPRINT-1-foundation.md references [[PROGRESS]] ✓ (PROGRESS references back)
 - ANALYSIS.md references [[CONVENTIONS]] ✓ (CONVENTIONS references back)
-- PLANNING.md references [[ANALYSIS]] ⚠ Fixed: added [[PLANNING]] to ANALYSIS.md related
+- PLANNING.md references [[ANALYSIS]] ⚠ Fixed: used update_frontmatter to add [[PLANNING]] to ANALYSIS related
 ```
 
 ### Step 6: Report Results
@@ -250,6 +282,80 @@ Every SYNC operation MUST produce a response with these sections in this order:
 - **Before Sync**: Verify source files exist, MCP server connected, producer skill completed
 - **During Sync**: Never modify content (only frontmatter), process writes sequentially, warn before overwriting
 - **After Sync**: Report all synced paths, any failures, and suggest visual verification in Obsidian
+
+---
+
+## Optional Workflow: Archive and Delete
+
+When the user asks to clean up, archive, or remove vault notes.
+
+> **DELETE is destructive and irreversible.** Always confirm with the user before deleting.
+
+### Archive (Preferred)
+
+1. **Move note to archive folder** using `move_note`:
+   ```
+   mcp__obsidian__move_note(
+     oldPath: "work/agent-sync-sdk/plans/old-plan.md",
+     newPath: "archive/agent-sync-sdk/old-plan.md",
+     overwrite: false
+   )
+   ```
+2. **Update frontmatter status** to `archived`:
+   ```
+   mcp__obsidian__update_frontmatter(
+     path: "archive/agent-sync-sdk/old-plan.md",
+     frontmatter: { "status": "archived", "updated": "2026-02-13" },
+     merge: true
+   )
+   ```
+3. **Report** the move with old and new paths.
+
+### Delete (Destructive)
+
+1. **Confirm with user** via `AskUserQuestion`:
+   ```
+   question: "Are you sure you want to permanently delete 'old-plan.md'? This cannot be undone."
+   options:
+     - "Yes, delete permanently"
+     - "No, move to archive instead"
+   ```
+2. **If confirmed**, call `delete_note` with matching confirmation:
+   ```
+   mcp__obsidian__delete_note(
+     path: "work/agent-sync-sdk/plans/old-plan.md",
+     confirmPath: "work/agent-sync-sdk/plans/old-plan.md"
+   )
+   ```
+3. **Report** the deletion and warn about broken references.
+
+---
+
+## Optional Workflow: Move and Reorganize
+
+When the user asks to reorganize vault structure, move notes between folders, or rename notes.
+
+### Single Note Move
+```
+mcp__obsidian__move_note(
+  oldPath: "inbox/unsorted-note.md",
+  newPath: "work/agent-sync-sdk/plans/sorted-note.md",
+  overwrite: false
+)
+```
+
+### Batch Reorganization
+
+1. **List source directory**: `mcp__obsidian__list_directory(path: "inbox/")`
+2. **Get metadata** for all notes: `mcp__obsidian__get_notes_info(paths: [...])`
+3. **Ask user** for destination mapping
+4. **Move notes sequentially**: `mcp__obsidian__move_note(...)` for each
+5. **Update cross-references** if filenames changed:
+   - Use `search_notes(query: "[[old-name]]")` to find referencing notes
+   - Use `patch_note` to update wiki-links in other notes
+6. **Report** all moves with old and new paths
+
+> **Caution**: Moving a note breaks existing `[[wiki-links]]` if the filename changes. Obsidian handles this automatically if "Automatically update internal links" is enabled. If not, use `patch_note` to update references.
 
 ---
 

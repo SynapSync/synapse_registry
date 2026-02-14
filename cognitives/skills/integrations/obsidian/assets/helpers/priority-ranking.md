@@ -225,11 +225,68 @@ version: "1.0"
 
 ---
 
+## Metadata Fast Path (v3.2 Optimization)
+
+Most weight components (recency, type, status, version) come from **frontmatter only**. Only `relevance_weight` requires body content. Optimize by separating metadata collection from content reads:
+
+### Step 1: Collect Metadata Without Reading Content
+
+**For batch of notes (preferred):**
+```
+mcp__obsidian__get_notes_info(paths: [
+  "work/project/ANALYSIS.md",
+  "work/project/CONVENTIONS.md",
+  "work/project/SPRINT-1.md",
+  ...
+])
+# Returns metadata for all notes in one call
+```
+
+**For individual notes:**
+```
+mcp__obsidian__get_frontmatter(path: "work/project/ANALYSIS.md")
+# Returns: { title, date, updated, type, status, version, tags, related, ... }
+```
+
+### Step 2: Calculate Non-Content Weights
+
+From frontmatter alone, calculate:
+- `recency_weight` (from `updated` or `date`)
+- `type_weight` (from `type`)
+- `status_weight` (from `status`)
+- `version_weight` (from `version`)
+
+### Step 3: Read Content Only for Top Candidates
+
+After calculating partial scores, identify the top ~10 candidates. Only then read their full content for `relevance_weight` (body match scoring):
+
+```
+mcp__obsidian__read_multiple_notes(
+  paths: [...top 10 candidate paths...],
+  includeContent: true,
+  includeFrontmatter: false  // already have it from Step 1
+)
+```
+
+### Performance Impact
+
+| Approach | Calls | Data Transferred |
+|----------|-------|-----------------|
+| Read all 20 notes fully | 20 `read_note` calls | Full content x 20 |
+| Metadata fast path | 1 `get_notes_info` + 1 `read_multiple_notes` (top 10) | Metadata x 20 + Full content x 10 |
+
+The fast path reduces data transfer by ~50% and is significantly faster for large notes.
+
+---
+
 ## Implementation Checklist
 
 When implementing priority ranking:
 
-- [ ] Parse frontmatter from all matching notes
+- [ ] Use `get_notes_info` for batch metadata collection (v3.2)
+- [ ] Calculate non-content weights from metadata first
+- [ ] Only read full content for top N candidates
+- [ ] Use `read_multiple_notes` with `includeContent: true` for batch content reads
 - [ ] Calculate each weight component (recency, type, relevance, status, version)
 - [ ] Sum weights to get total score for each note
 - [ ] Sort notes by score (descending)
