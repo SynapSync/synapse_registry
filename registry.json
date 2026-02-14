@@ -115,8 +115,8 @@
     {
       "name": "obsidian",
       "type": "skill",
-      "version": "3.2.0",
-      "description": "Unified Obsidian vault manager: sync documents, read notes, and search knowledge via MCP",
+      "version": "3.3.0",
+      "description": "Unified Obsidian vault manager: sync documents, read notes, and search knowledge",
       "author": "synapsync",
       "category": "integrations",
       "tags": [
@@ -125,7 +125,7 @@
         "read",
         "search",
         "vault",
-        "mcp",
+        "filesystem-fallback",
         "knowledge-base",
         "notes",
         "markdown"

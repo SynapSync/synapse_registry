@@ -219,6 +219,51 @@ related: []
 ---
 ```
 
+## Filesystem Serialization
+
+When writing to the vault via filesystem (no MCP), the generated frontmatter object must be manually serialized to YAML and prepended to the document body.
+
+### Serialization Rules
+
+1. **String values**: Quote with double quotes — `title: "My Title"`
+2. **Dates**: Quote as strings — `date: "2026-02-14"`
+3. **Numbers**: No quotes — `version: "1.0"` (keep as string for semver)
+4. **Arrays**: Use `- value` syntax on separate lines, indented 2 spaces
+5. **Nested objects**: Use indentation (2 spaces per level)
+6. **Wiki-links in arrays**: Quote them — `- "[[doc-name]]"`
+7. **Delimiter**: Wrap in `---` on separate lines
+
+### Template
+
+```
+---
+title: "{title}"
+date: "{date}"
+updated: "{updated}"
+project: "{project}"
+type: "{type}"
+status: "{status}"
+version: "{version}"
+tags:
+  - {tag1}
+  - {tag2}
+changelog:
+  - version: "{version}"
+    date: "{date}"
+    changes:
+      - "{change_description}"
+related:
+  - "[[{related_doc_1}]]"
+  - "[[{related_doc_2}]]"
+---
+```
+
+### Full File Construction
+
+Concatenate: `{frontmatter_yaml}\n\n{markdown_body}`
+
+The result is a complete `.md` file ready for `Write(file_path, content)`.
+
 ## Best Practices
 
 1. **Always reference the Obsidian markdown standard for type taxonomy** — see [../standards/obsidian-md-standard.md](../standards/obsidian-md-standard.md)

@@ -243,10 +243,24 @@ mcp__obsidian__get_notes_info(paths: [
 # Returns metadata for all notes in one call
 ```
 
+**Fallback Mode:**
+```
+# Read each note and parse frontmatter manually
+for each note_path:
+  Read(file_path: "{vault_path}/{note_path}")
+  # Parse YAML between `---` markers to extract: type, status, date, version, tags
+```
+
 **For individual notes:**
 ```
 mcp__obsidian__get_frontmatter(path: "work/project/ANALYSIS.md")
 # Returns: { title, date, updated, type, status, version, tags, related, ... }
+```
+
+**Fallback Mode:**
+```
+Read(file_path: "{vault_path}/{note_path}")
+# Parse frontmatter only (content between first and second `---`)
 ```
 
 ### Step 2: Calculate Non-Content Weights
@@ -268,6 +282,16 @@ mcp__obsidian__read_multiple_notes(
   includeFrontmatter: false  // already have it from Step 1
 )
 ```
+
+**Fallback Mode:**
+```
+# Read each note individually (in parallel if possible)
+Read(file_path: "{vault_path}/{note1}")
+Read(file_path: "{vault_path}/{note2}")
+# ...
+```
+
+> Filesystem fallback is slower than MCP for large result sets but functionally equivalent.
 
 ### Performance Impact
 

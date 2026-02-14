@@ -42,6 +42,18 @@ mcp__obsidian__get_frontmatter(path: "work/project/SPRINT-1.md")
 mcp__obsidian__read_note(path: "work/project/SPRINT-1.md")
 ```
 
+**Fallback Mode (fast path):**
+```
+Read(file_path: "{vault_path}/{note_path}")
+# Parse YAML between first `---` and second `---` markers
+# Extract the `related` array from the parsed frontmatter
+```
+
+**Fallback Mode (full path):**
+```
+Read(file_path: "{vault_path}/{note_path}")
+```
+
 ### Step 1: Collect References from Synced Files
 
 For each document synced in the batch, collect references from two sources:
@@ -114,6 +126,15 @@ mcp__obsidian__update_frontmatter(
 ```
 
 > **Why `update_frontmatter` instead of full read+write**: This tool modifies ONLY the frontmatter metadata, leaving the document body untouched. It is faster, safer, and directly implements the rule that cross-ref fixes only update the `related` frontmatter array — never the document body. With `merge: true`, other frontmatter fields are preserved.
+
+**Fallback Mode:**
+```
+Read(file_path: "{vault_path}/{note_path}")
+# Parse existing frontmatter YAML
+# Add missing entry to `related` array
+# Reconstruct the full file: updated frontmatter YAML + original body
+Write(file_path: "{vault_path}/{note_path}", content: "{updated_content}")
+```
 
 > **Important**: Only update the `related` array in frontmatter. Never edit the `## Referencias` body section — that section is populated at document creation time and is the author's curated navigation. The `related` frontmatter array is the machine-maintained source of truth for bidirectional references.
 
@@ -215,6 +236,12 @@ If document A references `[[B]]` but document B was not synced and may not exist
 ```
 mcp__obsidian__get_notes_info(paths: ["work/project/B.md"])
 # If returns empty/error, the note does not exist
+```
+
+**Fallback Mode:**
+```
+Glob(pattern: "{vault_path}/{expected_path}")
+# If file exists, Read and parse frontmatter for metadata
 ```
 
 - **Report as warning** — "ANALYSIS references [[MISSING-DOC]] which does not exist in vault"

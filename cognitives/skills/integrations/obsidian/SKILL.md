@@ -1,13 +1,13 @@
 ---
 name: obsidian
 description: >
-  Unified Obsidian vault operations via MCP: sync documents to vault, read notes for context,
-  search knowledge, and validate markdown standards.
+  Unified Obsidian vault operations: sync documents to vault, read notes for context,
+  search knowledge, and validate markdown standards. MCP preferred, filesystem fallback available.
   Trigger: When user wants to read from or write to Obsidian vault.
 license: Apache-2.0
 metadata:
   author: synapsync
-  version: "3.2"
+  version: "3.3"
   scope: [root]
   auto_invoke:
     - "sync * to obsidian"
@@ -19,6 +19,15 @@ metadata:
     - "lee de obsidian"
     - "busca en obsidian"
   changelog:
+    - version: "3.3"
+      date: "2026-02-14"
+      changes:
+        - "SYNC mode filesystem fallback: full self-sufficiency without MCP"
+        - "Added Step 0 access mode detection to SYNC (mirrors READ pattern)"
+        - "Added YAML serialization guidance for filesystem write operations"
+        - "Updated all helpers with filesystem fallback paths"
+        - "MCP changed from hard dependency to optional (recommended)"
+        - "Updated Rule 1 to conditional access mode detection"
     - version: "3.2"
       date: "2026-02-13"
       changes:
@@ -69,7 +78,7 @@ See [assets/README.md](assets/README.md) for the directory index.
 
 ## Purpose
 
-Unified skill for all Obsidian vault operations via MCP. Acts as a **bidirectional knowledge bridge** between the agent workspace and your Obsidian vault:
+Unified skill for all Obsidian vault operations. Acts as a **bidirectional knowledge bridge** between the agent workspace and your Obsidian vault (MCP preferred, filesystem fallback when unavailable):
 
 - **SYNC mode**: Write documents from workspace to vault (markdown reports, plans, analysis)
 - **READ mode**: Read, search, and reason over vault notes as contextual knowledge source
@@ -93,18 +102,25 @@ This skill supports **bilingual operation** (English + Spanish):
 
 ## Critical Rules
 
-> **RULE 1 — ALWAYS LOAD MCP TOOLS FIRST**
+> **RULE 1 — DETECT ACCESS MODE FIRST**
 >
-> Before calling ANY Obsidian MCP tool, use `ToolSearch` to load them:
+> Before any vault operation, detect whether MCP is available:
 > ```
-> ToolSearch query: "+obsidian write"    # For SYNC operations (write_note, patch_note, delete_note, move_note)
-> ToolSearch query: "+obsidian read"     # For READ operations (read_note, read_multiple_notes)
-> ToolSearch query: "+obsidian list"     # For vault browsing (list_directory, get_vault_stats)
-> ToolSearch query: "+obsidian frontmatter"  # For metadata operations (get_frontmatter, update_frontmatter)
-> ToolSearch query: "+obsidian info"     # For batch metadata (get_notes_info)
-> ToolSearch query: "+obsidian search"   # For search and tags (search_notes, manage_tags)
+> ToolSearch query: "+obsidian write"
 > ```
-> Never call `mcp__obsidian__*` tools without loading them first. They are deferred tools and will fail if not loaded.
+> If tools load successfully → use **MCP Mode** (preferred, optimized).
+> If ToolSearch returns no results or tools fail → use **Filesystem Fallback Mode** (ask user for vault path, use Read/Write/Edit/Glob/Bash).
+>
+> In MCP Mode, load all needed tools before calling them (they are deferred):
+> ```
+> ToolSearch query: "+obsidian write"    # For SYNC operations
+> ToolSearch query: "+obsidian read"     # For READ operations
+> ToolSearch query: "+obsidian list"     # For vault browsing
+> ToolSearch query: "+obsidian frontmatter"  # For metadata operations
+> ToolSearch query: "+obsidian info"     # For batch metadata
+> ToolSearch query: "+obsidian search"   # For search and tags
+> ```
+> Never call `mcp__obsidian__*` tools without loading them first. In Fallback Mode, skip tool loading entirely.
 
 > **RULE 2 — MODE DETECTION: AUTO-SELECT FROM USER INTENT**
 >
@@ -220,6 +236,7 @@ AskUserQuestion:
 | Move/reorganize notes | ✅ | ❌ |
 | Patch notes (partial edit) | ✅ | ❌ |
 | Metadata-only reads | ❌ | ✅ |
+| Filesystem fallback | ✅ | ✅ |
 
 ---
 
@@ -233,7 +250,7 @@ Sync markdown documents from workspace to Obsidian vault with proper frontmatter
 
 **Quick summary:**
 1. Identify source files (Glob workspace docs)
-2. Load MCP tools
+2. Detect access mode (MCP or filesystem fallback)
 3. Browse vault and ask user for destination
 4. Read source files
 5. Generate frontmatter (→ [frontmatter-generator](assets/helpers/frontmatter-generator.md))
@@ -332,7 +349,7 @@ Agent needs context → obsidian READ mode retrieves from vault
 
 ## Limitations
 
-- **MCP dependency**: Full functionality requires Obsidian REST API MCP server
+- **MCP recommended**: Obsidian MCP server provides optimized operations. Both modes (SYNC and READ) have filesystem fallback when MCP is unavailable — slightly slower but fully functional
 - **Markdown only**: Handles `.md` files, not binary assets/images
 - **Single vault**: Operates on one vault at a time
 - **No bidirectional sync**: Writes TO vault (SYNC) or reads FROM vault (READ), not both-way sync
@@ -345,7 +362,7 @@ Agent needs context → obsidian READ mode retrieves from vault
 | Issue | Mode | Solution |
 |-------|------|----------|
 | "Tool not found: mcp__obsidian__*" | Both | Run `ToolSearch query: "+obsidian write"` first |
-| "MCP server not connected" | Both | Start Obsidian, enable REST API plugin, or use filesystem fallback |
+| "MCP server not connected" | Both | Skill automatically falls back to filesystem mode. Provide vault path when prompted. |
 | "Note already exists" | SYNC | Confirm with user before overwriting |
 | "No results found" | READ | Broaden search, check different folders, verify vault path |
 | "Empty content" | SYNC | Verify source file path with Glob |
@@ -360,6 +377,7 @@ Agent needs context → obsidian READ mode retrieves from vault
 
 | Version | Date | Changes |
 |---------|------|---------|
+| 3.3 | 2026-02-14 | SYNC mode filesystem fallback. MCP optional. Step 0 access mode detection. YAML serialization guidance. All helpers updated with fallback paths. |
 | 3.2 | 2026-02-13 | Full MCP tool coherence (13/13 tools). Added delete/move/patch/metadata tools. Fixed manage_tags contract. Optimized cross-ref and ranking helpers. |
 | 3.1 | 2026-02-13 | Audit remediation: i18n docs, tool contracts, taxonomy reconciliation (14 types), disambiguation, batch limits, negative weights. |
 | 3.0 | 2026-02-12 | Consolidated obsidian-sync + obsidian-reader. Mode-based architecture (SYNC + READ). Shared helpers. |
