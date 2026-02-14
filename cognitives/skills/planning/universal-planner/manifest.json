@@ -2,7 +2,7 @@
   "$schema": "https://synapsync.dev/schemas/cognitive-manifest.json",
   "name": "universal-planner",
   "type": "skill",
-  "version": "3.1.0",
+  "version": "3.1.1",
   "description": "Unified planning and execution skill for any software scenario with PLAN and EXECUTE modes",
   "author": {
     "name": "SynapSync",
@@ -43,9 +43,20 @@
     "helpers": 4,
     "templates": 7,
     "validators": 2,
-    "examples": 1
+    "examples": 8
   },
   "changelog": [
+    {
+      "version": "3.1.1",
+      "date": "2026-02-14",
+      "changes": [
+        "Added comprehensive test suite: 6 test cases covering all planning sub-modes",
+        "test-case-2 (NEW_FEATURE), test-case-3 (REFACTOR), test-case-4 (BUG_FIX with fast path)",
+        "test-case-5 (TECH_DEBT), test-case-6 (NEW_PROJECT), test-case-7 (ARCHITECTURE)",
+        "Created test suite index (examples/README.md) with overview and running instructions",
+        "Updated asset counts in manifest and README (examples: 1 → 8)"
+      ]
+    },
     {
       "version": "3.1.0",
       "date": "2026-02-14",
