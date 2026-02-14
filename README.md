@@ -51,8 +51,7 @@ synapse-registry/
 | Name | Category | Version | Description |
 |------|----------|---------|-------------|
 | [skill-creator](cognitives/skills/general/skill-creator/) | general | 3.1.0 | Creates AI skills following SynapSync spec with templates and best practices |
-| [universal-planner](cognitives/skills/planning/universal-planner/) | planning | 2.1.0 | Adaptive planning skill for any software scenario: new projects, features, refactors, and more |
-| [universal-planner-executor](cognitives/skills/planning/universal-planner-executor/) | planning | 2.1.0 | Senior developer executor that implements universal-planner sprints and tracks progress |
+| [universal-planner](cognitives/skills/planning/universal-planner/) | planning | 3.0.0 | Unified planning and execution skill for any software scenario with PLAN and EXECUTE modes |
 | [code-analyzer](cognitives/skills/analytics/code-analyzer/) | analytics | 2.1.0 | Analyzes code modules and generates structured technical reports with architecture diagrams |
 | [obsidian](cognitives/skills/integrations/obsidian/) | integrations | 3.0.0 | Unified Obsidian vault manager: sync documents, read notes, and search knowledge via MCP |
 

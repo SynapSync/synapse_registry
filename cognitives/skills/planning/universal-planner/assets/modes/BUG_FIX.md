@@ -15,6 +15,26 @@ Use this mode when **investigating and planning a fix for a specific issue**. Th
 - "not working", "fails", "crashes"
 - Specific problem report
 
+## Fast Path (Severity LOW/MEDIUM with Trivial Fix)
+
+If the bug has a clear root cause, a simple fix (< 20 LOC), and low regression risk, use the Fast Path to avoid documentation overhead.
+
+**Generate only:**
+1. `analysis/ANALYSIS.md` — Root Cause Analysis + Solution Design + Test Cases
+2. `sprints/SPRINT-1-hotfix.md` — Single sprint with the fix tasks
+
+**Skip:** README.md (optional stub), CONVENTIONS.md (reference only), PLANNING.md, EXECUTION.md, PROGRESS.md
+
+**Detection:** Use Fast Path when ALL of these are true:
+- Severity is LOW or MEDIUM
+- Root cause is identified in a single file
+- Fix is < 20 lines of code
+- Regression risk is LOW
+
+When any condition is NOT met, use the full BUG_FIX workflow below.
+
+---
+
 ## Output Structure
 
 ```

@@ -171,7 +171,7 @@ related:
 
 ---
 
-## Referencias
+## References
 
 **Parent Documents:**
 - [[README]]

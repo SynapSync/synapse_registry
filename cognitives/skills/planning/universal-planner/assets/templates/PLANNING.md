@@ -247,7 +247,21 @@ related:
 
 ---
 
-## Referencias
+## Section Applicability
+
+*Omit sections marked "No" entirely for the given sub-mode. Sections marked "Optional" may be included if relevant.*
+
+| Section | NEW_PROJECT | NEW_FEATURE | REFACTOR | BUG_FIX | TECH_DEBT | ARCHITECTURE |
+|---------|:-----------:|:-----------:|:--------:|:-------:|:---------:|:------------:|
+| Budget | Yes | Optional | No | No | No | Yes |
+| Communication Plan | Yes | No | No | No | No | Optional |
+| Team Composition | Yes | Optional | No | No | No | Yes |
+| Deployment Strategy | Yes | Optional | Optional | Optional | No | Yes |
+| Timeline Milestones | Yes | Yes | Yes | Optional | Yes | Yes |
+
+---
+
+## References
 
 **Parent Documents:**
 - [[README]]

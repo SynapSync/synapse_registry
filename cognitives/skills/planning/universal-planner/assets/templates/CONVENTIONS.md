@@ -309,7 +309,7 @@ DELETE {{endpoint_4}}    # {{endpoint_4_purpose}}
 
 ---
 
-## Referencias
+## References
 
 **Parent Documents:**
 - [[README]]
