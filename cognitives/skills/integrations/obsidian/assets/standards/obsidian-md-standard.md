@@ -65,11 +65,11 @@ related:
 | `plan` | Strategic planning document | universal-planner |
 | `execution-plan` | Concrete task breakdown | universal-planner |
 | `sprint-plan` | Sprint-level task plan | universal-planner |
-| `progress` | Master progress dashboard | universal-planner, universal-planner-executor |
+| `progress` | Master progress dashboard | universal-planner |
 | `technical-report` | Code/module analysis report | code-analyzer |
 | `refactor-plan` | Refactoring recommendations | code-analyzer (v3) |
-| `retrospective` | Sprint/project retrospective | universal-planner, universal-planner-executor |
-| `decision-log` | Architecture/engineering decisions | universal-planner-executor |
+| `retrospective` | Sprint/project retrospective | universal-planner |
+| `decision-log` | Architecture/engineering decisions | universal-planner (EXECUTE mode) |
 | `data-model` | Entity relationships and storage | universal-planner (NEW_PROJECT) |
 | `flow-diagram` | Core flows and sequences | universal-planner (NEW_PROJECT) |
 
@@ -210,7 +210,7 @@ Sprint {N} is approved for completion when ALL criteria are met:
 - Gates use `- [ ]` / `- [x]` checkbox syntax
 - Criteria must be verifiable (not subjective)
 - A document with unmet gates cannot transition to `completed` status
-- Gates are checked by the executor skill (universal-planner-executor) or manually
+- Gates are checked by EXECUTE mode (universal-planner) or manually
 
 ### 10. Sequential Numbering
 
@@ -257,7 +257,7 @@ The following items were not completed in Sprint 1 and are carried into this spr
 
 ### 12. Retrospective Template
 
-When a skill generates a retrospective document (optional feature in universal-planner and universal-planner-executor):
+When a skill generates a retrospective document (optional feature in universal-planner):
 
 ```markdown
 ---

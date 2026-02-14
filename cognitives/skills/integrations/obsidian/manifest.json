@@ -2,7 +2,7 @@
   "$schema": "https://synapsync.dev/schemas/cognitive-manifest.json",
   "name": "obsidian",
   "type": "skill",
-  "version": "3.1.0",
+  "version": "3.2.0",
   "description": "Unified Obsidian vault manager: sync documents, read notes, and search knowledge via MCP",
   "author": {
     "name": "SynapSync",
@@ -37,6 +37,20 @@
     "mcp": ["obsidian"]
   },
   "changelog": [
+    {
+      "version": "3.2.0",
+      "date": "2026-02-13",
+      "changes": [
+        "Full MCP tool coherence: all 13 Obsidian MCP tools documented and integrated (was 7)",
+        "Added 6 missing tools: delete_note, patch_note, update_frontmatter, get_frontmatter, get_notes_info, move_note",
+        "Fixed manage_tags parameter mismatch (operation not action, note-level not vault-level)",
+        "Documented write_note mode parameter (overwrite/append/prepend)",
+        "Documented search_notes and read_multiple_notes extended parameters",
+        "Optimized cross-ref-validator with update_frontmatter (no full read+write)",
+        "Optimized priority-ranking with get_notes_info metadata fast path",
+        "Added optional archive/delete and move/reorganize workflows to SYNC mode"
+      ]
+    },
     {
       "version": "3.1.0",
       "date": "2026-02-13",

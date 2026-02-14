@@ -82,6 +82,23 @@ mcp__obsidian__list_directory(path: "/work")
 
 **Result:** Vault structure cached for all file destination decisions.
 
+### Step 4.5: Pre-Check Existing Notes (v3.2)
+
+Before asking the user for a destination, check if notes already exist at the target paths:
+
+```
+mcp__obsidian__get_notes_info(paths: [
+  "{destination}/00-strategic-analysis.md",
+  "{destination}/01-technical-debt.md",
+  "{destination}/02-growth-vision.md"
+])
+```
+
+**Use the results to:**
+- Warn the user about existing notes that will be overwritten
+- Compare `updated` dates to skip notes that haven't changed
+- Inform the user about operation scope (N new, M updates, K unchanged)
+
 ### Step 5: Ask User Once for Destination
 
 Present a single `AskUserQuestion` for the entire batch:
@@ -122,6 +139,8 @@ For each synced file pair (A, B):
   If A references B, verify B references A
   If missing, fix the reverse reference
 ```
+
+> **Optimization (v3.2)**: Cross-reference fixes use `mcp__obsidian__update_frontmatter` to add missing reverse references instead of reading the full note and rewriting it. See [cross-ref-validator.md](cross-ref-validator.md) for details.
 
 **Result:** Knowledge graph integrity maintained across the batch.
 
@@ -178,7 +197,9 @@ When implementing batch sync:
 - [ ] List vault structure once before asking user
 - [ ] Ask user once for destination (not per file)
 - [ ] Write files sequentially (not in parallel)
-- [ ] Run cross-reference validation after all writes
+- [ ] Pre-check existing notes with `get_notes_info` before asking user (v3.2)
+- [ ] Report which notes are new vs. updates vs. unchanged
+- [ ] Run cross-reference validation after all writes (using `update_frontmatter`)
 - [ ] Report all results in a single summary
 
 ## Example: Full Batch Flow

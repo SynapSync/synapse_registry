@@ -68,7 +68,7 @@ related:
 ## Verdict
 {{Was the sprint successful? Key takeaway.}}
 
-## Referencias
+## References
 
 **Parent:** [[PROGRESS]]
 **Input Documents:** [[SPRINT-{{N}}-name]]

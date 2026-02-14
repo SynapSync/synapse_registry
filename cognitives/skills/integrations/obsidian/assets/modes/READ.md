@@ -205,7 +205,13 @@ After reading all notes:
 
 **MCP Mode:**
 ```
-mcp__obsidian__search_notes(query: "race condition LockFileManager")
+mcp__obsidian__search_notes(
+  query: "race condition LockFileManager",
+  searchContent: true,       // search note body (default)
+  searchFrontmatter: false,  // also search in frontmatter fields
+  caseSensitive: false,      // case-insensitive (default)
+  limit: 10                  // return up to 10 results (default 5, max 20)
+)
 ```
 
 **Fallback Mode:**
@@ -213,6 +219,8 @@ mcp__obsidian__search_notes(query: "race condition LockFileManager")
 Grep(pattern: "race condition", path: "/path/to/vault", type: "md")
 # Then Read matching files for context
 ```
+
+> **Optimization (v3.2)**: When ranking search results, use `get_frontmatter` to extract metadata (type, status, date, version) without reading the full note body. This makes the [priority-ranking](../helpers/priority-ranking.md) algorithm faster for large result sets. Only read full content for the top N ranked results.
 
 Present results as:
 ```
@@ -231,10 +239,17 @@ Found N notes matching "query":
 
 **MCP Mode:**
 ```
-mcp__obsidian__search_notes(query: "tag:#strategy")
-# or
-mcp__obsidian__manage_tags(action: "list")  # List all tags first
+# Search for notes containing a tag in content or frontmatter
+mcp__obsidian__search_notes(query: "#strategy", searchFrontmatter: true, limit: 10)
+
+# For vault-wide tag discovery, search frontmatter:
+mcp__obsidian__search_notes(query: "strategy", searchFrontmatter: true, searchContent: false, limit: 20)
+
+# List tags on a specific note (note-level, NOT vault-wide)
+mcp__obsidian__manage_tags(path: "work/agent-sync-sdk/plans/ANALYSIS.md", operation: "list")
 ```
+
+> **Important (v3.2 fix)**: `manage_tags` operates on a **single note** specified by `path`. The parameter is `operation` (not `action`), accepting `"add"`, `"remove"`, or `"list"`. It is NOT a vault-wide tag listing tool. For vault-wide tag discovery, use `search_notes` with `searchFrontmatter: true`.
 
 **Fallback Mode:**
 ```
@@ -246,8 +261,19 @@ Grep(pattern: "#strategy", path: "/path/to/vault", type: "md")
 
 #### SEARCH_META - Search by Metadata
 
-Filter notes by frontmatter fields:
+**MCP Mode (preferred):**
+```
+# Search specifically in frontmatter fields
+mcp__obsidian__search_notes(query: "agent-sync-sdk", searchFrontmatter: true, searchContent: false, limit: 20)
 
+# Get frontmatter for a specific note (fast, no body content)
+mcp__obsidian__get_frontmatter(path: "work/agent-sync-sdk/plans/ANALYSIS.md")
+
+# Get metadata for multiple notes at once
+mcp__obsidian__get_notes_info(paths: ["work/agent-sync-sdk/plans/ANALYSIS.md", "work/agent-sync-sdk/plans/SPRINT-1.md"])
+```
+
+**Fallback Mode:**
 ```
 # Find all notes for a specific project
 Grep(pattern: "project: agent-sync-sdk", path: "/path/to/vault", type: "md")
@@ -269,9 +295,15 @@ This is the **most powerful operation** -- it assembles a comprehensive context 
    # Find folder matching project name
    ```
 
-2. **Read all notes** in the project folder (recursive)
+2. **Collect metadata first** (fast path):
+   ```
+   mcp__obsidian__get_notes_info(paths: [...all note paths from list_directory...])
+   ```
+   Use `get_notes_info` to collect title, type, date, status, and tags for all notes without reading full content.
 
-3. **Sort and classify** by type:
+3. **Read full content selectively**: Based on metadata, only read the most relevant notes (active status, high-priority types, recent dates). Use `read_multiple_notes` for up to 10 notes at a time.
+
+4. **Sort and classify** by type:
    - Plans & roadmaps (type: plan, strategic-analysis)
    - Technical debt & issues (type: technical-debt)
    - Architecture docs (type: architecture)
@@ -337,6 +369,18 @@ mcp__obsidian__list_directory(path: "/work/agent-sync-sdk")
 # ... for each subfolder
 ```
 
+**Get metadata for discovered notes (v3.2 optimization):**
+```
+# After listing a directory, get metadata for all notes in a single call
+mcp__obsidian__get_notes_info(paths: [
+  "work/agent-sync-sdk/plans/00-strategic-analysis.md",
+  "work/agent-sync-sdk/plans/01-technical-debt.md",
+  "work/agent-sync-sdk/plans/02-growth-vision.md"
+])
+```
+
+> Use `get_notes_info` after `list_directory` to get metadata (title, type, date, status) without reading full content. This is faster than reading each note individually for the DISCOVER summary.
+
 **Also use vault stats if available:**
 ```
 mcp__obsidian__get_vault_stats(recentCount: 10)
@@ -376,8 +420,13 @@ Analyze documents in a project folder against the Obsidian markdown standard.
 
 **Workflow:**
 1. **List all .md files** in the project folder
-2. **For each file**, apply validation checks from obsidian-linter
-3. **Generate compliance report:**
+2. **Frontmatter-only validation (fast path):** For checks that only examine frontmatter (required fields, type taxonomy, status values, date formats), use `get_frontmatter` instead of reading the full note:
+   ```
+   mcp__obsidian__get_frontmatter(path: "work/agent-sync-sdk/plans/ANALYSIS.md")
+   ```
+   Reserve full `read_note` calls for checks that require body content (wiki-link syntax, `## Referencias` section).
+3. **For each file**, apply validation checks from obsidian-linter
+4. **Generate compliance report:**
 
 ```markdown
 ## Standard Compliance Report: {project-name}
@@ -684,7 +733,7 @@ Grep(pattern: "agent-sync-sdk", path: "/path/to/vault", type: "md")
 | `obsidian` SYNC mode | Read notes that were previously synced; verify sync status |
 | `universal-planner` | Provide existing project context and feed historical plans as input |
 | `code-analyzer` | Supply architecture notes as reference for analysis |
-| `universal-planner-executor` | Provide sprint history and retrospectives as context |
+| `universal-planner` (EXECUTE mode) | Provide sprint history and retrospectives as context |
 
 ---
 

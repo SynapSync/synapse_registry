@@ -1,6 +1,6 @@
 # Code Quality Standards
 
-Production-quality standards to follow during task implementation (Role 1: Senior Developer).
+Production-quality standards to follow during task implementation (EXECUTE mode — Senior Developer role).
 
 ## General
 

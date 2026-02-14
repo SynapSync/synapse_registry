@@ -313,7 +313,7 @@ The analysis framework works for any language or framework. Adapt terminology to
 ### With `universal-planner`
 Use `code-analyzer` during the Analysis Phase (Step 1) of universal-planner to understand the current state of modules that will be affected by the planned work.
 
-### With `universal-planner-executor`
+### With `universal-planner` (EXECUTE mode)
 Before executing a sprint that modifies a module, run `code-analyzer` to document the "before" state for comparison.
 
 ## Limitations

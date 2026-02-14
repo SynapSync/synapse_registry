@@ -2,8 +2,8 @@
   "$schema": "https://synapsync.dev/schemas/cognitive-manifest.json",
   "name": "universal-planner",
   "type": "skill",
-  "version": "2.1.0",
-  "description": "Adaptive planning skill for any software scenario: new projects, features, refactors, and more",
+  "version": "3.1.0",
+  "description": "Unified planning and execution skill for any software scenario with PLAN and EXECUTE modes",
   "author": {
     "name": "SynapSync",
     "url": "https://github.com/SynapSync",
@@ -13,14 +13,14 @@
   "category": "planning",
   "tags": [
     "planning",
+    "execution",
     "sdlc",
-    "requirements",
-    "architecture",
     "sprints",
+    "architecture",
     "refactoring",
     "project-management",
+    "scrum",
     "analysis",
-    "execution",
     "universal"
   ],
   "providers": [
@@ -39,25 +39,46 @@
   },
   "homepage": "https://synapsync.dev/cognitives/universal-planner",
   "assets": {
-    "modes": 6,
-    "helpers": 1,
-    "templates": 5,
-    "validators": 1,
+    "modes": 8,
+    "helpers": 4,
+    "templates": 7,
+    "validators": 2,
     "examples": 1
   },
   "changelog": [
+    {
+      "version": "3.1.0",
+      "date": "2026-02-14",
+      "changes": [
+        "Audit remediation: 5 critical findings, 10 incongruencies, 6 risks addressed",
+        "Unified task granularity (Sprint/Phase/Task/Subtask) across all files",
+        "Created PROGRESS.md template; PROGRESS always generated, SPRINT-*.md optional",
+        "Added Before/After code fields to EXECUTION.md task format",
+        "Added Section Applicability tables, REFACTOR/TECH_DEBT disambiguation",
+        "Added BUG_FIX Fast Path, sprint failed status, Plan Freshness Check",
+        "Removed Handlebars syntax, inline retro, emojis; standardized language to English",
+        "Updated test-case-1.md, output-schema.json version, manifest asset counts"
+      ]
+    },
+    {
+      "version": "3.0.0",
+      "date": "2026-02-13",
+      "changes": [
+        "Consolidated universal-planner + universal-planner-executor into unified skill",
+        "Two top-level modes: PLAN (documentation only) and EXECUTE (implementation only)",
+        "Added PLAN.md and EXECUTE.md mode files",
+        "Moved executor assets: RETRO template, decision-log, code-quality-standards",
+        "Created merged troubleshooting guide",
+        "Breaking change: replaces both universal-planner v2.1 and universal-planner-executor v2.1"
+      ]
+    },
     {
       "version": "2.1.0",
       "date": "2026-02-12",
       "changes": [
         "Refactored to use assets pattern",
-        "Reduced SKILL.md from 1011 to 591 LOC (-41.5%)",
-        "Extracted 6 modes to assets/modes/",
-        "Extracted config-resolver to assets/helpers/",
-        "Extracted 5 templates to assets/templates/",
-        "Added output validator JSON schema",
-        "Documented modular assets pattern for skill organization",
-        "All smoke tests passed — no breaking changes"
+        "Extracted 6 modes, config-resolver, 5 templates, output validator",
+        "Documented modular assets pattern for skill organization"
       ]
     },
     {
@@ -66,12 +87,10 @@
       "changes": [
         "Initial universal-planner release",
         "Supports 6 planning modes",
-        "Per-project output configuration via cognitive.config.json",
-        "Obsidian-native markdown output",
-        "Sprint-based execution planning"
+        "Obsidian-native markdown output"
       ]
     }
   ],
   "createdAt": "2026-02-04T00:00:00Z",
-  "updatedAt": "2026-02-12T00:00:00Z"
+  "updatedAt": "2026-02-14T00:00:00Z"
 }

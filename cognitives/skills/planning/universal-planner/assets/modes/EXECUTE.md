@@ -1,99 +1,55 @@
----
-name: universal-planner-executor
-description: >
-  Senior Fullstack Developer executor that implements sprint-by-sprint from universal-planner output,
-  then switches to Scrum Master role to track progress.
-  Trigger: When a universal-planner planning output exists and implementation needs to begin.
-license: Apache-2.0
-metadata:
-  author: synapsync
-  version: "2.1"
-  scope: [root]
-  auto_invoke:
-    - "Execute the project plan"
-    - "Start implementing the sprints"
-    - "Work on the next sprint from the planning"
-    - "Continue executing the plan"
-  changelog:
-    - version: "2.1"
-      date: "2026-02-12"
-      changes:
-        - "Refactored to use assets pattern"
-        - "Reduced SKILL.md from 615 to ~468 LOC (-24%)"
-        - "Extracted RETRO template to assets/templates/"
-        - "Extracted 3 helpers to assets/helpers/"
-    - version: "2.0"
-      date: "2026-02-11"
-      changes:
-        - "Obsidian-native standard: frontmatter maintenance on sprint updates"
-        - "Added Step 3.5: Optional Retrospective Generation"
-        - "Graduation gate verification in Step 3 (Complete Sprint)"
-        - "Decision log entries include wiki-links to sprint and task context"
-        - "All document references use [[wiki-links]]"
-    - version: "1.0"
-      date: "2026-02-04"
-      changes:
-        - "Initial release — companion executor for universal-planner"
-        - "Dual-role system: Senior Developer (implementation) + Scrum Master (tracking)"
-        - "Sprint-by-sprint execution with phase-level granularity"
-        - "Automatic progress tracking and sprint updates"
-        - "Convention-first implementation from CONVENTIONS.md"
-        - "Decision log for ambiguity resolution"
-allowed-tools: Read, Edit, Write, Glob, Grep, Bash, Task
----
-
-# Universal Planner Executor
+# EXECUTE Mode
 
 ## Purpose
 
-Consume the planning output produced by `universal-planner` and execute it sprint-by-sprint, phase-by-phase, task-by-task. This skill operates under two alternating roles:
+Consume the planning output produced by PLAN mode and execute it sprint-by-sprint, phase-by-phase, task-by-task. This mode operates under two alternating roles:
 
 1. **Senior Fullstack Software Developer** — reads the plan, makes technical decisions, writes production-quality code, and implements every task following the project's established conventions.
 2. **Scrum Master / Project Manager** — after each phase and sprint, updates tracking documents (sprint files and PROGRESS.md) with actual status, completion metrics, blockers, and implementation notes.
 
-This skill does NOT plan. It receives a complete plan from `universal-planner` and executes it.
+**This mode does NOT plan. It receives a complete plan from PLAN mode and executes it.**
 
 ---
 
-## Critical Rules
+## Mode-Specific Rules
 
-> **RULE 1 — PLAN IS THE SOURCE OF TRUTH**
+> **RULE E1 — PLAN IS THE SOURCE OF TRUTH**
 >
-> The planning documents produced by `universal-planner` define **what** to build, **how** to structure it, and **which patterns** to follow. Every implementation decision must trace back to the plan. If the plan says "use the existing `Button` component from `src/components/ui/`", that is what you use. Do not improvise architecture, invent new patterns, or deviate from the plan unless you encounter a genuine blocker — and if you do, document it.
+> The planning documents produced by PLAN mode define **what** to build, **how** to structure it, and **which patterns** to follow. Every implementation decision must trace back to the plan. Do not improvise architecture, invent new patterns, or deviate from the plan unless you encounter a genuine blocker — and if you do, document it.
 
-> **RULE 2 — CONVENTIONS ARE NON-NEGOTIABLE**
+> **RULE E2 — CONVENTIONS ARE NON-NEGOTIABLE**
 >
-> `discovery/CONVENTIONS.md` (when it exists) defines the project's patterns, naming conventions, component library, state management, testing approach, and file organization. Every line of code you write MUST follow these conventions. If the plan references a convention, verify it still holds before implementing. Never introduce a pattern that conflicts with CONVENTIONS.md.
+> `discovery/CONVENTIONS.md` (when it exists) defines the project's patterns, naming conventions, component library, state management, testing approach, and file organization. Every line of code you write MUST follow these conventions. Never introduce a pattern that conflicts with CONVENTIONS.md.
 
-> **RULE 3 — EXECUTE IN ORDER**
+> **RULE E3 — EXECUTE IN ORDER**
 >
 > Work through sprints sequentially (Sprint 1 before Sprint 2). Within each sprint, work through phases in order. Within each phase, work through tasks in order. Respect dependency declarations — if a task says "Blocked by Task 2.1.3", do not start it until that dependency is resolved.
 
-> **RULE 4 — UPDATE TRACKING AFTER EVERY PHASE**
+> **RULE E4 — UPDATE TRACKING AFTER EVERY PHASE**
 >
-> After completing each phase within a sprint, immediately switch to the Scrum Master role and:
+> After completing each phase, immediately switch to the Scrum Master role and:
 > - Mark completed tasks with `[x]` in the sprint file
 > - Add implementation notes in the sprint's Notes section
 > - Log any blockers or discoveries
 >
-> After completing an entire sprint, update `PROGRESS.md` with status changes, metrics, and blocker resolutions.
+> After completing an entire sprint, update PROGRESS.md with status changes, metrics, and blocker resolutions.
 
-> **RULE 5 — PRODUCTION-QUALITY CODE**
+> **RULE E5 — PRODUCTION-QUALITY CODE**
 >
-> You are a Senior Fullstack Developer. Write code as if it ships to production today:
+> Write code as if it ships to production today:
 > - Clean, readable, self-documenting code
 > - Proper error handling at system boundaries
 > - Follow the project's existing testing patterns
 > - No TODO comments left behind — resolve them or log as blockers
 > - No dead code, no commented-out blocks, no debugging artifacts
 
-> **RULE 6 — VERIFY BEFORE MARKING DONE**
+> **RULE E6 — VERIFY BEFORE MARKING DONE**
 >
-> Every task in the sprint has a **Verification** section with commands and expected results. Run those verifications. A task is only complete when its verification passes. If verification fails, fix the issue before marking it done.
+> Every task has a **Verification** section with commands and expected results. Run those verifications. A task is only complete when its verification passes. If verification fails, fix the issue before marking it done.
 
-> **RULE 7 — DOCUMENT DECISIONS**
+> **RULE E7 — DOCUMENT DECISIONS**
 >
-> When the plan is ambiguous, incomplete, or conflicts with reality, make a senior-level engineering decision and document it in the sprint's Notes section using the Decision Log format (see below). Never silently deviate.
+> When the plan is ambiguous, incomplete, or conflicts with reality, make a senior-level engineering decision and document it using the [Decision Log format](../helpers/decision-log.md). Never silently deviate.
 
 ---
 
@@ -137,30 +93,9 @@ This skill does NOT plan. It receives a complete plan from `universal-planner` a
 
 ---
 
-## Configuration Resolution
+## Obsidian Maintenance Rules
 
-Before starting any workflow step, resolve the `{output_base}` path that determines where all output documents are stored.
-
-1. **Check** for `cognitive.config.json` in the project root (current working directory)
-2. **If found**: read the `output_base` value and use it for all `{output_base}` references in this skill
-3. **If NOT found**:
-   a. Infer the project name from the current directory name or git repository name
-   b. Ask the user: _"Where should I store output documents for this project?"_ — suggest `~/.agents/{project-name}/` as the default
-   c. Create `cognitive.config.json` in the project root with their chosen path
-   d. Inform the user the config was saved for future skill runs
-
-**Config file format** (`cognitive.config.json`):
-```json
-{
-  "output_base": "~/.agents/my-project"
-}
-```
-
-> **IMPORTANT**: Every `{output_base}` reference in this skill depends on this resolution. If the config file cannot be read or created, ask the user for an explicit path before proceeding.
-
-## Obsidian Output Standard
-
-When modifying sprint documents and PROGRESS.md, follow these Obsidian output rules:
+When modifying sprint documents and PROGRESS.md:
 
 1. **Frontmatter maintenance**: When updating a sprint file, bump `version`, update `updated` date, add `changelog` entry, update `status` and `progress`
 2. **Status transitions**: Move status through `draft → active → completed` as work progresses
@@ -170,7 +105,7 @@ When modifying sprint documents and PROGRESS.md, follow these Obsidian output ru
 6. **Bidirectional**: When adding decision references or notes that mention other documents, ensure reciprocal links
 7. **Wiki-links**: All document references in notes, decision logs, and completion summaries use `[[filename]]` syntax
 
-**When completing a sprint, update frontmatter:**
+**Frontmatter update on sprint completion:**
 ```yaml
 status: "completed"
 progress: 100
@@ -181,6 +116,8 @@ changelog:
     date: "YYYY-MM-DD"
     changes: ["Sprint completed — all tasks done, gates passed"]
 ```
+
+---
 
 ## Workflow
 
@@ -200,6 +137,15 @@ Before any work begins, locate the planning directory and verify all required do
 3. If any critical file is missing, **STOP** and report what's missing. Do not begin execution with an incomplete plan.
 
 **Output**: Confirmation that the plan is complete and ready for execution.
+
+### Step 0.5: Plan Freshness Check
+
+Before beginning execution, verify the plan is still valid against the current codebase state:
+
+1. Compare `discovery/CONVENTIONS.md` against current codebase (spot-check key components and patterns)
+2. If more than ~20% of referenced components, patterns, or files have changed since planning, warn the user
+3. Suggest re-running the Discovery step of PLAN mode if significant drift is detected
+4. If the plan is fresh (< 2-3 days old with minimal codebase changes), proceed normally
 
 ### Step 1: Internalize the Plan
 
@@ -239,7 +185,7 @@ For each task in the phase:
    - The task's specifications
    - CONVENTIONS.md patterns
    - The project's existing code style
-   - Production-quality standards (Rule 5)
+   - Production-quality standards (Rule E5)
 4. **Run verification**: Execute the task's verification command
    - If it passes → task is done
    - If it fails → diagnose and fix before proceeding
@@ -282,6 +228,17 @@ After all phases in a sprint are complete:
 3. Move any resolved blockers from OPEN to RESOLVED
 4. Update the Executive Summary to reflect current project state
 
+### Sprint Failure
+
+If a sprint genuinely cannot be completed (irresolvable blocker, fundamentally flawed plan, external dependency unavailable):
+
+1. Mark sprint status as `failed` in frontmatter
+2. Document the reason in the Notes section
+3. Log all unfinished tasks as blockers in PROGRESS.md
+4. Report failure to the user with a recommendation: re-plan the sprint or skip to the next one
+
+**Status transitions:** `draft → active → completed` or `draft → active → failed`
+
 **3c. Identify Next Sprint**
 1. Find the next sprint with status `NOT_STARTED`
 2. If it exists, report readiness to begin and summarize what's ahead
@@ -289,9 +246,9 @@ After all phases in a sprint are complete:
 
 ### Step 3.5: Retrospective Generation (Optional)
 
-After completing a sprint, offer to generate a retrospective to capture learnings, metrics, and action items. The retrospective follows a structured format with Keep/Problems/Learnings/Actions sections, metrics comparison table, and cross-links to related documents.
+After completing a sprint, offer to generate a retrospective to capture learnings, metrics, and action items.
 
-**Full template and usage details:** See [assets/templates/RETRO.md](assets/templates/RETRO.md)
+**Full template and usage details:** See [../templates/RETRO.md](../templates/RETRO.md)
 
 **If the user declines:** Skip and proceed to Step 3c (Identify Next Sprint).
 
@@ -363,36 +320,26 @@ When an implementation breaks something and needs to be reverted:
 
 ---
 
-## Decision Log Format
-
-When making decisions not explicitly covered by the plan, document them in the sprint file's Notes section with context, options considered, chosen decision, reasoning, and impact. Each decision includes wiki-links to the sprint and specific task.
-
-**Full format and examples:** See [assets/helpers/decision-log.md](assets/helpers/decision-log.md)
-
----
-
 ## Code Quality Standards
 
-As a Senior Fullstack Developer, write production-quality code following the project's existing patterns. Standards cover general principles, frontend/backend specifics, testing approaches, and git practices. Always defer to CONVENTIONS.md for project-specific patterns.
+As a Senior Fullstack Developer, write production-quality code following the project's existing patterns.
 
-**Full standards reference:** See [assets/helpers/code-quality-standards.md](assets/helpers/code-quality-standards.md)
+**Full standards reference:** See [../helpers/code-quality-standards.md](../helpers/code-quality-standards.md)
 
 ---
 
-## Integration with Universal Planner
+## Expected Input (Contract with PLAN Mode)
 
-### Expected Input
-
-This skill consumes the output of `universal-planner`. The expected directory structure:
+EXECUTE mode consumes the output of PLAN mode. The expected directory structure:
 
 ```
 {output_base}/planning/{project-name}/
 ├── README.md
 ├── discovery/
 │   └── CONVENTIONS.md              # Project patterns (when applicable)
-├── requirements/                    # NEW_PROJECT mode only
+├── requirements/                    # NEW_PROJECT sub-mode only
 │   └── *.md
-├── design/                          # NEW_PROJECT + ARCHITECTURE modes
+├── design/                          # NEW_PROJECT + ARCHITECTURE sub-modes
 │   └── *.md
 ├── analysis/
 │   └── ANALYSIS.md
@@ -405,21 +352,9 @@ This skill consumes the output of `universal-planner`. The expected directory st
     └── SPRINT-{N}-{name}.md
 ```
 
-### Lifecycle
+### What EXECUTE Mode Does NOT Do
 
-```
-universal-planner          universal-planner-executor
-─────────────────          ──────────────────────────
-1. Analyze & Plan    ───►  2. Read & Internalize Plan
-                           3. Execute Sprint by Sprint
-                           4. Update Tracking per Phase
-                           5. Complete All Sprints
-                           6. Report Final Status
-```
-
-### What This Skill Does NOT Do
-
-- **Does not create plans** — that is `universal-planner`'s job
+- **Does not create plans** — that is PLAN mode's job
 - **Does not modify planning strategy** — ANALYSIS.md and PLANNING.md are read-only references
 - **Does not add new sprints** — if new work is discovered, it's logged as a blocker for the planner to address
 - **Does modify sprint files** — checking off tasks, updating status, adding notes
@@ -427,9 +362,7 @@ universal-planner          universal-planner-executor
 
 ---
 
-## Configuration
-
-### Execution Scope
+## Execution Scope
 
 The user may request execution of:
 
@@ -451,32 +384,3 @@ Default behavior: **Resume** — find where work left off and continue.
 | **Per task** | Commit after each individual task (for fine-grained history) |
 
 Default behavior: **Per phase** — balances granularity with practicality.
-
----
-
-## Troubleshooting
-
-Common execution issues include missing plan directories, outdated CONVENTIONS.md references, verification failures, dependency ordering problems, incomplete sprints, build breaks, and ambiguous technical choices.
-
-**Full troubleshooting guide:** See [assets/helpers/troubleshooting.md](assets/helpers/troubleshooting.md)
-
----
-
-## Limitations
-
-1. **Requires a complete plan**: Cannot execute without `universal-planner` output
-2. **Sequential execution**: Processes one sprint at a time, in order
-3. **No planning modifications**: Does not restructure or improve the plan — only executes it
-4. **Discovery is read-only**: CONVENTIONS.md is consumed, not created — that is the planner's job
-5. **External blockers**: Cannot resolve dependencies on external teams, services, or decisions — logs them and moves on
-6. **Single agent**: Executes all tasks itself — does not delegate to specialized sub-agents
-
----
-
-## Version History
-
-| Version | Date | Changes |
-|---------|------|---------|
-| 2.1 | 2026-02-12 | Assets pattern migration — extracted templates and helpers, reduced SKILL.md by 24% |
-| 2.0 | 2026-02-11 | Obsidian-native standard — frontmatter maintenance, graduation gates, optional retrospectives, wiki-linked decision logs |
-| 1.0 | 2026-02-04 | Initial release — companion executor for universal-planner |

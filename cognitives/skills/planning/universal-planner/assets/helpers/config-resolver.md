@@ -93,7 +93,7 @@ echo '{"output_base":"~/.agents/my-project"}' > cognitive.config.json
 Tell the user the config was saved:
 
 ```
-✅ Configuration saved to cognitive.config.json
+Configuration saved to cognitive.config.json
    Output will be stored in: ~/.agents/my-project/
 
    This path will be used for all future skill runs in this project.
@@ -123,7 +123,7 @@ The skill replaces `{output_base}` with the resolved value.
 
 - **Required field:** `output_base` (string)
 - **Path type:** Absolute path (can use `~` for home directory)
-- **No trailing slash:** `~/.agents/my-project` ✅ (not `~/.agents/my-project/` ❌)
+- **No trailing slash in the stored value:** `~/.agents/my-project` (not `~/.agents/my-project/`). When using the value, append `/` as needed (e.g., `{output_base}/planning/`).
 
 **Optional fields (future):**
 
@@ -138,7 +138,7 @@ The skill replaces `{output_base}` with the resolved value.
 If the user provides a path that doesn't exist, offer to create it:
 
 ```
-⚠️  Path doesn't exist: ~/.agents/my-project
+WARNING: Path doesn't exist: ~/.agents/my-project
 
 Would you like me to create it? (Y/n): _____
 ```
@@ -154,7 +154,7 @@ mkdir -p ~/.agents/my-project
 If the path exists but isn't writable:
 
 ```
-❌ Path is not writable: ~/.agents/my-project
+ERROR: Path is not writable: ~/.agents/my-project
 
 Please choose a different path or fix permissions.
 
@@ -166,7 +166,7 @@ Your choice: _____
 If `cognitive.config.json` exists but is invalid JSON:
 
 ```
-❌ Error reading cognitive.config.json: Invalid JSON
+ERROR: Error reading cognitive.config.json: Invalid JSON
 
 Please fix the file or delete it to create a new one.
 
@@ -232,7 +232,7 @@ Step 4: Create config
    }
 
 Step 5: Inform user
-→ "✅ Configuration saved to cognitive.config.json"
+→ "Configuration saved to cognitive.config.json"
 
 Step 6: Use output_base
 → Planning output will go to:

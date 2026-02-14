@@ -4,7 +4,7 @@ This directory contains JSON schemas for validating universal-planner output.
 
 ## Purpose
 
-The output schema defines the **contract** between `universal-planner` and downstream skills (like `universal-planner-executor`). It ensures that:
+The output schema defines the **contract** between PLAN mode and EXECUTE mode (both within `universal-planner`). It ensures that:
 
 1. **All required files are generated** for the selected mode
 2. **File paths are valid** and follow conventions
@@ -104,9 +104,9 @@ if (!isValid) {
 }
 ```
 
-### For universal-planner-executor
+### For EXECUTE Mode
 
-At the **start** of execution (Step 0.5: Plan Validation), read the planning directory and validate:
+At the **start** of execution (Step 0: Locate and Validate Planning), read the planning directory and validate:
 
 ```typescript
 // Step 0.5: Validate Plan Structure
@@ -132,7 +132,7 @@ if (!isValid) {
   console.error("Invalid paths:", getInvalidPaths(errors));
 
   // Stop execution with clear error
-  throw new Error("Plan structure is incomplete. Please re-run universal-planner.");
+  throw new Error("Plan structure is incomplete. Please re-run PLAN mode.");
 }
 
 console.log("✅ Plan validation passed");
@@ -235,6 +235,7 @@ Files not in the `required` array are optional but still validated if present:
 
 ## Related
 
-- `universal-planner/SKILL.md` - Planning skill that produces this output
-- `universal-planner-executor/SKILL.md` - Execution skill that consumes this output
+- `universal-planner/SKILL.md` - Unified skill with PLAN and EXECUTE modes
+- `universal-planner/assets/modes/PLAN.md` - PLAN mode that produces this output
+- `universal-planner/assets/modes/EXECUTE.md` - EXECUTE mode that consumes this output
 - JSON Schema Draft 7: https://json-schema.org/draft-07/schema

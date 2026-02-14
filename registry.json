@@ -1,8 +1,8 @@
 {
   "$schema": "https://synapsync.dev/schemas/registry.json",
   "version": "1.0.0",
-  "lastUpdated": "2026-02-12T20:00:00Z",
-  "totalCognitives": 6,
+  "lastUpdated": "2026-02-13T00:00:00Z",
+  "totalCognitives": 5,
   "cognitives": [
     {
       "name": "skill-creator",
@@ -84,20 +84,20 @@
     {
       "name": "universal-planner",
       "type": "skill",
-      "version": "2.1.0",
-      "description": "Adaptive planning skill for any software scenario: new projects, features, refactors, and more",
+      "version": "3.1.0",
+      "description": "Unified planning and execution skill for any software scenario with PLAN and EXECUTE modes",
       "author": "synapsync",
       "category": "planning",
       "tags": [
         "planning",
+        "execution",
         "sdlc",
-        "requirements",
-        "architecture",
         "sprints",
+        "architecture",
         "refactoring",
         "project-management",
+        "scrum",
         "analysis",
-        "execution",
         "universal"
       ],
       "providers": [
@@ -111,37 +111,6 @@
       ],
       "downloads": 0,
       "path": "cognitives/skills/planning/universal-planner"
-    },
-    {
-      "name": "universal-planner-executor",
-      "type": "skill",
-      "version": "2.1.0",
-      "description": "Senior developer executor that implements universal-planner sprints and tracks progress",
-      "author": "synapsync",
-      "category": "planning",
-      "tags": [
-        "execution",
-        "sprints",
-        "implementation",
-        "scrum",
-        "project-management",
-        "fullstack",
-        "planning",
-        "automation",
-        "tracking",
-        "development"
-      ],
-      "providers": [
-        "claude",
-        "openai",
-        "cursor",
-        "windsurf",
-        "copilot",
-        "gemini",
-        "codex"
-      ],
-      "downloads": 0,
-      "path": "cognitives/skills/planning/universal-planner-executor"
     },
     {
       "name": "obsidian",

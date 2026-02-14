@@ -64,6 +64,23 @@ related:
 {{verification_command}}
 ```
 
+**Files:**
+- `{{file_path_1}}` ({{action: create|modify|delete}})
+- `{{file_path_2}}` ({{action}})
+
+**Before (Current State):**
+```{{language}}
+// Code at {{file_path}}:L{{start}}-L{{end}}
+{{current_code}}
+```
+
+**After (Target State):**
+```{{language}}
+{{target_code}}
+```
+
+*Use "N/A" for Before when creating new files, or for After when deleting files.*
+
 **Rollback:**
 ```bash
 {{rollback_command}}
@@ -135,10 +152,10 @@ Tasks follow a 4-level granularity system:
 
 | Level | Description | Effort | Example |
 |-------|-------------|--------|---------|
-| **L1 - Epic** | Large body of work | 2-4 weeks | "Implement user authentication" |
-| **L2 - Feature** | Cohesive feature | 3-5 days | "Add login form with validation" |
-| **L3 - Task** | Atomic unit of work | 4-8 hours | "Create LoginForm component" |
-| **L4 - Subtask** | Granular step | 1-2 hours | "Add email validation to form" |
+| **L1 - Sprint** | Major milestone | 3-7 days | "Implement user authentication" |
+| **L2 - Phase** | Logical grouping | 0.5-2 days | "Add login form with validation" |
+| **L3 - Task** | Discrete work item | 1-4 hours | "Create LoginForm component" |
+| **L4 - Subtask** | Single action | 5-30 min | "Add email validation to form" |
 
 **This execution plan uses L3 (Task) granularity by default.**
 
@@ -353,7 +370,21 @@ Tasks are distributed across sprints in [[PROGRESS]]:
 
 ---
 
-## Referencias
+## Section Applicability
+
+*Omit sections marked "No" entirely for the given sub-mode. Sections marked "Optional" may be included if relevant.*
+
+| Section | NEW_PROJECT | NEW_FEATURE | REFACTOR | BUG_FIX | TECH_DEBT | ARCHITECTURE |
+|---------|:-----------:|:-----------:|:--------:|:-------:|:---------:|:------------:|
+| Deployment Plan | Yes | Optional | Optional | Optional | No | Yes |
+| Monitoring & Observability | Yes | Optional | No | No | No | Yes |
+| Data Model Changes | Yes | Optional | Optional | No | No | Yes |
+| API Changes | Yes | Optional | Optional | No | No | Yes |
+| Budget | Yes | No | No | No | No | Yes |
+
+---
+
+## References
 
 **Parent Documents:**
 - [[README]]
