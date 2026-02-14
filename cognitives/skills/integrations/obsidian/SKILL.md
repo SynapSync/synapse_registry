@@ -7,7 +7,7 @@ description: >
 license: Apache-2.0
 metadata:
   author: synapsync
-  version: "3.1"
+  version: "3.2"
   scope: [root]
   auto_invoke:
     - "sync * to obsidian"
@@ -19,6 +19,15 @@ metadata:
     - "lee de obsidian"
     - "busca en obsidian"
   changelog:
+    - version: "3.2"
+      date: "2026-02-13"
+      changes:
+        - "Full MCP tool coherence: all 13 tools documented (was 7)"
+        - "Added 6 missing tools: delete_note, patch_note, update_frontmatter, get_frontmatter, get_notes_info, move_note"
+        - "Fixed manage_tags contract (operation not action, note-level scope)"
+        - "Documented write_note mode param, search_notes/read_multiple_notes extended params"
+        - "Optimized cross-ref-validator and priority-ranking with metadata-fast-path tools"
+        - "Added optional archive/delete and move/reorganize SYNC workflows"
     - version: "3.1"
       date: "2026-02-13"
       changes:
@@ -88,9 +97,12 @@ This skill supports **bilingual operation** (English + Spanish):
 >
 > Before calling ANY Obsidian MCP tool, use `ToolSearch` to load them:
 > ```
-> ToolSearch query: "+obsidian write"    # For SYNC operations
-> ToolSearch query: "+obsidian read"     # For READ operations
-> ToolSearch query: "+obsidian list"     # For vault browsing
+> ToolSearch query: "+obsidian write"    # For SYNC operations (write_note, patch_note, delete_note, move_note)
+> ToolSearch query: "+obsidian read"     # For READ operations (read_note, read_multiple_notes)
+> ToolSearch query: "+obsidian list"     # For vault browsing (list_directory, get_vault_stats)
+> ToolSearch query: "+obsidian frontmatter"  # For metadata operations (get_frontmatter, update_frontmatter)
+> ToolSearch query: "+obsidian info"     # For batch metadata (get_notes_info)
+> ToolSearch query: "+obsidian search"   # For search and tags (search_notes, manage_tags)
 > ```
 > Never call `mcp__obsidian__*` tools without loading them first. They are deferred tools and will fail if not loaded.
 
@@ -134,17 +146,35 @@ These tools are part of the Claude Code environment and require no special setup
 
 These tools are **deferred** — they must be loaded via `ToolSearch` before first use. They will fail if called without loading.
 
+#### Core Read/Write Tools
+
 | Tool | Parameters | Description |
 |------|-----------|-------------|
-| `mcp__obsidian__write_note` | `path` (string): vault-relative path. `content` (string): markdown body **without** frontmatter YAML block. `frontmatter` (object): key-value pairs to serialize as YAML. | Write a note to the vault. The MCP server handles serializing frontmatter and prepending it to content. |
-| `mcp__obsidian__read_note` | `path` (string): vault-relative path. | Read a note. Returns content with frontmatter. |
-| `mcp__obsidian__read_multiple_notes` | `paths` (string[]): array of vault-relative paths. | Read multiple notes in one call. |
-| `mcp__obsidian__search_notes` | `query` (string): search query. | Full-text search across the vault. |
-| `mcp__obsidian__list_directory` | `path` (string): vault-relative directory path. | List files and subdirectories. |
-| `mcp__obsidian__get_vault_stats` | `recentCount` (number, optional): how many recent notes to return. | Get vault statistics and recently modified notes. |
-| `mcp__obsidian__manage_tags` | `action` (string): `"list"`. | List all tags in the vault. |
+| `mcp__obsidian__write_note` | `path` (string): vault-relative path. `content` (string): markdown body **without** frontmatter YAML block. `frontmatter` (object, optional): key-value pairs to serialize as YAML. `mode` (string, optional): `"overwrite"` (default), `"append"`, or `"prepend"`. | Write a note to the vault. The MCP server serializes frontmatter and prepends it to content. Use `mode: "append"` to add content to an existing note without replacing it. |
+| `mcp__obsidian__read_note` | `path` (string): vault-relative path. `prettyPrint` (boolean, optional). | Read a note. Returns content with frontmatter. |
+| `mcp__obsidian__read_multiple_notes` | `paths` (string[], max 10): vault-relative paths. `includeContent` (boolean, optional, default true). `includeFrontmatter` (boolean, optional, default true). `prettyPrint` (boolean, optional). | Read multiple notes in one call. Use `includeContent: false` for metadata-only batch reads. |
+| `mcp__obsidian__patch_note` | `path` (string): vault-relative path. `oldString` (string): exact string to replace. `newString` (string): replacement. `replaceAll` (boolean, optional, default false). | Efficient partial edit — replace a specific string without rewriting the entire note. Fails on multiple matches unless `replaceAll: true`. |
+| `mcp__obsidian__delete_note` | `path` (string): vault-relative path. `confirmPath` (string): must exactly match `path`. | Delete a note permanently. Requires double confirmation. Always confirm with user before calling. |
+| `mcp__obsidian__move_note` | `oldPath` (string): current path. `newPath` (string): destination path. `overwrite` (boolean, optional, default false). | Move or rename a note. Use for reorganization and archiving workflows. |
 
-> **Note**: The `mcp__obsidian__write_note` tool accepts `frontmatter` as a **separate parameter** (a JSON object), not as part of `content`. Pass raw markdown body in `content` and structured metadata in `frontmatter`. The MCP server serializes the frontmatter into YAML and prepends it. If directories in `path` don't exist, they are created automatically.
+#### Metadata Tools
+
+| Tool | Parameters | Description |
+|------|-----------|-------------|
+| `mcp__obsidian__get_frontmatter` | `path` (string): vault-relative path. `prettyPrint` (boolean, optional). | Extract frontmatter without reading content. Fast path for ranking, filtering, and compliance checks. |
+| `mcp__obsidian__update_frontmatter` | `path` (string): vault-relative path. `frontmatter` (object): fields to update. `merge` (boolean, optional, default true). | Update frontmatter without touching note body. Preferred over full read+write for metadata-only changes (cross-ref fixes, status updates). |
+| `mcp__obsidian__get_notes_info` | `paths` (string[]): vault-relative paths. `prettyPrint` (boolean, optional). | Get metadata for multiple notes without reading content. Ideal for batch pre-checks, ranking, and existence validation. |
+
+#### Discovery Tools
+
+| Tool | Parameters | Description |
+|------|-----------|-------------|
+| `mcp__obsidian__search_notes` | `query` (string): search text. `searchContent` (boolean, optional, default true). `searchFrontmatter` (boolean, optional, default false). `caseSensitive` (boolean, optional, default false). `limit` (number, optional, default 5, max 20). `prettyPrint` (boolean, optional). | Full-text search. Use `searchFrontmatter: true` for metadata queries. |
+| `mcp__obsidian__list_directory` | `path` (string, optional, default "/"): vault-relative directory. `prettyPrint` (boolean, optional). | List files and subdirectories. |
+| `mcp__obsidian__get_vault_stats` | `recentCount` (number, optional, default 5, max 20). `prettyPrint` (boolean, optional). | Get vault statistics and recently modified notes. |
+| `mcp__obsidian__manage_tags` | `path` (string): vault-relative path to a **single note**. `operation` (string): `"add"`, `"remove"`, or `"list"`. `tags` (string[], required for add/remove). | Manage tags on a single note. **Not** a vault-wide tag listing tool. For vault-wide tag discovery, use `search_notes` with `searchFrontmatter: true`. |
+
+> **Note**: The `mcp__obsidian__write_note` tool accepts `frontmatter` as a **separate parameter** (a JSON object), not as part of `content`. Pass raw markdown body in `content` and structured metadata in `frontmatter`. The MCP server serializes the frontmatter into YAML and prepends it. If directories in `path` don't exist, they are created automatically. The `mode` parameter controls write behavior: `"overwrite"` (default) replaces the entire note, `"append"` adds to the end, `"prepend"` adds to the beginning.
 
 ---
 
@@ -186,6 +216,10 @@ AskUserQuestion:
 | Vault browsing | ✅ | ✅ |
 | Priority ranking | ❌ | ✅ |
 | Standard compliance check | ❌ | ✅ |
+| Delete/archive notes | ✅ | ❌ |
+| Move/reorganize notes | ✅ | ❌ |
+| Patch notes (partial edit) | ✅ | ❌ |
+| Metadata-only reads | ❌ | ✅ |
 
 ---
 
@@ -270,7 +304,7 @@ For compliance validation, see [assets/validators/obsidian-linter.md](assets/val
 |---------------|------------------------|
 | `universal-planner` | SYNC: Saves planning docs to vault. READ: Provides historical plans as context |
 | `code-analyzer` | SYNC: Saves technical reports. READ: Surfaces architecture notes |
-| `universal-planner-executor` | READ: Retrieves sprint plans and progress |
+| `universal-planner` (EXECUTE mode) | READ: Retrieves sprint plans and progress |
 
 **Composition pattern:**
 ```
@@ -315,6 +349,10 @@ Agent needs context → obsidian READ mode retrieves from vault
 | "Note already exists" | SYNC | Confirm with user before overwriting |
 | "No results found" | READ | Broaden search, check different folders, verify vault path |
 | "Empty content" | SYNC | Verify source file path with Glob |
+| "Confirmation path mismatch" | SYNC | `delete_note` requires `confirmPath` to exactly match `path` |
+| "Multiple matches found" | SYNC | `patch_note` with `replaceAll: false` fails on multiple matches; set `replaceAll: true` or refine the string |
+| "Frontmatter merge conflict" | SYNC | `update_frontmatter` with `merge: true` preserves existing; use `merge: false` to replace entirely |
+| Slow metadata queries | READ | Use `get_frontmatter` or `get_notes_info` instead of reading full notes |
 
 ---
 
@@ -322,6 +360,7 @@ Agent needs context → obsidian READ mode retrieves from vault
 
 | Version | Date | Changes |
 |---------|------|---------|
+| 3.2 | 2026-02-13 | Full MCP tool coherence (13/13 tools). Added delete/move/patch/metadata tools. Fixed manage_tags contract. Optimized cross-ref and ranking helpers. |
 | 3.1 | 2026-02-13 | Audit remediation: i18n docs, tool contracts, taxonomy reconciliation (14 types), disambiguation, batch limits, negative weights. |
 | 3.0 | 2026-02-12 | Consolidated obsidian-sync + obsidian-reader. Mode-based architecture (SYNC + READ). Shared helpers. |
 | 2.x | 2026-02-11 | (obsidian-sync v2.1.0) Assets pattern, cross-ref validation |

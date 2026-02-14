@@ -34,8 +34,7 @@ Every cognitive lives in `cognitives/{type}s/{category}/{name}/` and must contai
 
 ### Skills
 - **skill-creator** (`cognitives/skills/general/skill-creator/`) — Meta-skill for creating new skills with templates. Includes `assets/` with basic and advanced templates.
-- **universal-planner** (`cognitives/skills/planning/universal-planner/`) — Adaptive planning skill for any software scenario: new projects, features, refactors, bug fixes, tech debt, architecture changes. Uses modular assets pattern with 6 modes.
-- **universal-planner-executor** (`cognitives/skills/planning/universal-planner-executor/`) — Sprint-by-sprint executor companion for universal-planner output.
+- **universal-planner** (`cognitives/skills/planning/universal-planner/`) — Unified planning and execution skill with PLAN and EXECUTE modes. Covers new projects, features, refactors, bug fixes, tech debt, and architecture changes. Uses modular assets pattern with 8 modes (2 top-level + 6 planning sub-modes).
 - **code-analyzer** (`cognitives/skills/analytics/code-analyzer/`) — Analyzes code modules and generates structured technical reports with architecture diagrams.
 - **obsidian** (`cognitives/skills/integrations/obsidian/`) — Unified Obsidian vault manager with SYNC and READ modes. Syncs documents to vault and reads/searches notes via MCP. Includes the Obsidian markdown standard specification and linter as internal assets. Claude-only.
 

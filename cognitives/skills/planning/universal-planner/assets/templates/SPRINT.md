@@ -45,8 +45,7 @@ related:
 
 ## Carried Forward from [[SPRINT-{{prev_sprint}}]]
 
-{{#if has_carried_items}}
-The following items were not completed in Sprint {{prev_sprint}} and are carried forward:
+*If this is Sprint 2 or later and there are items carried forward from the previous sprint, include the table below. For Sprint 1, write "No items carried forward — this is the first sprint."*
 
 | ID | Task | Reason | Status |
 |----|------|--------|--------|
@@ -54,11 +53,6 @@ The following items were not completed in Sprint {{prev_sprint}} and are carried
 | {{task_id_2}} | {{task_name_2}} | {{reason_2}} | {{status_2}} |
 
 **Adjusted Priority:** These tasks take priority in this sprint.
-{{/if}}
-
-{{#unless has_carried_items}}
-No items carried forward from previous sprint.
-{{/unless}}
 
 ---
 
@@ -277,29 +271,6 @@ No items carried forward from previous sprint.
 
 ---
 
-## Sprint Retrospective
-
-### What Went Well ✅
-1. {{went_well_1}}
-2. {{went_well_2}}
-3. {{went_well_3}}
-
-### What Could Be Improved ⚠️
-1. {{improve_1}}
-2. {{improve_2}}
-3. {{improve_3}}
-
-### Action Items for Next Sprint 🎯
-1. [ ] {{action_item_1}}
-2. [ ] {{action_item_2}}
-3. [ ] {{action_item_3}}
-
-### Learnings 🎓
-1. **{{learning_1_title}}:** {{learning_1_description}}
-2. **{{learning_2_title}}:** {{learning_2_description}}
-
----
-
 ## Next Sprint Preview
 
 **Sprint {{next_sprint}} Focus:** {{next_sprint_focus}}
@@ -315,7 +286,19 @@ No items carried forward from previous sprint.
 
 ---
 
-## Referencias
+## Section Applicability
+
+*Omit sections marked "No" entirely for the given sub-mode.*
+
+| Section | NEW_PROJECT | NEW_FEATURE | REFACTOR | BUG_FIX | TECH_DEBT | ARCHITECTURE |
+|---------|:-----------:|:-----------:|:--------:|:-------:|:---------:|:------------:|
+| Daily Progress | Yes | Optional | Optional | No | Optional | Optional |
+| Deployment | Yes | Optional | No | No | No | Yes |
+| Testing (full detail) | Yes | Yes | Yes | Yes | Optional | Yes |
+
+---
+
+## References
 
 **Parent Document:**
 - [[PROGRESS]]
