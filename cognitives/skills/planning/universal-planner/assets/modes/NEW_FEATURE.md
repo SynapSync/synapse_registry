@@ -19,7 +19,7 @@ Use this mode when **adding functionality to an existing project**. The user wan
 ## Output Structure
 
 ```
-{output_base}/planning/{project-name}/
+{output_dir}/planning/{project-name}/
 ├── README.md
 ├── discovery/
 │   └── CONVENTIONS.md              # Existing patterns and conventions

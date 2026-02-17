@@ -18,7 +18,7 @@
 ### Expected Output Structure
 
 ```
-{output_base}/planning/refactor-auth-jwt/
+{output_dir}/planning/refactor-auth-jwt/
 ├── README.md
 ├── discovery/
 │   └── CONVENTIONS.md
@@ -45,7 +45,7 @@
 
 **Command:**
 ```bash
-OUTPUT_DIR=~/.agents/test-refactor/planning/refactor-auth-jwt
+OUTPUT_DIR=.agents/staging/universal-planner/test-refactor/planning/refactor-auth-jwt
 test -f "$OUTPUT_DIR/README.md" && \
 test -f "$OUTPUT_DIR/discovery/CONVENTIONS.md" && \
 test -f "$OUTPUT_DIR/analysis/ANALYSIS.md" && \
@@ -67,7 +67,7 @@ echo "✓ All 6 required files exist"
 
 **Command:**
 ```bash
-OUTPUT_DIR=~/.agents/test-refactor/planning/refactor-auth-jwt
+OUTPUT_DIR=.agents/staging/universal-planner/test-refactor/planning/refactor-auth-jwt
 FILE_COUNT=$(find "$OUTPUT_DIR" -name "*.md" -type f | wc -l | tr -d ' ')
 if [ "$FILE_COUNT" -eq 6 ]; then
   echo "✓ Correct file count: 6"
@@ -88,7 +88,7 @@ fi
 
 **Command:**
 ```bash
-OUTPUT_DIR=~/.agents/test-refactor/planning/refactor-auth-jwt
+OUTPUT_DIR=.agents/staging/universal-planner/test-refactor/planning/refactor-auth-jwt
 for file in README.md discovery/CONVENTIONS.md analysis/ANALYSIS.md planning/PLANNING.md execution/EXECUTION.md sprints/PROGRESS.md; do
   if head -1 "$OUTPUT_DIR/$file" | grep -q "^---$"; then
     echo "✓ $file has frontmatter"
@@ -110,7 +110,7 @@ done
 
 **Command:**
 ```bash
-OUTPUT_DIR=~/.agents/test-refactor/planning/refactor-auth-jwt
+OUTPUT_DIR=.agents/staging/universal-planner/test-refactor/planning/refactor-auth-jwt
 grep -q "## Executive Summary" "$OUTPUT_DIR/README.md" && echo "✓ README has Executive Summary"
 grep -q "## Project Structure" "$OUTPUT_DIR/discovery/CONVENTIONS.md" && echo "✓ CONVENTIONS has Project Structure"
 grep -q "## Executive Summary" "$OUTPUT_DIR/analysis/ANALYSIS.md" && echo "✓ ANALYSIS has Executive Summary"
@@ -128,7 +128,7 @@ grep -q "## Executive Summary" "$OUTPUT_DIR/analysis/ANALYSIS.md" && echo "✓ A
 
 **Command:**
 ```bash
-OUTPUT_DIR=~/.agents/test-refactor/planning/refactor-auth-jwt
+OUTPUT_DIR=.agents/staging/universal-planner/test-refactor/planning/refactor-auth-jwt
 grep -l '\[\[.*\]\]' "$OUTPUT_DIR/README.md" && echo "✓ README uses wiki-links"
 ```
 
@@ -144,7 +144,7 @@ grep -l '\[\[.*\]\]' "$OUTPUT_DIR/README.md" && echo "✓ README uses wiki-links
 
 **Command:**
 ```bash
-OUTPUT_DIR=~/.agents/test-refactor/planning/refactor-auth-jwt
+OUTPUT_DIR=.agents/staging/universal-planner/test-refactor/planning/refactor-auth-jwt
 for file in README.md discovery/CONVENTIONS.md analysis/ANALYSIS.md planning/PLANNING.md execution/EXECUTION.md sprints/PROGRESS.md; do
   grep -q "^## References$" "$OUTPUT_DIR/$file" && echo "✓ $file has References"
 done
@@ -164,7 +164,7 @@ done
 
 **Command:**
 ```bash
-OUTPUT_DIR=~/.agents/test-refactor/planning/refactor-auth-jwt
+OUTPUT_DIR=.agents/staging/universal-planner/test-refactor/planning/refactor-auth-jwt
 grep -q '\[\[CONVENTIONS\]\]' "$OUTPUT_DIR/analysis/ANALYSIS.md" && echo "✓ ANALYSIS → CONVENTIONS"
 grep -q '\[\[ANALYSIS\]\]' "$OUTPUT_DIR/discovery/CONVENTIONS.md" && echo "✓ CONVENTIONS → ANALYSIS"
 ```
@@ -181,7 +181,7 @@ grep -q '\[\[ANALYSIS\]\]' "$OUTPUT_DIR/discovery/CONVENTIONS.md" && echo "✓ C
 
 **Command:**
 ```bash
-OUTPUT_DIR=~/.agents/test-refactor/planning/refactor-auth-jwt
+OUTPUT_DIR=.agents/staging/universal-planner/test-refactor/planning/refactor-auth-jwt
 test -f "$OUTPUT_DIR/sprints/PROGRESS.md" && \
 grep -q "## Sprint Overview" "$OUTPUT_DIR/sprints/PROGRESS.md" && \
 echo "✓ PROGRESS.md exists with Sprint Overview"
@@ -213,7 +213,7 @@ echo "✓ PROGRESS.md exists with Sprint Overview"
 
 **Command:**
 ```bash
-OUTPUT_DIR=~/.agents/test-refactor/planning/refactor-auth-jwt
+OUTPUT_DIR=.agents/staging/universal-planner/test-refactor/planning/refactor-auth-jwt
 
 # Check for scope_modules in ANALYSIS.md frontmatter
 if grep -A 20 "^---$" "$OUTPUT_DIR/analysis/ANALYSIS.md" | grep -q "scope_modules:"; then
@@ -242,7 +242,7 @@ fi
 
 **Command:**
 ```bash
-OUTPUT_DIR=~/.agents/test-refactor/planning/refactor-auth-jwt
+OUTPUT_DIR=.agents/staging/universal-planner/test-refactor/planning/refactor-auth-jwt
 test -f "$OUTPUT_DIR/sprints/PROGRESS.md" && echo "✓ PROGRESS.md present"
 grep -q "Before:" "$OUTPUT_DIR/execution/EXECUTION.md" && echo "✓ Before/After fields in tasks"
 ```
@@ -259,7 +259,7 @@ grep -q "Before:" "$OUTPUT_DIR/execution/EXECUTION.md" && echo "✓ Before/After
 
 **Command:**
 ```bash
-OUTPUT_DIR=~/.agents/test-refactor/planning/refactor-auth-jwt
+OUTPUT_DIR=.agents/staging/universal-planner/test-refactor/planning/refactor-auth-jwt
 if grep -r '{{' "$OUTPUT_DIR" >/dev/null 2>&1; then
   echo "✗ Found Handlebars syntax"
 else

@@ -30,7 +30,7 @@ assets/
 
 | File | Purpose |
 |------|---------|
-| `config-resolver.md` | `{output_base}` configuration resolution workflow |
+| `config-resolver.md` | `{output_dir}` configuration resolution workflow |
 | `decision-log.md` | Decision log format for EXECUTE mode |
 | `code-quality-standards.md` | Production code standards for EXECUTE mode |
 | `troubleshooting.md` | Common issues for both PLAN and EXECUTE modes |

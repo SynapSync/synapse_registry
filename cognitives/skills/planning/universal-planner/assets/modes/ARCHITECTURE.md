@@ -19,7 +19,7 @@ Use this mode when **evolving system architecture or planning major structural c
 ## Output Structure
 
 ```
-{output_base}/planning/{project-name}/
+{output_dir}/planning/{project-name}/
 ├── README.md
 ├── discovery/
 │   └── CONVENTIONS.md              # Current architecture

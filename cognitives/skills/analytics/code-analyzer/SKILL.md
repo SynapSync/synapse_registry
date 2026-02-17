@@ -6,10 +6,14 @@ description: >
 license: Apache-2.0
 metadata:
   author: synapsync
-  version: "2.1"
+  version: "2.2"
   scope: [root]
   auto_invoke: "When the user asks to analyze, explain, or document a code module or file"
   changelog:
+    - version: "2.2"
+      date: "2026-02-17"
+      changes:
+        - "Deterministic staging pattern, {output_dir} rename, post-production delivery"
     - version: "2.1"
       date: "2026-02-12"
       changes:
@@ -94,24 +98,14 @@ The user provides:
 
 ## Configuration Resolution
 
-Before starting any workflow step, resolve the `{output_base}` path that determines where all output documents are stored.
+Before starting any workflow step, resolve the `{output_dir}` path — the local staging directory where all output documents are stored.
 
-1. **Check** for `cognitive.config.json` in the project root (current working directory)
-2. **If found**: read the `output_base` value and use it for all `{output_base}` references in this skill
-3. **If NOT found**:
-   a. Infer the project name from the current directory name or git repository name
-   b. Ask the user: _"Where should I store output documents for this project?"_ — suggest `~/.agents/{project-name}/` as the default
-   c. Create `cognitive.config.json` in the project root with their chosen path
-   d. Inform the user the config was saved for future skill runs
+1. **Infer** the project name from the current directory name or git repository name
+2. **Set** `{output_dir}` = `.agents/staging/code-analyzer/{project-name}/`
+3. **Create** the directory if it doesn't exist
+4. **Present** the resolved path to the user before proceeding
 
-**Config file format** (`cognitive.config.json`):
-```json
-{
-  "output_base": "~/.agents/my-project"
-}
-```
-
-> **IMPORTANT**: Every `{output_base}` reference in this skill depends on this resolution. If the config file cannot be read or created, ask the user for an explicit path before proceeding.
+> **IMPORTANT**: Every `{output_dir}` reference in this skill depends on this resolution.
 
 ## Obsidian Output Standard
 
@@ -175,7 +169,7 @@ Produce the structured technical report with all findings.
 **Actions**:
 1. Write the report following the **Output Structure** (see below)
 2. Generate Mermaid diagrams for visual understanding
-3. Save the report to `{output_base}/technical/module-analysis/{module-name}/`
+3. Save the report to `{output_dir}/technical/module-analysis/{module-name}/`
 4. Add `## Referencias` section at the end of the report (link to REFACTOR.md if v3, link to any other analysis documents for the same module)
 
 **Output**: Complete markdown report with diagrams.
@@ -198,16 +192,16 @@ If the user requests a v3 analysis, add improvement suggestions.
 All reports are saved to a central technical documentation directory:
 
 ```
-{output_base}/technical/module-analysis/
+{output_dir}/technical/module-analysis/
 └── {module-name}/
     ├── REPORT.md              # Main technical report
     └── REFACTOR.md            # Refactoring recommendations (v3 only)
 ```
 
 **Naming convention**: Use the module's folder name in kebab-case.
-- `/src/modules/OrderService` → `{output_base}/technical/module-analysis/order-service/`
-- `/apps/core/payments` → `{output_base}/technical/module-analysis/payments/`
-- `/src/services/notification-service.ts` → `{output_base}/technical/module-analysis/notification-service/`
+- `/src/modules/OrderService` → `{output_dir}/technical/module-analysis/order-service/`
+- `/apps/core/payments` → `{output_dir}/technical/module-analysis/payments/`
+- `/src/services/notification-service.ts` → `{output_dir}/technical/module-analysis/notification-service/`
 
 ## Output Structure
 
@@ -306,7 +300,7 @@ The analysis framework works for any language or framework. Adapt terminology to
 1. **Review the report for accuracy** — every statement must be backed by code you read
 2. **Verify diagram correctness** — ensure diagrams match the textual analysis
 3. **Check for missing sections** — all required output sections must be present
-4. **Save to the correct location** — `{output_base}/technical/module-analysis/{module-name}/`
+4. **Save to the correct location** — `{output_dir}/technical/module-analysis/{module-name}/`
 
 ## Integration with Other Skills
 
@@ -324,6 +318,18 @@ Before executing a sprint that modifies a module, run `code-analyzer` to documen
 4. **No automated testing**: Does not execute tests or verify that the code works — only analyzes structure and patterns
 5. **Framework detection**: May not recognize custom or obscure frameworks. The user can provide framework context to compensate
 
+## Post-Production Delivery
+
+After generating the technical report (and refactoring recommendations if v3), offer the user delivery options:
+
+1. **Sync to Obsidian vault** — use the `obsidian` skill (SYNC mode) to move the report to the vault
+2. **Move to custom path** — user specifies a destination and files are moved there
+3. **Keep in staging** — leave files in `.agents/staging/code-analyzer/` for later use
+
+Ask the user which option they prefer.
+
+---
+
 ## Troubleshooting
 
 | Issue | Solution |
@@ -340,6 +346,7 @@ See [assets/templates/REPORT.md](assets/templates/REPORT.md) and [assets/templat
 
 ## Version History
 
+- **2.2** (2026-02-17): Staging pattern migration — deterministic .agents/staging/ output, {output_dir} rename, post-production delivery
 - **2.0** (2026-02-11): Obsidian-native output — rich frontmatter, wiki-links, bidirectional references, metric tables, `## Referencias`
 - **1.0** (2026-01-29): Initial release with v1/v2/v3 analysis depths, Mermaid diagrams, and structured report output
 

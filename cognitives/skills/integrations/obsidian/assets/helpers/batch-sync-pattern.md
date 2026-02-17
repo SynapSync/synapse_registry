@@ -6,7 +6,7 @@ Optimize the workflow for syncing multiple files to Obsidian by parallelizing re
 
 ## When to Use
 
-- User asks to sync a directory (e.g., `{output_base}/planning/`)
+- User asks to sync a directory (e.g., `{output_dir}/planning/`)
 - User asks to sync multiple files by pattern (e.g., "sync all reports from today")
 - After another skill produces multiple documents and user wants all synced
 
@@ -36,7 +36,7 @@ For each file:
 Use `Glob` to collect all files to sync:
 
 ```
-Glob pattern: "{output_base}/planning/**/*.md"
+Glob pattern: "{output_dir}/planning/**/*.md"
 ```
 
 **Result:** List of absolute file paths:
@@ -228,19 +228,19 @@ When implementing batch sync:
 
 ## Example: Full Batch Flow
 
-**User request:** "sync {output_base}/planning/2026-02-10/ to obsidian"
+**User request:** "sync {output_dir}/planning/2026-02-10/ to obsidian"
 
 **Step 1: Discover**
 ```bash
-Glob("{output_base}/planning/2026-02-10/**/*.md")
+Glob("{output_dir}/planning/2026-02-10/**/*.md")
 # Found: 00-strategic-analysis.md, 01-technical-debt.md, 02-growth-vision.md
 ```
 
 **Step 2: Read all in parallel**
 ```
-Read("{output_base}/planning/2026-02-10/00-strategic-analysis.md")
-Read("{output_base}/planning/2026-02-10/01-technical-debt.md")
-Read("{output_base}/planning/2026-02-10/02-growth-vision.md")
+Read("{output_dir}/planning/2026-02-10/00-strategic-analysis.md")
+Read("{output_dir}/planning/2026-02-10/01-technical-debt.md")
+Read("{output_dir}/planning/2026-02-10/02-growth-vision.md")
 ```
 
 **Step 3: Load MCP once**

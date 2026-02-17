@@ -7,7 +7,7 @@ description: >
 license: Apache-2.0
 metadata:
   author: synapsync
-  version: "3.3"
+  version: "3.4"
   scope: [root]
   auto_invoke:
     - "sync * to obsidian"
@@ -19,6 +19,10 @@ metadata:
     - "lee de obsidian"
     - "busca en obsidian"
   changelog:
+    - version: "3.4"
+      date: "2026-02-17"
+      changes:
+        - "Staging convention, batch-move-from-staging, {output_dir} rename"
     - version: "3.3"
       date: "2026-02-14"
       changes:
@@ -275,20 +279,14 @@ Read, search, and reason over vault notes to provide contextual knowledge for de
 
 ## Configuration Resolution
 
-Before any operation, resolve `{output_base}` — the directory where skills store output documents (reports, plans, analysis). This is a **registry-wide convention** used by all SynapSync skills that produce output.
+The obsidian skill does not produce output to `{output_dir}` — it reads FROM the vault and writes TO the vault. However, it works closely with producer skills (universal-planner, code-analyzer, sprint-forge) that stage their output in `.agents/staging/{skill-name}/{project-name}/`.
 
-**Config file:** `cognitive.config.json` in the project root (current working directory).
-
-```json
-{
-  "output_base": "~/.agents/my-project"
-}
-```
-
-**Resolution steps:**
-1. Check for `cognitive.config.json` in the project root
-2. If found → read `output_base` and use it for all `{output_base}` references
-3. If not found → infer project name from directory/git repo, ask user with `AskUserQuestion` (suggest `~/.agents/{project-name}/`), create the config file
+**When the user says "sync my output to vault"**, obsidian SYNC mode:
+1. Detects `.agents/staging/` in the project root
+2. Lists available skill output directories
+3. Lets the user pick which skill's output to sync
+4. Syncs all files from the selected staging directory to the vault
+5. Optionally cleans up the staging directory after successful sync
 
 ---
 
@@ -322,6 +320,7 @@ For compliance validation, see [assets/validators/obsidian-linter.md](assets/val
 | `universal-planner` | SYNC: Saves planning docs to vault. READ: Provides historical plans as context |
 | `code-analyzer` | SYNC: Saves technical reports. READ: Surfaces architecture notes |
 | `universal-planner` (EXECUTE mode) | READ: Retrieves sprint plans and progress |
+| `sprint-forge` | SYNC: Saves findings, roadmap, sprint files, and re-entry prompts to vault. READ: Provides project history and debt context across sessions. |
 
 **Composition pattern:**
 ```
@@ -377,6 +376,7 @@ Agent needs context → obsidian READ mode retrieves from vault
 
 | Version | Date | Changes |
 |---------|------|---------|
+| 3.4 | 2026-02-17 | Staging convention migration — batch-move-from-staging workflow, {output_dir} rename, staging-aware Configuration Resolution |
 | 3.3 | 2026-02-14 | SYNC mode filesystem fallback. MCP optional. Step 0 access mode detection. YAML serialization guidance. All helpers updated with fallback paths. |
 | 3.2 | 2026-02-13 | Full MCP tool coherence (13/13 tools). Added delete/move/patch/metadata tools. Fixed manage_tags contract. Optimized cross-ref and ranking helpers. |
 | 3.1 | 2026-02-13 | Audit remediation: i18n docs, tool contracts, taxonomy reconciliation (14 types), disambiguation, batch limits, negative weights. |

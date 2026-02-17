@@ -18,7 +18,7 @@
 ### Expected Output Structure
 
 ```
-{output_base}/planning/microservices-migration/
+{output_dir}/planning/microservices-migration/
 ├── README.md
 ├── discovery/
 │   └── CONVENTIONS.md
@@ -54,7 +54,7 @@
 
 **Command:**
 ```bash
-OUTPUT_DIR=~/.agents/test-architecture/planning/microservices-migration
+OUTPUT_DIR=.agents/staging/universal-planner/test-architecture/planning/microservices-migration
 FILE_COUNT=$(find "$OUTPUT_DIR" -name "*.md" -type f | wc -l | tr -d ' ')
 if [ "$FILE_COUNT" -eq 13 ]; then
   echo "✓ Correct file count: 13"
@@ -75,7 +75,7 @@ fi
 
 **Command:**
 ```bash
-OUTPUT_DIR=~/.agents/test-architecture/planning/microservices-migration/design
+OUTPUT_DIR=.agents/staging/universal-planner/test-architecture/planning/microservices-migration/design
 
 test -f "$OUTPUT_DIR/system-overview.md" && echo "✓ system-overview.md exists"
 test -f "$OUTPUT_DIR/architecture-decisions.md" && echo "✓ architecture-decisions.md exists"
@@ -104,7 +104,7 @@ fi
 
 **Command:**
 ```bash
-OUTPUT_DIR=~/.agents/test-architecture/planning/microservices-migration
+OUTPUT_DIR=.agents/staging/universal-planner/test-architecture/planning/microservices-migration
 
 test -f "$OUTPUT_DIR/README.md" && echo "✓ README.md exists"
 test -f "$OUTPUT_DIR/discovery/CONVENTIONS.md" && echo "✓ CONVENTIONS.md exists"
@@ -134,7 +134,7 @@ test -f "$OUTPUT_DIR/sprints/PROGRESS.md" && echo "✓ PROGRESS.md exists"
 
 **Command:**
 ```bash
-OUTPUT_DIR=~/.agents/test-architecture/planning/microservices-migration
+OUTPUT_DIR=.agents/staging/universal-planner/test-architecture/planning/microservices-migration
 
 # Core files
 for file in README.md discovery/CONVENTIONS.md analysis/ANALYSIS.md planning/PLANNING.md execution/EXECUTION.md sprints/PROGRESS.md; do
@@ -167,7 +167,7 @@ done
 
 **Command:**
 ```bash
-OUTPUT_DIR=~/.agents/test-architecture/planning/microservices-migration/design
+OUTPUT_DIR=.agents/staging/universal-planner/test-architecture/planning/microservices-migration/design
 
 # Architecture decisions should use ADR format
 grep -q "ADR-\|Decision:\|Context:" "$OUTPUT_DIR/architecture-decisions.md" && \
@@ -202,7 +202,7 @@ echo "✓ Data model addresses distributed architecture"
 
 **Command:**
 ```bash
-OUTPUT_DIR=~/.agents/test-architecture/planning/microservices-migration/analysis
+OUTPUT_DIR=.agents/staging/universal-planner/test-architecture/planning/microservices-migration/analysis
 
 # Check for gap analysis section
 if grep -q "Gap Analysis\|Current.*Architecture\|Target.*Architecture" "$OUTPUT_DIR/ANALYSIS.md"; then
@@ -247,7 +247,7 @@ echo "✓ Migration path documented"
 
 **Command:**
 ```bash
-OUTPUT_DIR=~/.agents/test-architecture/planning/microservices-migration
+OUTPUT_DIR=.agents/staging/universal-planner/test-architecture/planning/microservices-migration
 grep -l '\[\[.*\]\]' "$OUTPUT_DIR/README.md" && echo "✓ README uses wiki-links"
 ```
 
@@ -263,7 +263,7 @@ grep -l '\[\[.*\]\]' "$OUTPUT_DIR/README.md" && echo "✓ README uses wiki-links
 
 **Command:**
 ```bash
-OUTPUT_DIR=~/.agents/test-architecture/planning/microservices-migration
+OUTPUT_DIR=.agents/staging/universal-planner/test-architecture/planning/microservices-migration
 
 REFS_COUNT=0
 for file in $(find "$OUTPUT_DIR" -name "*.md" -type f); do
@@ -311,7 +311,7 @@ fi
 
 **Command:**
 ```bash
-OUTPUT_DIR=~/.agents/test-architecture/planning/microservices-migration
+OUTPUT_DIR=.agents/staging/universal-planner/test-architecture/planning/microservices-migration
 test -f "$OUTPUT_DIR/sprints/PROGRESS.md" && \
 grep -q "## Sprint Overview" "$OUTPUT_DIR/sprints/PROGRESS.md" && \
 echo "✓ PROGRESS.md exists with Sprint Overview"
@@ -367,7 +367,7 @@ echo "✓ PROGRESS.md exists with Sprint Overview"
 
 **Command:**
 ```bash
-OUTPUT_DIR=~/.agents/test-architecture/planning/microservices-migration
+OUTPUT_DIR=.agents/staging/universal-planner/test-architecture/planning/microservices-migration
 test -f "$OUTPUT_DIR/sprints/PROGRESS.md" && echo "✓ PROGRESS.md present"
 grep -q "Before:" "$OUTPUT_DIR/execution/EXECUTION.md" && echo "✓ Before/After in tasks"
 ```
@@ -384,7 +384,7 @@ grep -q "Before:" "$OUTPUT_DIR/execution/EXECUTION.md" && echo "✓ Before/After
 
 **Command:**
 ```bash
-OUTPUT_DIR=~/.agents/test-architecture/planning/microservices-migration
+OUTPUT_DIR=.agents/staging/universal-planner/test-architecture/planning/microservices-migration
 if grep -r '{{' "$OUTPUT_DIR" >/dev/null 2>&1; then
   echo "✗ Found Handlebars syntax"
 else

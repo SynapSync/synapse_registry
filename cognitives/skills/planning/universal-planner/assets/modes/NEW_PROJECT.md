@@ -21,7 +21,7 @@ Use this mode when planning a **product or application from scratch** (greenfiel
 NEW_PROJECT produces the most comprehensive documentation set:
 
 ```
-{output_base}/planning/{project-name}/
+{output_dir}/planning/{project-name}/
 ├── README.md
 ├── requirements/                    # SDLC Phase 1 (7 files)
 │   ├── problem-definition.md

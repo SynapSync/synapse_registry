@@ -2,7 +2,7 @@
   "$schema": "https://synapsync.dev/schemas/cognitive-manifest.json",
   "name": "sprint-forge",
   "type": "skill",
-  "version": "1.1.0",
+  "version": "1.2.0",
   "description": "Adaptive sprint workflow — analysis, roadmap, iterative sprints, debt tracking, and context persistence",
   "author": {
     "name": "SynapSync",
@@ -45,6 +45,15 @@
   },
   "changelog": [
     {
+      "version": "1.2.0",
+      "date": "2026-02-17",
+      "changes": [
+        "Migrated to deterministic staging pattern (.agents/staging/sprint-forge/)",
+        "Renamed {output_base} to {output_dir} for consistency across all skills",
+        "Added post-production delivery step to INIT and SPRINT modes"
+      ]
+    },
+    {
       "version": "1.1.0",
       "date": "2026-02-16",
       "changes": [
@@ -69,5 +78,5 @@
     }
   ],
   "createdAt": "2026-02-16T00:00:00Z",
-  "updatedAt": "2026-02-16T00:00:00Z"
+  "updatedAt": "2026-02-17T00:00:00Z"
 }

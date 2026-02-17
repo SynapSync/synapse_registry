@@ -18,7 +18,7 @@
 ### Expected Output Structure
 
 ```
-{output_base}/planning/dark-mode/
+{output_dir}/planning/dark-mode/
 ├── README.md
 ├── discovery/
 │   └── CONVENTIONS.md
@@ -50,7 +50,7 @@
 
 **Command:**
 ```bash
-OUTPUT_DIR=~/.agents/test-new-feature/planning/dark-mode
+OUTPUT_DIR=.agents/staging/universal-planner/test-new-feature/planning/dark-mode
 test -f "$OUTPUT_DIR/README.md" && \
 test -f "$OUTPUT_DIR/discovery/CONVENTIONS.md" && \
 test -f "$OUTPUT_DIR/analysis/ANALYSIS.md" && \
@@ -80,7 +80,7 @@ echo "✓ All 6 required files exist"
 
 **Command:**
 ```bash
-OUTPUT_DIR=~/.agents/test-new-feature/planning/dark-mode
+OUTPUT_DIR=.agents/staging/universal-planner/test-new-feature/planning/dark-mode
 FILE_COUNT=$(find "$OUTPUT_DIR" -name "*.md" -type f | wc -l | tr -d ' ')
 if [ "$FILE_COUNT" -eq 6 ]; then
   echo "✓ Correct file count: 6"
@@ -101,7 +101,7 @@ fi
 
 **Command:**
 ```bash
-OUTPUT_DIR=~/.agents/test-new-feature/planning/dark-mode
+OUTPUT_DIR=.agents/staging/universal-planner/test-new-feature/planning/dark-mode
 for file in README.md discovery/CONVENTIONS.md analysis/ANALYSIS.md planning/PLANNING.md execution/EXECUTION.md sprints/PROGRESS.md; do
   if head -1 "$OUTPUT_DIR/$file" | grep -q "^---$"; then
     echo "✓ $file has frontmatter"
@@ -131,7 +131,7 @@ done
 
 **Command:**
 ```bash
-OUTPUT_DIR=~/.agents/test-new-feature/planning/dark-mode
+OUTPUT_DIR=.agents/staging/universal-planner/test-new-feature/planning/dark-mode
 
 # README.md
 grep -q "## Executive Summary" "$OUTPUT_DIR/README.md" && echo "✓ README has Executive Summary"
@@ -172,7 +172,7 @@ grep -q "## Global Metrics" "$OUTPUT_DIR/sprints/PROGRESS.md" && echo "✓ PROGR
 
 **Command:**
 ```bash
-OUTPUT_DIR=~/.agents/test-new-feature/planning/dark-mode
+OUTPUT_DIR=.agents/staging/universal-planner/test-new-feature/planning/dark-mode
 
 # Check for wiki-links (should find them)
 grep -l '\[\[.*\]\]' "$OUTPUT_DIR/README.md" && echo "✓ README uses wiki-links"
@@ -203,7 +203,7 @@ fi
 
 **Command:**
 ```bash
-OUTPUT_DIR=~/.agents/test-new-feature/planning/dark-mode
+OUTPUT_DIR=.agents/staging/universal-planner/test-new-feature/planning/dark-mode
 
 for file in README.md discovery/CONVENTIONS.md analysis/ANALYSIS.md planning/PLANNING.md execution/EXECUTION.md sprints/PROGRESS.md; do
   if grep -q "^## References$" "$OUTPUT_DIR/$file"; then
@@ -246,7 +246,7 @@ done
 
 **Command:**
 ```bash
-OUTPUT_DIR=~/.agents/test-new-feature/planning/dark-mode
+OUTPUT_DIR=.agents/staging/universal-planner/test-new-feature/planning/dark-mode
 
 # Check if ANALYSIS references CONVENTIONS
 grep -q '\[\[CONVENTIONS\]\]' "$OUTPUT_DIR/analysis/ANALYSIS.md" && echo "✓ ANALYSIS → CONVENTIONS"
@@ -267,7 +267,7 @@ grep -q '\[\[ANALYSIS\]\]' "$OUTPUT_DIR/discovery/CONVENTIONS.md" && echo "✓ C
 
 **Command:**
 ```bash
-OUTPUT_DIR=~/.agents/test-new-feature/planning/dark-mode
+OUTPUT_DIR=.agents/staging/universal-planner/test-new-feature/planning/dark-mode
 test -f "$OUTPUT_DIR/sprints/PROGRESS.md" && \
 grep -q "## Sprint Overview" "$OUTPUT_DIR/sprints/PROGRESS.md" && \
 echo "✓ PROGRESS.md exists and contains Sprint Overview"
@@ -313,7 +313,7 @@ echo "✓ PROGRESS.md exists and contains Sprint Overview"
 
 **Command:**
 ```bash
-OUTPUT_DIR=~/.agents/test-new-feature/planning/dark-mode
+OUTPUT_DIR=.agents/staging/universal-planner/test-new-feature/planning/dark-mode
 grep -q "## Conventions Alignment" "$OUTPUT_DIR/planning/PLANNING.md" && \
 grep -q '\[\[CONVENTIONS\]\]' "$OUTPUT_DIR/planning/PLANNING.md" && \
 echo "✓ PLANNING references and aligns with CONVENTIONS"
@@ -341,7 +341,7 @@ echo "✓ PLANNING references and aligns with CONVENTIONS"
 
 **Command:**
 ```bash
-OUTPUT_DIR=~/.agents/test-new-feature/planning/dark-mode
+OUTPUT_DIR=.agents/staging/universal-planner/test-new-feature/planning/dark-mode
 
 # Check PROGRESS.md exists
 test -f "$OUTPUT_DIR/sprints/PROGRESS.md" && echo "✓ PROGRESS.md template present"
@@ -379,7 +379,7 @@ echo "✓ Granularity levels documented correctly"
 
 **Command:**
 ```bash
-OUTPUT_DIR=~/.agents/test-new-feature/planning/dark-mode
+OUTPUT_DIR=.agents/staging/universal-planner/test-new-feature/planning/dark-mode
 
 # Check for Handlebars (should not exist)
 if grep -r '{{' "$OUTPUT_DIR" >/dev/null 2>&1; then

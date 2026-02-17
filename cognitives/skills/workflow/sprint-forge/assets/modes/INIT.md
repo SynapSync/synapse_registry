@@ -47,7 +47,7 @@ Gather or detect the following configuration:
 |--------|---------------|
 | **Project Name** | Ask the user or derive from the codebase directory name. Use a slug format: `my-project-audit`. |
 | **Codebase Path** | The absolute path to the codebase. Usually the current working directory. |
-| **Output Directory** | Where sprint-forge artifacts will be stored. Suggest: `~/.agents/{project-name}/`. Ask the user to confirm. |
+| **Output Directory** | Where sprint-forge artifacts will be stored. Default: `.agents/staging/sprint-forge/{project-name}/`. Present to user before proceeding. |
 | **Sprint Output Dir** | `{output_dir}/sprints/` (automatic) |
 
 Present the resolved configuration to the user for confirmation:
@@ -151,6 +151,16 @@ Using the [reentry-generator.md](../helpers/reentry-generator.md) helper:
    - Sprint 1 finding file path
 3. Generate all 4 scenario prompts with real paths
 4. Write to `{output_dir}/RE-ENTRY-PROMPTS.md`
+
+### Step 8 — Post-Production Delivery
+
+After all INIT documents are generated in `{output_dir}`, offer the user delivery options:
+
+1. **Sync to Obsidian vault** — use the `obsidian` skill (SYNC mode) to move findings, roadmap, and re-entry prompts to the vault
+2. **Move to custom path** — user specifies a destination and files are moved there
+3. **Keep in staging** — leave files in `.agents/staging/sprint-forge/` for later use
+
+Ask the user which option they prefer. If they choose option 1 or 2, move (not copy) the files to the destination.
 
 ---
 

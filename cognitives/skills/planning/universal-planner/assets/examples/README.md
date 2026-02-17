@@ -113,7 +113,7 @@ Run a single test case:
 
 ```bash
 # Example: Run NEW_FEATURE test (test-case-2)
-OUTPUT_DIR=~/.agents/test-newfeature/planning/dark-mode-feature
+OUTPUT_DIR=.agents/staging/universal-planner/test-newfeature/planning/dark-mode-feature
 
 # Run all TC, IT, RT commands from test-case-2.md
 ```

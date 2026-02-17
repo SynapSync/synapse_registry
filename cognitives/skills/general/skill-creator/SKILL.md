@@ -6,10 +6,14 @@ description: >
 license: Apache-2.0
 metadata:
   author: synapsync
-  version: "3.1"
+  version: "3.2"
   scope: [root]
   auto_invoke: "when user asks to create, document, refactor or standardize agent skills"
   changelog:
+    - version: "3.2"
+      date: "2026-02-17"
+      changes:
+        - "Deterministic staging pattern, {output_dir} rename"
     - version: "3.1"
       date: "2026-02-11"
       changes:
@@ -21,7 +25,7 @@ metadata:
         - "Migrated to SynapSync ecosystem"
         - "Updated categories to match SynapSync registry"
         - "Updated sync command to synapsync sync"
-        - "Updated paths to {output_base}/skills/"
+        - "Updated paths to {output_dir}/skills/"
     - version: "2.3"
       date: "2026-01-20"
       changes:
@@ -128,29 +132,19 @@ Avoid these mistakes when creating skills:
 
 ## Configuration Resolution
 
-Before creating any skill, resolve the `{output_base}` path that determines where all output documents are stored.
+Before creating any skill, resolve the `{output_dir}` path — the local staging directory where output documents are stored.
 
-1. **Check** for `cognitive.config.json` in the project root (current working directory)
-2. **If found**: read the `output_base` value and use it for all `{output_base}` references in this skill
-3. **If NOT found**:
-   a. Infer the project name from the current directory name or git repository name
-   b. Ask the user: _"Where should I store output documents for this project?"_ — suggest `~/.agents/{project-name}/` as the default
-   c. Create `cognitive.config.json` in the project root with their chosen path
-   d. Inform the user the config was saved for future skill runs
+1. **Infer** the project name from the current directory name or git repository name
+2. **Set** `{output_dir}` = `.agents/staging/skill-creator/{project-name}/`
+3. **Create** the directory if it doesn't exist
+4. **Present** the resolved path to the user before proceeding
 
-**Config file format** (`cognitive.config.json`):
-```json
-{
-  "output_base": "~/.agents/my-project"
-}
-```
-
-> **IMPORTANT**: Every `{output_base}` reference in this skill depends on this resolution. If the config file cannot be read or created, ask the user for an explicit path before proceeding.
+> **IMPORTANT**: Every `{output_dir}` reference in this skill depends on this resolution.
 
 ## Skill Structure
 
 ```
-{output_base}/skills/{category}/{skill-name}/
+{output_dir}/skills/{category}/{skill-name}/
 ├── SKILL.md              # Required - main skill file
 ├── assets/               # Optional - templates, schemas, examples
 │   ├── template.py
@@ -510,7 +504,7 @@ When generating a new skill, include sections based on complexity:
 - **Example Output**: Show realistic output (with proper formatting)
 - **Version History**: Track evolution over time
 - **Future Enhancements**: Planned improvements (checkbox format)
-- **Obsidian Output Standard**: If the skill writes `.md` files to `{output_base}`, it MUST include a `## Obsidian Output Standard` section with the appropriate Obsidian output rules inline (frontmatter schema, wiki-links, type taxonomy, bidirectional references)
+- **Obsidian Output Standard**: If the skill writes `.md` files to `{output_dir}`, it MUST include a `## Obsidian Output Standard` section with the appropriate Obsidian output rules inline (frontmatter schema, wiki-links, type taxonomy, bidirectional references)
 
 ---
 
@@ -593,7 +587,7 @@ The sync command performs a **double synchronization**:
 
 **1. Manifest Sync**
 
-- Scans `{output_base}/` filesystem for all cognitives
+- Scans `{output_dir}/` filesystem for all cognitives
 - Compares with `manifest.json` (the registry of installed cognitives)
 - Adds new cognitives (created locally by AI) with `source: "local"`
 - Removes entries for deleted cognitives
@@ -603,14 +597,14 @@ The sync command performs a **double synchronization**:
 
 - For each enabled provider (claude, cursor, etc.):
   - Creates symlinks from provider directory to central storage
-  - Example: `.claude/skills/react-hooks` → `../../{output_base}/skills/frontend/react-hooks`
+  - Example: `.claude/skills/react-hooks` → `../../{output_dir}/skills/frontend/react-hooks`
   - Removes orphaned symlinks (cognitive no longer exists)
 
 ### Directory Structure After Sync
 
 ```
 project/
-├── {output_base}/                          # Central storage (source of truth)
+├── {output_dir}/                          # Central storage (source of truth)
 │   ├── manifest.json                    # Registry of all cognitives
 │   └── skills/
 │       └── frontend/
@@ -619,16 +613,16 @@ project/
 │
 ├── .claude/                             # Claude provider (symlinks)
 │   └── skills/
-│       └── react-hooks -> ../../{output_base}/skills/frontend/react-hooks
+│       └── react-hooks -> ../../{output_dir}/skills/frontend/react-hooks
 │
 └── .cursor/                             # Cursor provider (symlinks)
     └── skills/
-        └── react-hooks -> ../../{output_base}/skills/frontend/react-hooks
+        └── react-hooks -> ../../{output_dir}/skills/frontend/react-hooks
 ```
 
 ### No Manual Copying Required
 
-You do NOT need to manually copy skills to each provider folder. The CLI creates symlinks from each provider's skills directory back to the central `{output_base}/skills/` folder.
+You do NOT need to manually copy skills to each provider folder. The CLI creates symlinks from each provider's skills directory back to the central `{output_dir}/skills/` folder.
 
 > **IMPORTANT**: Always run `synapsync sync` after creating, modifying, or deleting skills to keep your project synchronized with all providers.
 
@@ -735,7 +729,7 @@ Optional sections (add if relevant):
 
 ## Checklist Before Creating
 
-- [ ] Skill doesn't already exist (check `{output_base}/skills/`)
+- [ ] Skill doesn't already exist (check `{output_dir}/skills/`)
 - [ ] Pattern is reusable (not one-off)
 - [ ] Name follows conventions (lowercase, hyphens)
 - [ ] Category is correct (general/frontend/backend/devops/security/testing/etc.)
@@ -776,5 +770,5 @@ Optional sections (add if relevant):
 
 ### References
 
-- **Examples**: Review existing skills in `{output_base}/skills/` for reference patterns
+- **Examples**: Review existing skills in `{output_dir}/skills/` for reference patterns
 - **SynapSync Registry**: https://github.com/SynapSync/synapse-registry - Public skill repository

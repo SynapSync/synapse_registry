@@ -101,44 +101,58 @@ The central index at the root. When adding a cognitive, an entry must also be ad
 
 Skills use YAML frontmatter with: `name`, `description`, `license`, `metadata` (author, version, scope, auto_invoke), and `allowed-tools`.
 
-**Important**: Do NOT put `output_base` in frontmatter. Output paths are resolved per-project at runtime via `cognitive.config.json` (see below).
+**Important**: Do NOT put `output_dir` in frontmatter. Output paths use a deterministic staging convention (see below).
 
-### Per-Project Output Configuration (`cognitive.config.json`)
+### Staging Output Convention
 
-Skills that produce output documents (reports, plans, analysis, etc.) use a `{output_base}` variable for all output paths. This variable is resolved at runtime from a per-project config file, allowing each project to have its own output destination.
+Skills that produce output documents (reports, plans, analysis) write to a **deterministic local staging directory**. No config file needed — the path is computed automatically.
 
-**Config file**: `cognitive.config.json` at the project root (current working directory).
+**Staging path formula:**
 
-```json
-{
-  "output_base": "~/.agents/my-project"
-}
+```
+{output_dir} = .agents/staging/{skill-name}/{project-name}/
 ```
 
-**How skills resolve `{output_base}`**:
-1. Check for `cognitive.config.json` in the project root
-2. If found — read `output_base` and use it
-3. If not found — ask the user for a path (suggest `~/.agents/{project-name}/`), create the config file, proceed
+- `{skill-name}` — the skill's name (e.g., `universal-planner`, `code-analyzer`, `sprint-forge`)
+- `{project-name}` — inferred from the current directory name or git repository name
+
+**How skills resolve `{output_dir}`:**
+1. Infer the project name from the current directory name or git repository name
+2. Set `{output_dir}` = `.agents/staging/{skill-name}/{project-name}/`
+3. Create the directory if it doesn't exist
+4. Present the resolved path to the user before proceeding
 
 **When creating a new skill that produces output**, you MUST:
-1. Use `{output_base}` for all output paths (e.g., `{output_base}/planning/`, `{output_base}/technical/`)
+1. Use `{output_dir}` for all output paths (e.g., `{output_dir}/planning/`, `{output_dir}/technical/`)
 2. Include a `## Configuration Resolution` section before the Workflow section
-3. Never hardcode output paths — no `.synapsync/`, `.agents/`, or absolute paths
+3. Never hardcode output paths — no `.synapsync/` or absolute paths
+4. Include a **post-production delivery step** at the end of the workflow
 
 **Standard Configuration Resolution section** (copy this into new skills):
 
 ```markdown
 ## Configuration Resolution
 
-Before starting any workflow step, resolve the `{output_base}` path that determines where all output documents are stored.
+Before starting any workflow step, resolve the `{output_dir}` path — the local staging directory where all output documents are stored.
 
-1. **Check** for `cognitive.config.json` in the project root (current working directory)
-2. **If found**: read the `output_base` value and use it for all `{output_base}` references in this skill
-3. **If NOT found**:
-   a. Infer the project name from the current directory name or git repository name
-   b. Ask the user: _"Where should I store output documents for this project?"_ — suggest `~/.agents/{project-name}/` as the default
-   c. Create `cognitive.config.json` in the project root with their chosen path
-   d. Inform the user the config was saved for future skill runs
+1. **Infer** the project name from the current directory name or git repository name
+2. **Set** `{output_dir}` = `.agents/staging/{skill-name}/{project-name}/`
+3. **Create** the directory if it doesn't exist
+4. **Present** the resolved path to the user before proceeding
+```
+
+**Standard Post-Production Delivery step** (add at end of skill workflow):
+
+```markdown
+## Post-Production Delivery
+
+After all documents are generated in `{output_dir}`, offer the user delivery options:
+
+1. **Sync to Obsidian vault** — use the `obsidian` skill (SYNC mode) to move output to the vault
+2. **Move to custom path** — user specifies a destination and files are moved there
+3. **Keep in staging** — leave files in `.agents/staging/` for later use
+
+Ask the user which option they prefer. If they choose option 1 or 2, move (not copy) the files to the destination.
 ```
 
 ## Commit Convention
@@ -154,9 +168,10 @@ This project uses conventional commits: `feat:`, `fix:`, `chore:`, `docs:`, etc.
 - Category must be from the valid categories list
 - Maximum 10 tags per cognitive
 - Description maximum 100 characters
-- Skills that produce output MUST use `{output_base}` variable (never hardcoded paths)
+- Skills that produce output MUST use `{output_dir}` variable (never hardcoded paths)
 - Skills that produce output MUST include a `## Configuration Resolution` section
-- No `output_base` field in SKILL.md frontmatter (resolved at runtime via `cognitive.config.json`)
+- No `output_dir` field in SKILL.md frontmatter (resolved at runtime via staging convention)
+- Skills that produce output MUST include a post-production delivery step
 
 ## Working on This Repo
 

@@ -2,49 +2,26 @@
 
 ## Purpose
 
-Resolve the `{output_base}` path that determines where all planning output documents are stored. This is a **standardized workflow** used across all SynapSync skills that generate output.
+Resolve the `{output_dir}` path that determines where all planning output documents are stored. This is a **standardized workflow** used across all SynapSync skills that generate output.
 
 ## Why This Exists
 
-Every skill that produces documents needs to know WHERE to save them. Instead of duplicating this logic in every skill, we centralize it here. Skills reference this helper and follow the same pattern.
+Every skill that produces documents needs to know WHERE to save them. Instead of config files, we use a **deterministic staging path** — computed from the skill name and project name. No user interaction needed for path resolution.
+
+## Staging Path Formula
+
+```
+{output_dir} = .agents/staging/{skill-name}/{project-name}/
+```
+
+- `{skill-name}` — the skill's name (e.g., `universal-planner`, `code-analyzer`, `sprint-forge`)
+- `{project-name}` — inferred from the current directory name or git repository name
 
 ## Workflow
 
 Follow these steps at the **beginning** of any skill execution that generates output:
 
-### Step 1: Check for Config File
-
-Look for `cognitive.config.json` in the **project root** (current working directory):
-
-```bash
-# Check if file exists
-ls cognitive.config.json
-```
-
-### Step 2: If Found → Read output_base
-
-If the file exists, read the `output_base` value:
-
-```json
-{
-  "output_base": "~/.agents/my-project"
-}
-```
-
-Use this value for all `{output_base}` references throughout the skill.
-
-**Example:**
-
-```
-{output_base}/planning/my-feature/
-→ ~/.agents/my-project/planning/my-feature/
-```
-
-### Step 3: If NOT Found → Resolve Interactively
-
-If the file doesn't exist, resolve the path interactively:
-
-#### 3a. Infer Project Name
+### Step 1: Infer Project Name
 
 Infer the project name from:
 
@@ -59,136 +36,102 @@ git remote get-url origin | sed 's/.*\///' | sed 's/\.git$//'
 basename $(pwd)
 ```
 
-#### 3b. Ask User
+### Step 2: Compute Staging Path
 
-Prompt the user with a suggested default:
+Set `{output_dir}` using the formula:
 
 ```
-Where should I store output documents for this project?
-
-Suggested: ~/.agents/{project-name}/
-
-Your choice: _____
+{output_dir} = .agents/staging/universal-planner/{project-name}/
 ```
 
-**Important:** Make it easy to accept the default (e.g., pressing Enter accepts suggestion).
+**Example:**
 
-#### 3c. Create Config File
-
-Once the user provides a path, create `cognitive.config.json` in the project root:
-
-```json
-{
-  "output_base": "~/.agents/my-project"
-}
 ```
+Project: my-awesome-app
+{output_dir} = .agents/staging/universal-planner/my-awesome-app/
+```
+
+### Step 3: Create Directory
+
+If the directory doesn't exist, create it:
 
 ```bash
-# Example using Write tool
-echo '{"output_base":"~/.agents/my-project"}' > cognitive.config.json
+mkdir -p .agents/staging/universal-planner/{project-name}
 ```
 
-#### 3d. Inform User
+### Step 4: Present to User
 
-Tell the user the config was saved:
-
-```
-Configuration saved to cognitive.config.json
-   Output will be stored in: ~/.agents/my-project/
-
-   This path will be used for all future skill runs in this project.
-```
-
-### Step 4: Use {output_base}
-
-Throughout the skill, use `{output_base}` as a variable:
+Inform the user of the resolved path:
 
 ```
-{output_base}/planning/{feature-name}/
-{output_base}/technical/{module-name}/
-{output_base}/docs/{category}/
+Output documents will be stored in: .agents/staging/universal-planner/{project-name}/
+
+Proceed?
 ```
 
-The skill replaces `{output_base}` with the resolved value.
+### Step 5: Use {output_dir}
 
-## Config File Format
+Throughout the skill, use `{output_dir}` as a variable:
 
-```json
-{
-  "output_base": "/absolute/path/to/output/directory"
-}
 ```
+{output_dir}/planning/{feature-name}/
+{output_dir}/technical/{module-name}/
+{output_dir}/docs/{category}/
+```
+
+The skill replaces `{output_dir}` with the resolved value.
+
+## Path Details
 
 **Rules:**
 
-- **Required field:** `output_base` (string)
-- **Path type:** Absolute path (can use `~` for home directory)
-- **No trailing slash in the stored value:** `~/.agents/my-project` (not `~/.agents/my-project/`). When using the value, append `/` as needed (e.g., `{output_base}/planning/`).
-
-**Optional fields (future):**
-
-- `default_mode`: Default planning mode
-- `templates_dir`: Custom templates directory
-- `obsidian_vault`: Obsidian vault name (for MCP integration)
+- **Path type:** Relative to project root (always starts with `.agents/staging/`)
+- **No trailing slash in the stored value:** `.agents/staging/universal-planner/my-project` (not `.agents/staging/universal-planner/my-project/`). When using the value, append `/` as needed (e.g., `{output_dir}/planning/`).
+- **Deterministic:** Same project + same skill = same path, every time. No user input needed for resolution.
 
 ## Error Handling
 
-### Path Doesn't Exist
+### Directory Creation Fails
 
-If the user provides a path that doesn't exist, offer to create it:
-
-```
-WARNING: Path doesn't exist: ~/.agents/my-project
-
-Would you like me to create it? (Y/n): _____
-```
-
-If yes, create the directory:
-
-```bash
-mkdir -p ~/.agents/my-project
-```
-
-### Path Not Writable
-
-If the path exists but isn't writable:
+If the directory cannot be created (permissions issue):
 
 ```
-ERROR: Path is not writable: ~/.agents/my-project
+ERROR: Cannot create staging directory: .agents/staging/universal-planner/{project-name}
 
-Please choose a different path or fix permissions.
-
-Your choice: _____
+Please check permissions or specify an alternative path.
 ```
 
-### JSON Malformed
+### Project Name Cannot Be Inferred
 
-If `cognitive.config.json` exists but is invalid JSON:
+If neither git remote nor directory name yields a usable slug:
 
 ```
-ERROR: Error reading cognitive.config.json: Invalid JSON
-
-Please fix the file or delete it to create a new one.
-
-Expected format:
-{
-  "output_base": "/path/to/output"
-}
+Could not infer the project name. What should I call this project?
+(This will be used for the output path: .agents/staging/universal-planner/{your-name}/)
 ```
 
-Do NOT proceed — ask the user to fix the file.
+## Example: Full Resolution Flow
 
-## Path Expansion
+**Scenario:** User invokes `universal-planner` in a project directory.
 
-Always expand paths before using them:
+```
+Step 1: Infer project name
+→ Git repo: "my-awesome-app"
+→ Project name: "my-awesome-app"
 
-| User Input                    | Expanded Path                               |
-| ----------------------------- | ------------------------------------------- |
-| `~/.agents/my-project` | `/Users/username/.agents/my-project` |
-| `./output`                    | `/current/working/directory/output`         |
-| `/absolute/path`              | `/absolute/path`                            |
+Step 2: Compute staging path
+→ {output_dir} = .agents/staging/universal-planner/my-awesome-app/
 
-Use the shell or language-specific path expansion (e.g., `os.path.expanduser()` in Python, `path.resolve()` in Node.js).
+Step 3: Create directory
+→ mkdir -p .agents/staging/universal-planner/my-awesome-app
+
+Step 4: Present to user
+→ "Output documents will be stored in: .agents/staging/universal-planner/my-awesome-app/"
+
+Step 5: Use output_dir
+→ Planning output will go to:
+   .agents/staging/universal-planner/my-awesome-app/planning/new-feature/
+```
 
 ## Usage in Skills
 
@@ -201,74 +144,37 @@ See [assets/helpers/config-resolver.md](assets/helpers/config-resolver.md) for t
 
 **Quick summary:**
 
-1. Check `cognitive.config.json` → read `output_base`
-2. If not found → ask user, create config
-3. Use `{output_base}/` for all output paths
+1. Infer project name from directory/git
+2. Set `{output_dir}` = `.agents/staging/{skill-name}/{project-name}/`
+3. Create directory if needed
+4. Use `{output_dir}/` for all output paths
 ```
 
 Then invoke the workflow before any output generation.
 
-## Example: Full Resolution Flow
-
-**Scenario:** User invokes `universal-planner` in a project without `cognitive.config.json`.
-
-```
-Step 1: Check for cognitive.config.json
-→ File not found
-
-Step 2: Infer project name
-→ Git repo: "my-awesome-app"
-→ Project name: "my-awesome-app"
-
-Step 3: Ask user
-→ "Where should I store output documents for this project?"
-→ Suggested: ~/.agents/my-awesome-app/
-→ User presses Enter (accepts default)
-
-Step 4: Create config
-→ Write cognitive.config.json:
-   {
-     "output_base": "~/.agents/my-awesome-app"
-   }
-
-Step 5: Inform user
-→ "Configuration saved to cognitive.config.json"
-
-Step 6: Use output_base
-→ Planning output will go to:
-   ~/.agents/my-awesome-app/planning/new-feature/
-```
-
 ## Rationale
 
-**Why not hardcode paths?**
+**Why deterministic staging paths?**
 
-- Different users have different preferences (some use `~/Documents/`, some use `~/.agents/`)
-- Projects live in different locations
+- **No config files needed** — eliminates `cognitive.config.json` complexity
+- **Predictable** — same project always gets the same path
+- **Local-first** — output stays in the project directory until the user decides where it goes
+- **Post-production delivery** — after generating docs, the user can sync to Obsidian vault, move to a custom path, or keep in staging
 
-**Why cognitive.config.json in project root?**
+**Why `.agents/staging/`?**
 
-- **Per-project config:** Each project can have its own output destination
-- **Version controlled:** The config can be committed to git (optional)
-- **Discoverable:** Easy to find and edit
-
-**Why ask only once?**
-
-- **Better UX:** Don't interrupt the user every time
-- **Consistency:** All output goes to the same place
-
-**Why not use a global config?**
-
-- Projects have different needs
-- Some users want outputs in Obsidian, others in project docs/
-- Per-project is more flexible
+- `.agents/` is a hidden directory (gitignored) — keeps project root clean
+- `staging/` makes it clear these are temporary outputs awaiting delivery
+- `{skill-name}/` prevents collision between skills
 
 ## Related
 
 - Output format follows the Obsidian markdown conventions (frontmatter, wiki-links, type taxonomy)
-- See `obsidian` skill (SYNC mode) for syncing output to Obsidian vault via MCP
+- See `obsidian` skill (SYNC mode) for syncing staging output to Obsidian vault via MCP
+- See SKILL.md Post-Production Delivery for the delivery workflow after generation
 
 ## Version
 
 Created: 2026-02-12 (v2.1.0)
+Updated: 2026-02-17 (v3.2.0) — Migrated from cognitive.config.json to deterministic staging paths
 Pattern: Shared helper for output path resolution

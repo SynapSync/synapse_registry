@@ -7,7 +7,7 @@ description: >
 license: Apache-2.0
 metadata:
   author: synapsync
-  version: "3.1"
+  version: "3.2"
   scope: [root]
   auto_invoke:
     - "Planning a new project, feature, refactor, or any software work"
@@ -19,6 +19,10 @@ metadata:
     - "Work on the next sprint from the planning"
     - "Continue executing the plan"
   changelog:
+    - version: "3.2"
+      date: "2026-02-17"
+      changes:
+        - "Deterministic staging pattern, config-resolver rewrite, {output_dir} rename, post-production delivery"
     - version: "3.1"
       date: "2026-02-14"
       changes:
@@ -157,7 +161,7 @@ When in PLAN mode, detect the planning sub-mode. See [assets/modes/PLAN.md](asse
 
 ### PLAN Mode Workflow
 
-1. **Configuration Resolution** → resolve `{output_base}`
+1. **Configuration Resolution** → resolve `{output_dir}`
 2. **Codebase Discovery** → `discovery/CONVENTIONS.md` (except NEW_PROJECT)
 3. **Analysis** → `analysis/ANALYSIS.md`
 4. **Planning** → `planning/PLANNING.md`
@@ -185,11 +189,12 @@ When in PLAN mode, detect the planning sub-mode. See [assets/modes/PLAN.md](asse
 See [assets/helpers/config-resolver.md](assets/helpers/config-resolver.md) for the standardized resolution workflow.
 
 **Quick summary:**
-1. Check `cognitive.config.json` in project root → read `output_base`
-2. If not found → ask user, suggest `~/.agents/{project-name}/`, create config
-3. Use `{output_base}/` for all output paths
+1. Infer project name from directory/git
+2. Set `{output_dir}` = `.agents/staging/universal-planner/{project-name}/`
+3. Create directory if needed
+4. Use `{output_dir}/` for all output paths
 
-All `{output_base}` references depend on this resolution.
+All `{output_dir}` references depend on this resolution.
 
 ---
 
@@ -297,6 +302,7 @@ Common issues and resolutions for both PLAN and EXECUTE modes.
 
 | Version | Date | Changes |
 |---------|------|---------|
+| 3.2 | 2026-02-17 | Staging pattern migration — deterministic .agents/staging/ output, config-resolver rewrite, {output_dir} rename, post-production delivery |
 | 3.1 | 2026-02-14 | Audit remediation — unified granularity, PROGRESS template, before/after fields, fast paths, failed status, language standardization |
 | 3.0 | 2026-02-13 | Consolidated universal-planner + universal-planner-executor — two modes (PLAN/EXECUTE), shared config, merged troubleshooting |
 | 2.0 | 2026-02-11 | Obsidian-native output — frontmatter, wiki-links, bidirectional references, graduation gates, metric tables |

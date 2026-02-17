@@ -51,11 +51,11 @@ synapse-registry/
 
 | Name | Category | Version | Description |
 |------|----------|---------|-------------|
-| [skill-creator](cognitives/skills/general/skill-creator/) | general | 3.1.0 | Creates AI skills following SynapSync spec with templates and best practices |
-| [universal-planner](cognitives/skills/planning/universal-planner/) | planning | 3.1.1 | Unified planning and execution skill for any software scenario with PLAN and EXECUTE modes |
-| [code-analyzer](cognitives/skills/analytics/code-analyzer/) | analytics | 2.1.0 | Analyzes code modules and generates structured technical reports with architecture diagrams |
-| [obsidian](cognitives/skills/integrations/obsidian/) | integrations | 3.3.0 | Unified Obsidian vault manager: sync documents, read notes, and search knowledge via MCP |
-| [sprint-forge](cognitives/skills/workflow/sprint-forge/) | workflow | 1.1.0 | Adaptive sprint workflow — analysis, roadmap, iterative sprints, debt tracking, and context persistence |
+| [skill-creator](cognitives/skills/general/skill-creator/) | general | 3.2.0 | Creates AI skills following SynapSync spec with templates and best practices |
+| [universal-planner](cognitives/skills/planning/universal-planner/) | planning | 3.2.0 | Unified planning and execution skill for any software scenario with PLAN and EXECUTE modes |
+| [code-analyzer](cognitives/skills/analytics/code-analyzer/) | analytics | 2.2.0 | Analyzes code modules and generates structured technical reports with architecture diagrams |
+| [obsidian](cognitives/skills/integrations/obsidian/) | integrations | 3.4.0 | Unified Obsidian vault manager: sync documents, read notes, and search knowledge via MCP |
+| [sprint-forge](cognitives/skills/workflow/sprint-forge/) | workflow | 1.2.0 | Adaptive sprint workflow — analysis, roadmap, iterative sprints, debt tracking, and context persistence |
 
 ### Agents
 
@@ -89,7 +89,7 @@ The obsidian skill operates in two modes, detected automatically from the user's
 │                                                                 │
 │  universal-planner ──┐                                          │
 │  code-analyzer ──────┤  produce .md files   ┌────────────────┐  │
-│  (any skill)  ───────┘  ({output_base}/*)   │    obsidian    │  │
+│  (any skill)  ───────┘  ({output_dir}/*)   │    obsidian    │  │
 │                                             │  SYNC mode     │  │
 │                                             └───────┬────────┘  │
 │                                                     │           │
@@ -186,34 +186,33 @@ The obsidian skill requires the **Obsidian MCP server** for full functionality:
 | `planning` | Project planning, SDLC, requirements, architecture |
 | `workflow` | Sprint workflows, iterative processes, adaptive execution |
 
-## Per-Project Output Configuration
+## Staging Output Convention
 
-Skills that produce output documents (reports, plans, analysis) use a `{output_base}` variable for all output paths instead of hardcoded directories. This allows each project to have its own output destination.
+Skills that produce output documents (reports, plans, analysis) write to a **deterministic local staging directory** instead of hardcoded paths. No config file needed.
 
 ### How It Works
 
-Every project that uses output-producing skills has a `cognitive.config.json` at its root:
+Every skill that produces output computes its staging path automatically:
 
-```json
-{
-  "output_base": "~/.agents/my-project"
-}
+```
+{output_dir} = .agents/staging/{skill-name}/{project-name}/
 ```
 
-Skills auto-discover this file at runtime:
-1. Check for `cognitive.config.json` in the project root
-2. If found -- read `output_base` and use it for all paths
-3. If not found -- prompt the user, create the config, and proceed
+Skills auto-discover the project name at runtime:
+1. Infer project name from git repo or directory name
+2. Compute `{output_dir}` = `.agents/staging/{skill-name}/{project-name}/`
+3. Create directory if needed, present to user, proceed
 
-This means **N projects can each point to different output folders** with zero cross-contamination.
+After generating output, skills offer **post-production delivery**: sync to Obsidian vault, move to a custom path, or keep in staging.
 
 ### For Skill Authors
 
 If your skill produces output files, you **must**:
-1. Use `{output_base}` for all output paths (e.g., `{output_base}/planning/`, `{output_base}/technical/`)
+1. Use `{output_dir}` for all output paths (e.g., `{output_dir}/planning/`, `{output_dir}/technical/`)
 2. Include a `## Configuration Resolution` section before the Workflow section (see [CLAUDE.md](CLAUDE.md) for the standard template)
-3. Never hardcode output paths -- no `.synapsync/`, `.agents/`, or absolute paths
-4. Never put `output_base` in SKILL.md frontmatter
+3. Never hardcode output paths -- no `.synapsync/` or absolute paths
+4. Never put `output_dir` in SKILL.md frontmatter
+5. Include a post-production delivery step at the end of the workflow
 
 ## Contributing
 

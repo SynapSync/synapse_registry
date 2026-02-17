@@ -36,9 +36,9 @@ Common issues and resolutions for both PLAN and EXECUTE modes.
 
 ### Plan Directory Not Found
 
-**Symptom**: Cannot find `{output_base}/planning/{project-name}/`
+**Symptom**: Cannot find `{output_dir}/planning/{project-name}/`
 
-**Resolution**: Verify the path exists. The user may need to run PLAN mode first or specify the correct project name. Check that `cognitive.config.json` has the correct `output_base` path.
+**Resolution**: Verify the path exists. The user may need to run PLAN mode first or specify the correct project name. The staging path should be `.agents/staging/universal-planner/{project-name}/`.
 
 ### CONVENTIONS.md References Components That Don't Exist
 

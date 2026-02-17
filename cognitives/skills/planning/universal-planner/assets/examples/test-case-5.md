@@ -18,7 +18,7 @@
 ### Expected Output Structure
 
 ```
-{output_base}/planning/cleanup-orders-api/
+{output_dir}/planning/cleanup-orders-api/
 ├── README.md
 ├── discovery/
 │   └── CONVENTIONS.md
@@ -45,7 +45,7 @@
 
 **Command:**
 ```bash
-OUTPUT_DIR=~/.agents/test-techdebt/planning/cleanup-orders-api
+OUTPUT_DIR=.agents/staging/universal-planner/test-techdebt/planning/cleanup-orders-api
 test -f "$OUTPUT_DIR/README.md" && \
 test -f "$OUTPUT_DIR/discovery/CONVENTIONS.md" && \
 test -f "$OUTPUT_DIR/analysis/ANALYSIS.md" && \
@@ -67,7 +67,7 @@ echo "✓ All 6 required files exist"
 
 **Command:**
 ```bash
-OUTPUT_DIR=~/.agents/test-techdebt/planning/cleanup-orders-api
+OUTPUT_DIR=.agents/staging/universal-planner/test-techdebt/planning/cleanup-orders-api
 FILE_COUNT=$(find "$OUTPUT_DIR" -name "*.md" -type f | wc -l | tr -d ' ')
 if [ "$FILE_COUNT" -eq 6 ]; then
   echo "✓ Correct file count: 6"
@@ -88,7 +88,7 @@ fi
 
 **Command:**
 ```bash
-OUTPUT_DIR=~/.agents/test-techdebt/planning/cleanup-orders-api
+OUTPUT_DIR=.agents/staging/universal-planner/test-techdebt/planning/cleanup-orders-api
 for file in README.md discovery/CONVENTIONS.md analysis/ANALYSIS.md planning/PLANNING.md execution/EXECUTION.md sprints/PROGRESS.md; do
   if head -1 "$OUTPUT_DIR/$file" | grep -q "^---$"; then
     echo "✓ $file has frontmatter"
@@ -110,7 +110,7 @@ done
 
 **Command:**
 ```bash
-OUTPUT_DIR=~/.agents/test-techdebt/planning/cleanup-orders-api
+OUTPUT_DIR=.agents/staging/universal-planner/test-techdebt/planning/cleanup-orders-api
 grep -q "## Executive Summary" "$OUTPUT_DIR/README.md" && echo "✓ README has Executive Summary"
 grep -q "## Project Structure" "$OUTPUT_DIR/discovery/CONVENTIONS.md" && echo "✓ CONVENTIONS has Project Structure"
 grep -q "## Executive Summary" "$OUTPUT_DIR/analysis/ANALYSIS.md" && echo "✓ ANALYSIS has Executive Summary"
@@ -128,7 +128,7 @@ grep -q "## Executive Summary" "$OUTPUT_DIR/analysis/ANALYSIS.md" && echo "✓ A
 
 **Command:**
 ```bash
-OUTPUT_DIR=~/.agents/test-techdebt/planning/cleanup-orders-api
+OUTPUT_DIR=.agents/staging/universal-planner/test-techdebt/planning/cleanup-orders-api
 grep -l '\[\[.*\]\]' "$OUTPUT_DIR/README.md" && echo "✓ README uses wiki-links"
 ```
 
@@ -144,7 +144,7 @@ grep -l '\[\[.*\]\]' "$OUTPUT_DIR/README.md" && echo "✓ README uses wiki-links
 
 **Command:**
 ```bash
-OUTPUT_DIR=~/.agents/test-techdebt/planning/cleanup-orders-api
+OUTPUT_DIR=.agents/staging/universal-planner/test-techdebt/planning/cleanup-orders-api
 for file in README.md discovery/CONVENTIONS.md analysis/ANALYSIS.md planning/PLANNING.md execution/EXECUTION.md sprints/PROGRESS.md; do
   grep -q "^## References$" "$OUTPUT_DIR/$file" && echo "✓ $file has References"
 done
@@ -164,7 +164,7 @@ done
 
 **Command:**
 ```bash
-OUTPUT_DIR=~/.agents/test-techdebt/planning/cleanup-orders-api
+OUTPUT_DIR=.agents/staging/universal-planner/test-techdebt/planning/cleanup-orders-api
 grep -q '\[\[CONVENTIONS\]\]' "$OUTPUT_DIR/analysis/ANALYSIS.md" && echo "✓ ANALYSIS → CONVENTIONS"
 grep -q '\[\[ANALYSIS\]\]' "$OUTPUT_DIR/discovery/CONVENTIONS.md" && echo "✓ CONVENTIONS → ANALYSIS"
 ```
@@ -181,7 +181,7 @@ grep -q '\[\[ANALYSIS\]\]' "$OUTPUT_DIR/discovery/CONVENTIONS.md" && echo "✓ C
 
 **Command:**
 ```bash
-OUTPUT_DIR=~/.agents/test-techdebt/planning/cleanup-orders-api
+OUTPUT_DIR=.agents/staging/universal-planner/test-techdebt/planning/cleanup-orders-api
 test -f "$OUTPUT_DIR/sprints/PROGRESS.md" && \
 grep -q "## Sprint Overview" "$OUTPUT_DIR/sprints/PROGRESS.md" && \
 echo "✓ PROGRESS.md exists with Sprint Overview"
@@ -213,7 +213,7 @@ echo "✓ PROGRESS.md exists with Sprint Overview"
 
 **Command:**
 ```bash
-OUTPUT_DIR=~/.agents/test-techdebt/planning/cleanup-orders-api
+OUTPUT_DIR=.agents/staging/universal-planner/test-techdebt/planning/cleanup-orders-api
 
 # Check for debt inventory section
 grep -q "Debt Inventory\|Technical Debt Catalog" "$OUTPUT_DIR/analysis/ANALYSIS.md" && \
@@ -251,7 +251,7 @@ echo "✓ Debt items are prioritized"
 
 **Command:**
 ```bash
-OUTPUT_DIR=~/.agents/test-techdebt/planning/cleanup-orders-api
+OUTPUT_DIR=.agents/staging/universal-planner/test-techdebt/planning/cleanup-orders-api
 test -f "$OUTPUT_DIR/sprints/PROGRESS.md" && echo "✓ PROGRESS.md present"
 grep -q "Before:" "$OUTPUT_DIR/execution/EXECUTION.md" && echo "✓ Before/After fields in tasks"
 ```
@@ -268,7 +268,7 @@ grep -q "Before:" "$OUTPUT_DIR/execution/EXECUTION.md" && echo "✓ Before/After
 
 **Command:**
 ```bash
-OUTPUT_DIR=~/.agents/test-techdebt/planning/cleanup-orders-api
+OUTPUT_DIR=.agents/staging/universal-planner/test-techdebt/planning/cleanup-orders-api
 if grep -r '{{' "$OUTPUT_DIR" >/dev/null 2>&1; then
   echo "✗ Found Handlebars syntax"
 else

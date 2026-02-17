@@ -126,7 +126,7 @@ changelog:
 Before any work begins, locate the planning directory and verify all required documents exist.
 
 **Actions**:
-1. Find the planning directory at `{output_base}/planning/{project-name}/`
+1. Find the planning directory at `{output_dir}/planning/{project-name}/`
 2. Verify these files exist (based on the planning mode that was used):
    - `analysis/ANALYSIS.md`
    - `planning/PLANNING.md`
@@ -263,6 +263,20 @@ When all sprints are completed:
 2. Run any project-level verification (build, full test suite, lint)
 3. Report final status with summary of what was built
 
+### Step 5: Post-Production Delivery
+
+After project completion (or after any sprint if the user requests), offer to move the staging output to a final destination:
+
+1. **Sync to Obsidian vault** — use the `obsidian` skill (SYNC mode) to move planning output to the vault
+2. **Move to custom path** — user specifies a destination and files are moved there
+3. **Keep in staging** — leave files in `.agents/staging/universal-planner/` for later use
+
+Ask the user:
+
+> "Your planning/execution output is in `.agents/staging/universal-planner/{project-name}/`. Would you like to move it somewhere?"
+
+If they choose option 1 or 2, move (not copy) the files to the destination. If they choose option 3, do nothing.
+
 ---
 
 ## Handling Edge Cases
@@ -333,7 +347,7 @@ As a Senior Fullstack Developer, write production-quality code following the pro
 EXECUTE mode consumes the output of PLAN mode. The expected directory structure:
 
 ```
-{output_base}/planning/{project-name}/
+{output_dir}/planning/{project-name}/
 ├── README.md
 ├── discovery/
 │   └── CONVENTIONS.md              # Project patterns (when applicable)

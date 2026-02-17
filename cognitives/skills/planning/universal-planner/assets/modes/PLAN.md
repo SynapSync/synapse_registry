@@ -61,10 +61,10 @@ Detect the sub-mode from the user's input using these signals:
 
 ## Output Structure
 
-All output goes into `{output_base}/planning/{project-name}/`.
+All output goes into `{output_dir}/planning/{project-name}/`.
 
 ```
-{output_base}/planning/{project-name}/
+{output_dir}/planning/{project-name}/
 ├── README.md                              # Project overview and document navigation
 │
 ├── discovery/                              # Codebase Discovery (all sub-modes except NEW_PROJECT)

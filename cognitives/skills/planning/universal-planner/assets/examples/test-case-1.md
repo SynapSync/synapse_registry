@@ -225,26 +225,26 @@ $ grep -c "## Workflow" assets/modes/NEW_PROJECT.md
 
 ### IT2: Simulated Config Resolution
 
-**Scenario:** Skill needs to resolve output_base
+**Scenario:** Skill needs to resolve output_dir
 
 **Steps:**
 1. Skill references `assets/helpers/config-resolver.md`
 2. Skill follows workflow documented in helper
-3. Skill creates/reads cognitive.config.json
+3. Skill computes deterministic staging path
 
 **Expected:** Helper documents:
-- Step 1: Check for config file
-- Step 2: Read if found
-- Step 3: Ask user if not found
-- Step 4: Use {output_base}
+- Step 1: Infer project name from git/directory
+- Step 2: Compute staging path `.agents/staging/universal-planner/{project-name}/`
+- Step 3: Create directory if needed
+- Step 4: Present path to user and proceed
 
 **Verification:**
 ```bash
-$ grep -c "Step 1: Check for Config File" assets/helpers/config-resolver.md
+$ grep -c "Step 1: Infer Project Name" assets/helpers/config-resolver.md
 1
-$ grep -c "Step 2: If Found" assets/helpers/config-resolver.md
+$ grep -c "Step 2: Compute Staging Path" assets/helpers/config-resolver.md
 1
-$ grep -c "Step 3: If NOT Found" assets/helpers/config-resolver.md
+$ grep -c "Step 3: Create Directory" assets/helpers/config-resolver.md
 1
 ```
 

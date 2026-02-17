@@ -19,7 +19,7 @@ Use this mode when **restructuring existing code without changing behavior**. Th
 ## Output Structure
 
 ```
-{output_base}/planning/{project-name}/
+{output_dir}/planning/{project-name}/
 ├── README.md
 ├── discovery/
 │   └── CONVENTIONS.md              # Current patterns and issues

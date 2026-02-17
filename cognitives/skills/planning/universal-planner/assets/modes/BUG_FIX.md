@@ -38,7 +38,7 @@ When any condition is NOT met, use the full BUG_FIX workflow below.
 ## Output Structure
 
 ```
-{output_base}/planning/{project-name}/
+{output_dir}/planning/{project-name}/
 ├── README.md
 ├── discovery/
 │   └── CONVENTIONS.md              # Existing patterns and test coverage

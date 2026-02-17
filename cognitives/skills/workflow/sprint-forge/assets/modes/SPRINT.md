@@ -228,3 +228,15 @@ If execution revealed that the roadmap needs adjustment:
 - [debt-tracker.md](../helpers/debt-tracker.md) — Debt table rules
 - [reentry-generator.md](../helpers/reentry-generator.md) — Re-entry prompt updates
 - [SPRINT.md template](../templates/SPRINT.md) — Sprint document structure
+
+---
+
+## Post-Sprint Delivery
+
+After completing a sprint (execution + retro + re-entry prompt update), offer the user delivery options for the new/updated files:
+
+1. **Sync to Obsidian vault** — use the `obsidian` skill (SYNC mode) to sync the sprint file and updated roadmap/re-entry prompts to the vault
+2. **Move to custom path** — user specifies a destination
+3. **Keep in staging** — leave files in `.agents/staging/sprint-forge/` for later use
+
+Ask the user which option they prefer.

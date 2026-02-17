@@ -12,7 +12,7 @@
       "pattern": "^/.*|^~.*",
       "examples": [
         "/Users/user/.agents/my-project/planning/feature-name",
-        "~/.agents/my-project/planning/feature-name"
+        ".agents/staging/universal-planner/my-project/planning/feature-name"
       ]
     },
     "mode": {
@@ -178,17 +178,17 @@
   ],
   "examples": [
     {
-      "planning_dir": "~/.agents/my-project/planning/new-feature",
+      "planning_dir": ".agents/staging/universal-planner/my-project/planning/new-feature",
       "mode": "NEW_FEATURE",
       "project_name": "new-feature",
       "files": {
-        "README.md": "~/.agents/my-project/planning/new-feature/README.md",
-        "discovery/CONVENTIONS.md": "~/.agents/my-project/planning/new-feature/discovery/CONVENTIONS.md",
-        "analysis/ANALYSIS.md": "~/.agents/my-project/planning/new-feature/analysis/ANALYSIS.md",
-        "planning/PLANNING.md": "~/.agents/my-project/planning/new-feature/planning/PLANNING.md",
-        "execution/EXECUTION.md": "~/.agents/my-project/planning/new-feature/execution/EXECUTION.md",
-        "sprints/PROGRESS.md": "~/.agents/my-project/planning/new-feature/sprints/PROGRESS.md",
-        "sprints/SPRINT-1-setup.md": "~/.agents/my-project/planning/new-feature/sprints/SPRINT-1-setup.md"
+        "README.md": ".agents/staging/universal-planner/my-project/planning/new-feature/README.md",
+        "discovery/CONVENTIONS.md": ".agents/staging/universal-planner/my-project/planning/new-feature/discovery/CONVENTIONS.md",
+        "analysis/ANALYSIS.md": ".agents/staging/universal-planner/my-project/planning/new-feature/analysis/ANALYSIS.md",
+        "planning/PLANNING.md": ".agents/staging/universal-planner/my-project/planning/new-feature/planning/PLANNING.md",
+        "execution/EXECUTION.md": ".agents/staging/universal-planner/my-project/planning/new-feature/execution/EXECUTION.md",
+        "sprints/PROGRESS.md": ".agents/staging/universal-planner/my-project/planning/new-feature/sprints/PROGRESS.md",
+        "sprints/SPRINT-1-setup.md": ".agents/staging/universal-planner/my-project/planning/new-feature/sprints/SPRINT-1-setup.md"
       },
       "metadata": {
         "created_at": "2026-02-12T10:30:00Z",
@@ -199,28 +199,28 @@
       }
     },
     {
-      "planning_dir": "~/.agents/my-project/planning/new-app",
+      "planning_dir": ".agents/staging/universal-planner/my-project/planning/new-app",
       "mode": "NEW_PROJECT",
       "project_name": "new-app",
       "files": {
-        "README.md": "~/.agents/my-project/planning/new-app/README.md",
-        "requirements/problem-definition.md": "~/.agents/my-project/planning/new-app/requirements/problem-definition.md",
-        "requirements/goals-and-metrics.md": "~/.agents/my-project/planning/new-app/requirements/goals-and-metrics.md",
-        "requirements/stakeholders-and-personas.md": "~/.agents/my-project/planning/new-app/requirements/stakeholders-and-personas.md",
-        "requirements/functional-requirements.md": "~/.agents/my-project/planning/new-app/requirements/functional-requirements.md",
-        "requirements/non-functional-requirements.md": "~/.agents/my-project/planning/new-app/requirements/non-functional-requirements.md",
-        "requirements/assumptions-and-constraints.md": "~/.agents/my-project/planning/new-app/requirements/assumptions-and-constraints.md",
-        "requirements/out-of-scope.md": "~/.agents/my-project/planning/new-app/requirements/out-of-scope.md",
-        "design/system-overview.md": "~/.agents/my-project/planning/new-app/design/system-overview.md",
-        "design/architecture-decisions.md": "~/.agents/my-project/planning/new-app/design/architecture-decisions.md",
-        "design/high-level-architecture.md": "~/.agents/my-project/planning/new-app/design/high-level-architecture.md",
-        "design/data-model.md": "~/.agents/my-project/planning/new-app/design/data-model.md",
-        "design/core-flows.md": "~/.agents/my-project/planning/new-app/design/core-flows.md",
-        "design/non-functional-design.md": "~/.agents/my-project/planning/new-app/design/non-functional-design.md",
-        "analysis/ANALYSIS.md": "~/.agents/my-project/planning/new-app/analysis/ANALYSIS.md",
-        "planning/PLANNING.md": "~/.agents/my-project/planning/new-app/planning/PLANNING.md",
-        "execution/EXECUTION.md": "~/.agents/my-project/planning/new-app/execution/EXECUTION.md",
-        "sprints/PROGRESS.md": "~/.agents/my-project/planning/new-app/sprints/PROGRESS.md"
+        "README.md": ".agents/staging/universal-planner/my-project/planning/new-app/README.md",
+        "requirements/problem-definition.md": ".agents/staging/universal-planner/my-project/planning/new-app/requirements/problem-definition.md",
+        "requirements/goals-and-metrics.md": ".agents/staging/universal-planner/my-project/planning/new-app/requirements/goals-and-metrics.md",
+        "requirements/stakeholders-and-personas.md": ".agents/staging/universal-planner/my-project/planning/new-app/requirements/stakeholders-and-personas.md",
+        "requirements/functional-requirements.md": ".agents/staging/universal-planner/my-project/planning/new-app/requirements/functional-requirements.md",
+        "requirements/non-functional-requirements.md": ".agents/staging/universal-planner/my-project/planning/new-app/requirements/non-functional-requirements.md",
+        "requirements/assumptions-and-constraints.md": ".agents/staging/universal-planner/my-project/planning/new-app/requirements/assumptions-and-constraints.md",
+        "requirements/out-of-scope.md": ".agents/staging/universal-planner/my-project/planning/new-app/requirements/out-of-scope.md",
+        "design/system-overview.md": ".agents/staging/universal-planner/my-project/planning/new-app/design/system-overview.md",
+        "design/architecture-decisions.md": ".agents/staging/universal-planner/my-project/planning/new-app/design/architecture-decisions.md",
+        "design/high-level-architecture.md": ".agents/staging/universal-planner/my-project/planning/new-app/design/high-level-architecture.md",
+        "design/data-model.md": ".agents/staging/universal-planner/my-project/planning/new-app/design/data-model.md",
+        "design/core-flows.md": ".agents/staging/universal-planner/my-project/planning/new-app/design/core-flows.md",
+        "design/non-functional-design.md": ".agents/staging/universal-planner/my-project/planning/new-app/design/non-functional-design.md",
+        "analysis/ANALYSIS.md": ".agents/staging/universal-planner/my-project/planning/new-app/analysis/ANALYSIS.md",
+        "planning/PLANNING.md": ".agents/staging/universal-planner/my-project/planning/new-app/planning/PLANNING.md",
+        "execution/EXECUTION.md": ".agents/staging/universal-planner/my-project/planning/new-app/execution/EXECUTION.md",
+        "sprints/PROGRESS.md": ".agents/staging/universal-planner/my-project/planning/new-app/sprints/PROGRESS.md"
       },
       "metadata": {
         "created_at": "2026-02-12T10:30:00Z",

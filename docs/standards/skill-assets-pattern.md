@@ -116,7 +116,7 @@ Supporting files for {skill-name} following the assets pattern.
 - Provides step-by-step procedures
 
 **Examples:**
-- `config-resolver.md` — How to resolve `{output_base}`
+- `config-resolver.md` — How to resolve `{output_dir}`
 - `error-handler.md` — Standard error handling workflow
 - `validation.md` — Input validation procedures
 
@@ -217,9 +217,10 @@ See individual mode files for detailed workflows and requirements.
 See [assets/helpers/config-resolver.md](assets/helpers/config-resolver.md) for the full workflow.
 
 **Quick summary:**
-1. Check `cognitive.config.json` → read `output_base`
-2. If not found → ask user, create config
-3. Use `{output_base}/` for all output paths
+1. Infer project name from directory/git
+2. Set `{output_dir}` = `.agents/staging/{skill-name}/{project-name}/`
+3. Create directory if needed
+4. Use `{output_dir}/` for all output paths
 ```
 
 ---

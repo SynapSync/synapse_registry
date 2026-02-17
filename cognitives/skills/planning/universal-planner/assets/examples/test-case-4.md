@@ -35,7 +35,7 @@
 
 **Command:**
 ```bash
-OUTPUT_DIR=~/.agents/test-bugfix-fast/planning/fix-login-timeout
+OUTPUT_DIR=.agents/staging/universal-planner/test-bugfix-fast/planning/fix-login-timeout
 test -f "$OUTPUT_DIR/analysis/ANALYSIS.md" && \
 test -f "$OUTPUT_DIR/sprints/SPRINT-1-hotfix.md" && \
 echo "✓ Fast path: 2 required files exist"
@@ -53,7 +53,7 @@ echo "✓ Fast path: 2 required files exist"
 
 **Command:**
 ```bash
-OUTPUT_DIR=~/.agents/test-bugfix-fast/planning/fix-login-timeout
+OUTPUT_DIR=.agents/staging/universal-planner/test-bugfix-fast/planning/fix-login-timeout
 FILE_COUNT=$(find "$OUTPUT_DIR" -name "*.md" -type f | wc -l | tr -d ' ')
 if [ "$FILE_COUNT" -eq 2 ]; then
   echo "✓ Fast path correct: 2 files"
@@ -80,7 +80,7 @@ test ! -f "$OUTPUT_DIR/sprints/PROGRESS.md" && echo "✓ No PROGRESS (fast path)
 
 **Command:**
 ```bash
-OUTPUT_DIR=~/.agents/test-bugfix-fast/planning/fix-login-timeout
+OUTPUT_DIR=.agents/staging/universal-planner/test-bugfix-fast/planning/fix-login-timeout
 if grep -A 20 "^---$" "$OUTPUT_DIR/analysis/ANALYSIS.md" | grep -q 'severity:.*"medium"'; then
   echo "✓ ANALYSIS has severity: medium"
 else
@@ -100,7 +100,7 @@ fi
 
 **Command:**
 ```bash
-OUTPUT_DIR=~/.agents/test-bugfix-fast/planning/fix-login-timeout
+OUTPUT_DIR=.agents/staging/universal-planner/test-bugfix-fast/planning/fix-login-timeout
 test -f "$OUTPUT_DIR/sprints/SPRINT-1-hotfix.md" && \
 grep -q "## Task" "$OUTPUT_DIR/sprints/SPRINT-1-hotfix.md" && \
 echo "✓ SPRINT-1-hotfix has tasks"
@@ -120,7 +120,7 @@ echo "✓ SPRINT-1-hotfix has tasks"
 
 **Command:**
 ```bash
-OUTPUT_DIR=~/.agents/test-bugfix-std/planning/fix-checkout-corruption
+OUTPUT_DIR=.agents/staging/universal-planner/test-bugfix-std/planning/fix-checkout-corruption
 test -f "$OUTPUT_DIR/README.md" && \
 test -f "$OUTPUT_DIR/discovery/CONVENTIONS.md" && \
 test -f "$OUTPUT_DIR/analysis/ANALYSIS.md" && \
@@ -142,7 +142,7 @@ echo "✓ Standard path: all 6 files exist"
 
 **Command:**
 ```bash
-OUTPUT_DIR=~/.agents/test-bugfix-std/planning/fix-checkout-corruption
+OUTPUT_DIR=.agents/staging/universal-planner/test-bugfix-std/planning/fix-checkout-corruption
 FILE_COUNT=$(find "$OUTPUT_DIR" -name "*.md" -type f | wc -l | tr -d ' ')
 if [ "$FILE_COUNT" -eq 6 ]; then
   echo "✓ Standard path correct: 6 files"
@@ -163,7 +163,7 @@ fi
 
 **Command:**
 ```bash
-OUTPUT_DIR=~/.agents/test-bugfix-std/planning/fix-checkout-corruption
+OUTPUT_DIR=.agents/staging/universal-planner/test-bugfix-std/planning/fix-checkout-corruption
 if grep -A 20 "^---$" "$OUTPUT_DIR/analysis/ANALYSIS.md" | grep -q 'severity:.*\(high\|critical\)'; then
   echo "✓ ANALYSIS has high/critical severity"
 else
@@ -189,7 +189,7 @@ fi
 
 **Command:**
 ```bash
-OUTPUT_DIR=~/.agents/test-bugfix-std/planning/fix-checkout-corruption
+OUTPUT_DIR=.agents/staging/universal-planner/test-bugfix-std/planning/fix-checkout-corruption
 grep -q "Root Cause" "$OUTPUT_DIR/analysis/ANALYSIS.md" && echo "✓ Root cause analysis present"
 grep -q "Fix Strategy\|Solution Design" "$OUTPUT_DIR/planning/PLANNING.md" && echo "✓ Fix strategy present"
 ```
@@ -224,11 +224,11 @@ grep -q "Fix Strategy\|Solution Design" "$OUTPUT_DIR/planning/PLANNING.md" && ec
 **Command:**
 ```bash
 # Fast path should NOT have PROGRESS.md
-test ! -f ~/.agents/test-bugfix-fast/planning/fix-login-timeout/sprints/PROGRESS.md && \
+test ! -f .agents/staging/universal-planner/test-bugfix-fast/planning/fix-login-timeout/sprints/PROGRESS.md && \
 echo "✓ Fast path: no PROGRESS.md (correct)"
 
 # Standard path SHOULD have PROGRESS.md
-test -f ~/.agents/test-bugfix-std/planning/fix-checkout-corruption/sprints/PROGRESS.md && \
+test -f .agents/staging/universal-planner/test-bugfix-std/planning/fix-checkout-corruption/sprints/PROGRESS.md && \
 echo "✓ Standard path: PROGRESS.md present"
 ```
 
@@ -302,7 +302,7 @@ echo "✓ Fast path documented in BUG_FIX mode"
 **Command:**
 ```bash
 # Check both fast and standard path outputs
-for OUTPUT_DIR in ~/.agents/test-bugfix-fast/planning/fix-login-timeout ~/.agents/test-bugfix-std/planning/fix-checkout-corruption; do
+for OUTPUT_DIR in .agents/staging/universal-planner/test-bugfix-fast/planning/fix-login-timeout .agents/staging/universal-planner/test-bugfix-std/planning/fix-checkout-corruption; do
   if [ -d "$OUTPUT_DIR" ]; then
     if grep -r '{{' "$OUTPUT_DIR" >/dev/null 2>&1; then
       echo "✗ Found Handlebars in $OUTPUT_DIR"

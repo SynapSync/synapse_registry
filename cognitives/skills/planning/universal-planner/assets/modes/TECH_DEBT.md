@@ -20,7 +20,7 @@ Use this mode when **reducing technical debt in an existing codebase**. The user
 ## Output Structure
 
 ```
-{output_base}/planning/{project-name}/
+{output_dir}/planning/{project-name}/
 ├── README.md
 ├── discovery/
 │   └── CONVENTIONS.md              # Current patterns and debt inventory

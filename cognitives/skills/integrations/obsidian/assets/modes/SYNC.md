@@ -6,7 +6,7 @@
 - (ES) User says "guardar en obsidian", "sincronizar a obsidian", or similar in Spanish
 - User asks to **create a report/plan AND save it to Obsidian** (this mode handles the Obsidian part after creation)
 - User wants to **browse their vault** to choose where to place documents
-- User asks to move an entire folder (e.g., `{output_base}/planning/`) to their Obsidian vault
+- User asks to move an entire folder (e.g., `{output_dir}/planning/`) to their Obsidian vault
 - After another skill finishes generating documents, user wants them in Obsidian
 
 ## When NOT to Use This Mode
@@ -21,7 +21,7 @@
 
 **RULE 0 - USE THE EXACT PATH THE USER GIVES YOU**
 
-When the user specifies a vault destination path, use it **exactly as given**. Do not modify it, do not substitute it, do not "improve" it. The `~/.agents/` pattern found in skill examples is an `output_base` convention for other skills — it is NOT a vault folder and must NEVER be used as a vault destination. If the user says "save to `work/my-project/plans/`", write to `work/my-project/plans/` — never to `agents/`, `agents/{project-name}/`, or any variation.
+When the user specifies a vault destination path, use it **exactly as given**. Do not modify it, do not substitute it, do not "improve" it. The `.agents/staging/` pattern found in skill examples is an `output_dir` convention for other skills — it is NOT a vault folder and must NEVER be used as a vault destination. If the user says "save to `work/my-project/plans/`", write to `work/my-project/plans/` — never to `agents/`, `agents/{project-name}/`, or any variation.
 
 **RULE 1 - ALWAYS ASK WHERE TO SAVE**
 
@@ -192,7 +192,7 @@ mcp__obsidian__write_note(
     "type": "analysis",
     "status": "active",
     "version": "1.0",
-    "source": "{output_base}/planning/2026-02-10/00-strategic-analysis.md",
+    "source": "{output_dir}/planning/2026-02-10/00-strategic-analysis.md",
     "tags": ["agent-sync-sdk", "analysis", "strategy"],
     "changelog": [{"version": "1.0", "date": "2026-02-12", "changes": ["Synced to Obsidian"]}],
     "related": ["[[01-technical-debt]]", "[[02-growth-vision]]"]
@@ -400,6 +400,49 @@ Every SYNC operation MUST produce a response with these sections in this order:
 
 ---
 
+## Optional Workflow: Batch Move from Staging
+
+When the user asks to "sync my output to vault" or "move staging to obsidian", this workflow detects local staging directories and syncs their contents to the vault.
+
+### When to Use
+
+- User says "sync my staging output to obsidian" or "move my reports to vault"
+- After a producer skill (universal-planner, code-analyzer, sprint-forge) completes and the user wants to persist output in the vault
+
+### Workflow
+
+1. **Detect staging directories**: `Glob(pattern: ".agents/staging/*/")` to find all skill staging dirs
+2. **List available skills**: Present the user with a list of skills that have staging output
+3. **User picks**: Which skill's output to sync (or "all")
+4. **For each selected skill's staging dir**:
+   a. Glob all `.md` files in the staging directory
+   b. Follow the standard SYNC workflow (Steps 1-6) to write to vault
+   c. After successful sync, ask user if they want to clean up the staging directory
+5. **Report**: Standard SYNC output format with all synced files
+
+### Example
+
+```
+User: "sync my planning output to obsidian"
+
+Detected staging output:
+  - .agents/staging/universal-planner/my-app/ (8 files)
+  - .agents/staging/code-analyzer/my-app/ (2 files)
+
+Which output would you like to sync?
+1. universal-planner (8 files)
+2. code-analyzer (2 files)
+3. All (10 files)
+
+User selects: 3 (All)
+
+→ Follows standard SYNC workflow for all 10 files
+→ Reports results
+→ "Would you like to clean up the staging directories?"
+```
+
+---
+
 ## Optional Workflow: Archive and Delete
 
 When the user asks to clean up, archive, or remove vault notes.
@@ -590,9 +633,9 @@ Bash(command: "rm '{vault_path}/{file}'")
 
 ## Example: Full Sync Flow
 
-**User request:** "sync {output_base}/planning/ to obsidian"
+**User request:** "sync {output_dir}/planning/ to obsidian"
 
-1. **Glob**: Find all `.md` files in `{output_base}/planning/`
+1. **Glob**: Find all `.md` files in `{output_dir}/planning/`
 2. **Read**: Read all files in parallel
 3. **Load**: `ToolSearch query: "+obsidian write"`
 4. **List vault**: `mcp__obsidian__list_directory(path: "/")`

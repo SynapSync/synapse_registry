@@ -642,7 +642,7 @@ progress: 65
 metrics:
   tasks_completed: 12
   tasks_total: 18
-source: "{output_base}/planning/2026-02-10/"
+source: "{output_dir}/planning/2026-02-10/"
 ---
 ```
 

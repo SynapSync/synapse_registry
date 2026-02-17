@@ -18,7 +18,7 @@
 ### Expected Output Structure
 
 ```
-{output_base}/planning/team-task-manager/
+{output_dir}/planning/team-task-manager/
 ├── README.md
 ├── requirements/                        # 7 files
 │   ├── problem-definition.md
@@ -61,7 +61,7 @@
 
 **Command:**
 ```bash
-OUTPUT_DIR=~/.agents/test-newproject/planning/team-task-manager
+OUTPUT_DIR=.agents/staging/universal-planner/test-newproject/planning/team-task-manager
 FILE_COUNT=$(find "$OUTPUT_DIR" -name "*.md" -type f | wc -l | tr -d ' ')
 if [ "$FILE_COUNT" -eq 18 ]; then
   echo "✓ Correct file count: 18"
@@ -82,7 +82,7 @@ fi
 
 **Command:**
 ```bash
-OUTPUT_DIR=~/.agents/test-newproject/planning/team-task-manager/requirements
+OUTPUT_DIR=.agents/staging/universal-planner/test-newproject/planning/team-task-manager/requirements
 
 test -f "$OUTPUT_DIR/problem-definition.md" && echo "✓ problem-definition.md exists"
 test -f "$OUTPUT_DIR/goals-and-metrics.md" && echo "✓ goals-and-metrics.md exists"
@@ -122,7 +122,7 @@ fi
 
 **Command:**
 ```bash
-OUTPUT_DIR=~/.agents/test-newproject/planning/team-task-manager/design
+OUTPUT_DIR=.agents/staging/universal-planner/test-newproject/planning/team-task-manager/design
 
 test -f "$OUTPUT_DIR/system-overview.md" && echo "✓ system-overview.md exists"
 test -f "$OUTPUT_DIR/architecture-decisions.md" && echo "✓ architecture-decisions.md exists"
@@ -160,7 +160,7 @@ fi
 
 **Command:**
 ```bash
-OUTPUT_DIR=~/.agents/test-newproject/planning/team-task-manager
+OUTPUT_DIR=.agents/staging/universal-planner/test-newproject/planning/team-task-manager
 
 test -f "$OUTPUT_DIR/README.md" && echo "✓ README.md exists"
 test -f "$OUTPUT_DIR/analysis/ANALYSIS.md" && echo "✓ ANALYSIS.md exists"
@@ -181,7 +181,7 @@ test -f "$OUTPUT_DIR/sprints/PROGRESS.md" && echo "✓ PROGRESS.md exists"
 
 **Command:**
 ```bash
-OUTPUT_DIR=~/.agents/test-newproject/planning/team-task-manager
+OUTPUT_DIR=.agents/staging/universal-planner/test-newproject/planning/team-task-manager
 
 # Core files
 for file in README.md analysis/ANALYSIS.md planning/PLANNING.md execution/EXECUTION.md sprints/PROGRESS.md; do
@@ -211,7 +211,7 @@ done
 
 **Command:**
 ```bash
-OUTPUT_DIR=~/.agents/test-newproject/planning/team-task-manager/requirements
+OUTPUT_DIR=.agents/staging/universal-planner/test-newproject/planning/team-task-manager/requirements
 
 # Functional requirements should use MoSCoW prioritization
 grep -q "Must Have\|Should Have\|Could Have\|Won't Have" "$OUTPUT_DIR/functional-requirements.md" && \
@@ -244,7 +244,7 @@ echo "✓ User personas documented"
 
 **Command:**
 ```bash
-OUTPUT_DIR=~/.agents/test-newproject/planning/team-task-manager/design
+OUTPUT_DIR=.agents/staging/universal-planner/test-newproject/planning/team-task-manager/design
 
 # Architecture decisions should use ADR format
 grep -q "ADR-\|Decision:\|Context:\|Consequences:" "$OUTPUT_DIR/architecture-decisions.md" && \
@@ -277,7 +277,7 @@ echo "✓ Core flows include sequence diagrams"
 
 **Command:**
 ```bash
-OUTPUT_DIR=~/.agents/test-newproject/planning/team-task-manager
+OUTPUT_DIR=.agents/staging/universal-planner/test-newproject/planning/team-task-manager
 grep -l '\[\[.*\]\]' "$OUTPUT_DIR/README.md" && echo "✓ README uses wiki-links"
 ```
 
@@ -293,7 +293,7 @@ grep -l '\[\[.*\]\]' "$OUTPUT_DIR/README.md" && echo "✓ README uses wiki-links
 
 **Command:**
 ```bash
-OUTPUT_DIR=~/.agents/test-newproject/planning/team-task-manager
+OUTPUT_DIR=.agents/staging/universal-planner/test-newproject/planning/team-task-manager
 
 REFS_COUNT=0
 for file in $(find "$OUTPUT_DIR" -name "*.md" -type f); do
@@ -319,7 +319,7 @@ fi
 
 **Command:**
 ```bash
-OUTPUT_DIR=~/.agents/test-newproject/planning/team-task-manager
+OUTPUT_DIR=.agents/staging/universal-planner/test-newproject/planning/team-task-manager
 
 if test -f "$OUTPUT_DIR/discovery/CONVENTIONS.md"; then
   echo "✗ CONVENTIONS.md exists (should NOT for NEW_PROJECT)"
@@ -362,7 +362,7 @@ fi
 
 **Command:**
 ```bash
-OUTPUT_DIR=~/.agents/test-newproject/planning/team-task-manager
+OUTPUT_DIR=.agents/staging/universal-planner/test-newproject/planning/team-task-manager
 test -f "$OUTPUT_DIR/sprints/PROGRESS.md" && \
 grep -q "## Sprint Overview" "$OUTPUT_DIR/sprints/PROGRESS.md" && \
 echo "✓ PROGRESS.md exists with Sprint Overview"
@@ -425,7 +425,7 @@ echo "✓ PROGRESS.md exists with Sprint Overview"
 
 **Command:**
 ```bash
-OUTPUT_DIR=~/.agents/test-newproject/planning/team-task-manager
+OUTPUT_DIR=.agents/staging/universal-planner/test-newproject/planning/team-task-manager
 test -f "$OUTPUT_DIR/sprints/PROGRESS.md" && echo "✓ PROGRESS.md present"
 grep -q "Before:" "$OUTPUT_DIR/execution/EXECUTION.md" && echo "✓ Before/After in tasks"
 ```
@@ -442,7 +442,7 @@ grep -q "Before:" "$OUTPUT_DIR/execution/EXECUTION.md" && echo "✓ Before/After
 
 **Command:**
 ```bash
-OUTPUT_DIR=~/.agents/test-newproject/planning/team-task-manager
+OUTPUT_DIR=.agents/staging/universal-planner/test-newproject/planning/team-task-manager
 if grep -r '{{' "$OUTPUT_DIR" >/dev/null 2>&1; then
   echo "✗ Found Handlebars syntax"
 else
