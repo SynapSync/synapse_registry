@@ -31,7 +31,8 @@ synapse-registry/
 │   │   ├── general/                    # General-purpose skills
 │   │   ├── analytics/                  # Data analysis
 │   │   ├── planning/                   # Project planning & SDLC
-│   │   └── integrations/              # External services & Obsidian
+│   │   ├── integrations/              # External services & Obsidian
+│   │   └── workflow/                  # Sprint workflows & iterative processes
 │   │
 │   ├── agents/                         # Autonomous AI agents
 │   │   └── general/
@@ -51,9 +52,10 @@ synapse-registry/
 | Name | Category | Version | Description |
 |------|----------|---------|-------------|
 | [skill-creator](cognitives/skills/general/skill-creator/) | general | 3.1.0 | Creates AI skills following SynapSync spec with templates and best practices |
-| [universal-planner](cognitives/skills/planning/universal-planner/) | planning | 3.1.0 | Unified planning and execution skill for any software scenario with PLAN and EXECUTE modes |
+| [universal-planner](cognitives/skills/planning/universal-planner/) | planning | 3.1.1 | Unified planning and execution skill for any software scenario with PLAN and EXECUTE modes |
 | [code-analyzer](cognitives/skills/analytics/code-analyzer/) | analytics | 2.1.0 | Analyzes code modules and generates structured technical reports with architecture diagrams |
-| [obsidian](cognitives/skills/integrations/obsidian/) | integrations | 3.2.0 | Unified Obsidian vault manager: sync documents, read notes, and search knowledge via MCP |
+| [obsidian](cognitives/skills/integrations/obsidian/) | integrations | 3.3.0 | Unified Obsidian vault manager: sync documents, read notes, and search knowledge via MCP |
+| [sprint-forge](cognitives/skills/workflow/sprint-forge/) | workflow | 1.1.0 | Adaptive sprint workflow — analysis, roadmap, iterative sprints, debt tracking, and context persistence |
 
 ### Agents
 
@@ -182,6 +184,7 @@ The obsidian skill requires the **Obsidian MCP server** for full functionality:
 | `automation` | Task automation, workflows |
 | `integrations` | External services, Obsidian, and knowledge management |
 | `planning` | Project planning, SDLC, requirements, architecture |
+| `workflow` | Sprint workflows, iterative processes, adaptive execution |
 
 ## Per-Project Output Configuration
 

@@ -8,6 +8,15 @@ Format based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and th
 
 _No unreleased changes._
 
+## [2026-02-17]
+
+### Added
+- **sprint-forge** skill (workflow, v1.1.0): Adaptive sprint workflow with 3 modes (INIT, SPRINT, STATUS). Deep analysis, evolving roadmap, one-at-a-time sprint generation, formal debt tracking with inheritance, and re-entry prompts for context persistence across sessions. Language-agnostic — works for any project type. Modular assets: 3 modes, 4 helpers, 4 templates. Integrates with obsidian (vault sync) and code-analyzer (findings input).
+
+### Changed
+- **obsidian** skill (integrations): Updated README version reference to v3.3.0.
+- **universal-planner** skill (planning): Updated README version reference to v3.1.1.
+
 ## [2026-02-14]
 
 ### Changed

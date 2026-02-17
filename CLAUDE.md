@@ -37,6 +37,7 @@ Every cognitive lives in `cognitives/{type}s/{category}/{name}/` and must contai
 - **universal-planner** (`cognitives/skills/planning/universal-planner/`) — Unified planning and execution skill with PLAN and EXECUTE modes. Covers new projects, features, refactors, bug fixes, tech debt, and architecture changes. Uses modular assets pattern with 8 modes (2 top-level + 6 planning sub-modes).
 - **code-analyzer** (`cognitives/skills/analytics/code-analyzer/`) — Analyzes code modules and generates structured technical reports with architecture diagrams.
 - **obsidian** (`cognitives/skills/integrations/obsidian/`) — Unified Obsidian vault manager with SYNC and READ modes. Syncs documents to vault and reads/searches notes via MCP. Includes the Obsidian markdown standard specification and linter as internal assets. Claude-only.
+- **sprint-forge** (`cognitives/skills/workflow/sprint-forge/`) — Adaptive sprint workflow with 3 modes (INIT, SPRINT, STATUS). Deep analysis, evolving roadmap, one-at-a-time sprints, formal debt tracking, and re-entry prompts for context persistence. Language-agnostic. Modular assets: 3 modes, 4 helpers, 4 templates.
 
 ### Agents
 - **feature-branch-manager** (`cognitives/agents/general/feature-branch-manager/`) — Git workflow agent for branch creation, pushing, and PR creation. Claude-only.
@@ -47,7 +48,7 @@ Every cognitive lives in `cognitives/{type}s/{category}/{name}/` and must contai
 
 ## Valid Categories
 
-`general`, `frontend`, `backend`, `database`, `devops`, `security`, `testing`, `analytics`, `automation`, `integrations`, `planning`
+`general`, `frontend`, `backend`, `database`, `devops`, `security`, `testing`, `analytics`, `automation`, `integrations`, `planning`, `workflow`
 
 ## Valid Providers
 

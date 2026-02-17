@@ -1,0 +1,73 @@
+{
+  "$schema": "https://synapsync.dev/schemas/cognitive-manifest.json",
+  "name": "sprint-forge",
+  "type": "skill",
+  "version": "1.1.0",
+  "description": "Adaptive sprint workflow — analysis, roadmap, iterative sprints, debt tracking, and context persistence",
+  "author": {
+    "name": "SynapSync",
+    "url": "https://github.com/SynapSync",
+    "email": "hello@synapsync.dev"
+  },
+  "license": "Apache-2.0",
+  "category": "workflow",
+  "tags": [
+    "workflow",
+    "sprint",
+    "planning",
+    "execution",
+    "debt-tracking",
+    "roadmap",
+    "iterative",
+    "adaptive",
+    "context-persistence",
+    "reentry"
+  ],
+  "providers": [
+    "claude",
+    "openai",
+    "cursor",
+    "windsurf",
+    "copilot",
+    "gemini",
+    "codex"
+  ],
+  "file": "SKILL.md",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/SynapSync/synapse-registry"
+  },
+  "homepage": "https://synapsync.dev/cognitives/sprint-forge",
+  "assets": {
+    "modes": 3,
+    "helpers": 4,
+    "templates": 4
+  },
+  "changelog": [
+    {
+      "version": "1.1.0",
+      "date": "2026-02-16",
+      "changes": [
+        "Add [>] carry-over task state for tasks that pass to the next sprint",
+        "Add execution metadata (date, executor) to sprint header",
+        "Add 'Converted to Phase' as disposition action for recommendations",
+        "Add Findings Consolidation phase as recommended sprint closing pattern",
+        "Add Evidence field to task format for inline documentation",
+        "Add 'New Technical Debt Detected' as fourth retro subsection"
+      ]
+    },
+    {
+      "version": "1.0.0",
+      "date": "2026-02-16",
+      "changes": [
+        "Initial release — 3 modes (INIT, SPRINT, STATUS)",
+        "Adaptive roadmap with sprint-by-sprint generation",
+        "Formal debt tracking with inheritance",
+        "Re-entry prompts for context persistence across sessions",
+        "Language-agnostic: works for any project type, language, or framework"
+      ]
+    }
+  ],
+  "createdAt": "2026-02-16T00:00:00Z",
+  "updatedAt": "2026-02-16T00:00:00Z"
+}
