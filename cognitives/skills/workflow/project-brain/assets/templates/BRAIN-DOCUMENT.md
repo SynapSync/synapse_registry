@@ -1,3 +1,4 @@
+<!-- brain-format: v2.0 -->
 # {project_name} — Project Brain
 
 > Last updated: {date} | Sessions: {N}
@@ -31,7 +32,7 @@
 
 <!-- Newest first. SAVE mode prepends entries here. -->
 
-### Session {N} — {date}
+### Session {N} — {date} [SID: {YYYYMMDD-HHMM}]
 
 **Summary**: {2-3 sentences}
 
@@ -43,6 +44,9 @@
 
 **Files Changed**:
 - `{path}` — {what}
+
+**Retrospective**:
+{Process reflection: friction, pivots, time sinks, what worked well — or "Straightforward session." if nothing notable}
 
 ---
 

@@ -59,6 +59,9 @@ If the file does not exist or returns an error:
 
 Parse the document in order of format priority:
 
+**Priority 0 — Format Marker:**
+Check the first 5 lines for `<!-- brain-format: vX.X -->`. If found, use that version directly and skip the heading heuristic.
+
 **Priority 1 — v2.0 Standard Sections:**
 Look for these h2 headings:
 - `## Project Identity`

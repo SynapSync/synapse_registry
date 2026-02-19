@@ -35,17 +35,20 @@ For UPDATE, the path is already known from Step 0.
 
 ## Step 2 — Gather Session Context
 
+**Session ID**: Generate a Session ID at the start: `SID: {YYYYMMDD-HHMM}` using the current date and time.
+
 Synthesize from the current conversation:
 
 1. **Summary**: 2-3 sentences of what was accomplished this session
 2. **Decisions**: Explicit decisions made (architecture choices, library selections, approach changes)
 3. **Discoveries**: Non-obvious findings (bugs found, performance insights, undocumented behaviors)
 4. **Files Changed**: Run `git diff --name-only` if git repo; otherwise ask the user
-5. **Next Steps**: What should happen next, prioritized
+5. **Retrospective**: Process reflection — friction points, approach pivots, time sinks, and what worked well. Focus on things NOT already captured in Decisions or Discoveries (e.g., "started with approach X but switched to Y because Z", "biggest time sink was debugging the API integration because docs were outdated"). If the session was straightforward with no notable friction or pivots, write `Straightforward session.` — do NOT fabricate reflections.
+6. **Next Steps**: Only include items that were explicitly discussed or requested during the session. If no next steps were discussed, write `No explicit next steps discussed.` — do NOT infer or fabricate items to fill this section.
 
 For **INIT** only, also gather:
-6. **Project Identity**: Name, purpose, stack, repository, key paths — infer from cwd or ask
-7. **Key Files**: Critical project files and why they matter
+7. **Project Identity**: Name, purpose, stack, repository, key paths — infer from cwd or ask
+8. **Key Files**: Critical project files and why they matter
 
 ### Confirmation Gate
 
@@ -58,7 +61,8 @@ Here's what I'll save to the brain document:
 **Decisions**: {list}
 **Discoveries**: {list}
 **Files Changed**: {list}
-**Next Steps**: {list}
+**Retrospective**: {reflection or "Straightforward session."}
+**Next Steps**: {list or "No explicit next steps discussed."}
 
 {For INIT: also show Project Identity and Key Files}
 
@@ -84,6 +88,11 @@ Do NOT write until the user confirms.
 
 Use the incremental merge algorithm (see [helpers/incremental-merge.md](../helpers/incremental-merge.md)):
 
+**Pre-write backup**: Before reading the document for merge, copy the current brain document:
+> `{path}` → `{path}.bak`
+>
+> Use the Write tool to copy the contents. If the merge produces incorrect results, the user can restore from the `.bak` file.
+
 1. Read the existing brain document
 2. Detect format:
    - **v2.0** → proceed with merge
@@ -95,12 +104,21 @@ Use the incremental merge algorithm (see [helpers/incremental-merge.md](../helpe
 | Metadata (date, session count) | Update |
 | Project Identity | Update only changed fields |
 | Active State | Full replace |
-| Session Log | Prepend new entry |
+| Session Log | Prepend new entry (check SID for duplicates first — see below) |
 | Accumulated Context > Architecture Decisions | Append rows |
 | Accumulated Context > Patterns & Conventions | Append (skip duplicates) |
 | Accumulated Context > Constraints & Gotchas | Append (skip duplicates) |
 | Next Steps | Full replace |
-| Key Files | Merge (add new, update changed, keep rest) |
+| Key Files | **Merge + staleness check**: add new, update changed, keep rest. For each existing entry, verify the file still exists (using Glob). If a file was deleted, remove the entry or mark it as `~~{path}~~ (removed)` and confirm with user. |
+
+**Session ID duplicate check**: Before prepending the new session entry, check if an entry with the same SID already exists in Session Log. If found:
+> "Session already saved (SID: {SID}). Update the existing entry or create a new one?"
+
+**Contradiction check**: When appending to Accumulated Context, check if the new item contradicts an existing one (e.g., "Use library X" vs "Stopped using library X"). If a contradiction is detected:
+> "Pattern '{new}' seems to contradict existing '{old}'. Retire the old one?"
+>
+> If yes → move the old item to a `### Retired` sub-section at the bottom of Accumulated Context.
+> If no → keep both items.
 
 4. Write the merged document
 

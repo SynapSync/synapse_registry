@@ -9,7 +9,7 @@ description: >
 license: Apache-2.0
 metadata:
   author: synapsync
-  version: "2.0"
+  version: "2.1"
   scope: [root]
   auto_invoke:
     # English triggers — LOAD
@@ -45,6 +45,19 @@ metadata:
     - "escribe el resumen de sesion"
     - "persiste esta sesion"
   changelog:
+    - version: "2.1"
+      date: "2026-02-19"
+      changes:
+        - "Pre-write backup (.bak) before merge in SAVE UPDATE mode"
+        - "Explicit brain-format marker (<!-- brain-format: v2.0 -->) in template and LOAD parsing"
+        - "Session ID (SID: YYYYMMDD-HHMM) for idempotent saves with duplicate detection"
+        - "Semantic duplicate detection replaces non-implementable >80% overlap heuristic"
+        - "Markdown-aware section splitting (respects code fences)"
+        - "Session Log compaction now archives full entries before summarizing"
+        - "Key Files staleness check verifies files still exist during merge"
+        - "Accumulated Context contradiction check with retirement flow"
+        - "Session Retrospective section — process reflection (friction, pivots, time sinks)"
+        - "Next Steps anti-fabrication guard — only explicitly discussed items, no inference"
     - version: "2.0"
       date: "2026-02-19"
       changes:
@@ -205,7 +218,7 @@ new session        → project-brain LOAD → full context restored
 2. **Single file**: One brain document per project — not a recursive folder reader
 3. **No synthesis**: If the brain document is outdated, the briefing reflects that
 4. **MCP for Obsidian only in LOAD**: SAVE always writes to filesystem (Obsidian syncs via the `obsidian` skill if needed)
-5. **Session Log size**: Compacted at 15+ entries — older sessions become a summary paragraph
+5. **Session Log size**: Compacted at 15+ entries — older sessions are archived to `.agents/project-brain/archive/` and replaced with a summary paragraph
 6. **No auto-save**: SAVE must be explicitly invoked — the agent doesn't auto-save on exit
 
 ---
@@ -214,5 +227,6 @@ new session        → project-brain LOAD → full context restored
 
 | Version | Date | Changes |
 |---------|------|---------|
+| 2.1 | 2026-02-19 | Hardening: pre-write backup, format marker, session ID idempotency, semantic dedup, markdown-aware split, session archive, Key Files staleness check, context contradiction retirement, session retrospective, next steps anti-fabrication |
 | 2.0 | 2026-02-19 | SAVE mode (INIT + UPDATE), auto-discovery, standard brain format, incremental merge, session compaction, backward-compatible parsing, modular assets |
 | 1.0 | 2026-02-18 | Initial release — LOAD mode, Obsidian MCP + filesystem fallback, format-agnostic parsing |

@@ -170,7 +170,7 @@
     {
       "name": "project-brain",
       "type": "skill",
-      "version": "2.0.0",
+      "version": "2.1.0",
       "description": "Session memory for AI agents — load context, save sessions, evolve knowledge",
       "author": "synapsync",
       "category": "workflow",
