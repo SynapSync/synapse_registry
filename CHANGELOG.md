@@ -10,6 +10,9 @@ _No unreleased changes._
 
 ## [2026-02-19]
 
+### Added
+- **project-brain** skill (workflow, v2.0.0): SAVE mode with INIT (create new) and UPDATE (incremental merge) sub-modes. Auto-discovery of brain documents in `.agents/project-brain/`. Standard brain document format (BRAIN-DOCUMENT template) with Project Identity, Active State, Session Log (newest-first), Accumulated Context (append-only), Next Steps, and Key Files. Incremental merge algorithm — per-section strategy, session compaction at 15+ entries, duplicate detection. Backward-compatible parsing: v2.0, v1.0, and free-form formats with optional migration. Interactive path resolution (local default or custom root). Modular assets architecture: 2 modes, 1 helper, 1 template.
+
 ### Changed
 - **obsidian** skill (integrations, v3.4.0): Three bug fixes — (1) SYNC.md:528 `search_notes`/`patch_note` missing `mcp__obsidian__` prefix; (2) `priority-ranking.md` `read_multiple_notes` called with unsupported params `includeContent`/`includeFrontmatter`; (3) `obsidian-linter.md` version regex `/^\d+\.\d+$/` rejecting 3-part semver — fixed to `/^\d+\.\d+(\.\d+)?$/`.
 - **sprint-forge** skill (workflow, v1.3.0): Fixed misleading claim in INIT Step 2 — `{output_dir}` is not "stored in README.md". Replaced with accurate discovery rules: option 1 paths are auto-discovered by scanning `.agents/sprint-forge/`; option 2 (custom) paths must be provided via re-entry prompt or explicit message.

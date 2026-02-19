@@ -170,17 +170,17 @@
     {
       "name": "project-brain",
       "type": "skill",
-      "version": "1.0.0",
-      "description": "Loads a project brain document to restore full session context for any agent",
+      "version": "2.0.0",
+      "description": "Session memory for AI agents — load context, save sessions, evolve knowledge",
       "author": "synapsync",
       "category": "workflow",
       "tags": [
         "context-restoration",
-        "session",
+        "session-memory",
         "brain",
-        "handoff",
+        "save",
+        "incremental",
         "continuity",
-        "obsidian",
         "markdown",
         "context-persistence"
       ],

@@ -1,0 +1,67 @@
+{
+  "$schema": "https://synapsync.dev/schemas/cognitive-manifest.json",
+  "name": "project-brain",
+  "type": "skill",
+  "version": "2.0.0",
+  "description": "Session memory for AI agents — load context, save sessions, evolve knowledge",
+  "author": {
+    "name": "SynapSync",
+    "url": "https://github.com/SynapSync",
+    "email": "hello@synapsync.dev"
+  },
+  "license": "Apache-2.0",
+  "category": "workflow",
+  "tags": [
+    "context-restoration",
+    "session-memory",
+    "brain",
+    "save",
+    "incremental",
+    "continuity",
+    "markdown",
+    "context-persistence"
+  ],
+  "providers": [
+    "claude",
+    "openai",
+    "cursor",
+    "windsurf",
+    "copilot",
+    "gemini",
+    "codex"
+  ],
+  "file": "SKILL.md",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/SynapSync/synapse-registry"
+  },
+  "homepage": "https://synapsync.dev/cognitives/project-brain",
+  "changelog": [
+    {
+      "version": "2.0.0",
+      "date": "2026-02-19",
+      "changes": [
+        "Added SAVE mode with INIT and UPDATE sub-modes",
+        "Auto-discovery of brain documents in .agents/project-brain/",
+        "Standard brain document format (BRAIN-DOCUMENT template)",
+        "Incremental merge algorithm for non-destructive updates",
+        "Session Log with newest-first ordering and compaction",
+        "Backward-compatible parsing: v2.0, v1.0, and free-form",
+        "Interactive path resolution",
+        "Modular assets architecture"
+      ]
+    },
+    {
+      "version": "1.0.0",
+      "date": "2026-02-18",
+      "changes": [
+        "Initial release — single LOAD mode",
+        "Obsidian MCP support with filesystem fallback",
+        "Format-agnostic parsing of standard and free-form brain documents",
+        "Integrates with sprint-forge REENTRY.md, universal-planner, and obsidian skill"
+      ]
+    }
+  ],
+  "createdAt": "2026-02-18T00:00:00Z",
+  "updatedAt": "2026-02-19T00:00:00Z"
+}
