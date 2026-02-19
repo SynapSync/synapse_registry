@@ -21,6 +21,15 @@ This mode reads all project artifacts and generates a comprehensive progress rep
 
 ## Workflow
 
+### Step 0 — Locate Output Directory
+
+Before reading any files, determine `{output_dir}`:
+
+1. If the user's request includes an explicit path, use it
+2. Otherwise, check `{cwd}/.agents/sprint-forge/` — if a single project directory exists, use it
+3. If multiple directories exist, ask: "Which project? Found: {list}"
+4. If none found, ask: "Where are your sprint-forge documents? (e.g. `.agents/sprint-forge/my-project/`)"
+
 ### Step 1 — Read Project State
 
 Read the following files:

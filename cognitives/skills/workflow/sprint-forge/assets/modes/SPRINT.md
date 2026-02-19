@@ -28,6 +28,17 @@ If ambiguous, ask:
 
 ## GENERATE Workflow
 
+### Step 0 — Locate Output Directory
+
+Before reading any sprint files, determine `{output_dir}`:
+
+1. If the user's request includes an explicit path, use it
+2. Otherwise, check `{cwd}/.agents/sprint-forge/` — if a single project directory exists, use it
+3. If multiple directories exist, ask: "Which project? Found: {list}"
+4. If none found, ask: "Where are your sprint-forge documents? (e.g. `.agents/sprint-forge/my-project/`)"
+
+Once resolved, all subsequent steps use `{output_dir}` as the base for all file paths.
+
 ### Step 1 — Determine Sprint Number
 
 1. Read `ROADMAP.md` to understand the planned sprints
@@ -229,14 +240,3 @@ If execution revealed that the roadmap needs adjustment:
 - [reentry-generator.md](../helpers/reentry-generator.md) — Re-entry prompt updates
 - [SPRINT.md template](../templates/SPRINT.md) — Sprint document structure
 
----
-
-## Post-Sprint Delivery
-
-After completing a sprint (execution + retro + re-entry prompt update), offer the user delivery options for the new/updated files:
-
-1. **Sync to Obsidian vault** — use the `obsidian` skill (SYNC mode) to sync the sprint file and updated roadmap/re-entry prompts to the vault
-2. **Move to custom path** — user specifies a destination
-3. **Keep in staging** — leave files in `.agents/staging/sprint-forge/` for later use
-
-Ask the user which option they prefer.

@@ -47,10 +47,23 @@ Gather or detect the following configuration:
 |--------|---------------|
 | **Project Name** | Ask the user or derive from the codebase directory name. Use a slug format: `my-project-audit`. |
 | **Codebase Path** | The absolute path to the codebase. Usually the current working directory. |
-| **Output Directory** | Where sprint-forge artifacts will be stored. Default: `.agents/staging/sprint-forge/{project-name}/`. Present to user before proceeding. |
-| **Sprint Output Dir** | `{output_dir}/sprints/` (automatic) |
+| **Sprint Output Dir** | `{output_dir}/sprints/` (automatic, resolved below) |
 
-Present the resolved configuration to the user for confirmation:
+**Before writing any file**, ask the user where sprint-forge documents should be saved:
+
+> "Where should I save sprint-forge documents for **{project_name}**?
+>
+> 1. **Local** (default) — `{cwd}/.agents/sprint-forge/{project-name}/`
+> 2. **Custom path** — provide a filesystem or Obsidian vault path and files will be saved directly to `{root}/{project-name}/`"
+
+Set `{output_dir}` based on the choice:
+
+- **Option 1**: `{cwd}/.agents/sprint-forge/{project-name}/` — `sprint-forge/` acts as a namespace inside `.agents/` (shared with other skills)
+- **Option 2**: `{user-provided-root}/{project-name}/` — the user's path is already the destination, no extra namespace added
+
+The resolved `{output_dir}` is stored in the project README.md so SPRINT and STATUS modes can locate it in future sessions without asking again.
+
+Confirm with the user:
 
 > **Project**: {project_name}
 > **Codebase**: `{codebase_path}`
@@ -151,18 +164,6 @@ Using the [reentry-generator.md](../helpers/reentry-generator.md) helper:
    - Sprint 1 finding file path
 3. Generate all 4 scenario prompts with real paths
 4. Write to `{output_dir}/RE-ENTRY-PROMPTS.md`
-
-### Step 8 — Post-Production Delivery
-
-After all INIT documents are generated in `{output_dir}`, offer the user delivery options:
-
-1. **Sync to Obsidian vault** — use the `obsidian` skill (SYNC mode) to move findings, roadmap, and re-entry prompts to the vault
-2. **Move to custom path** — user specifies a destination and files are moved there
-3. **Keep in staging** — leave files in `.agents/staging/sprint-forge/` for later use
-
-Ask the user which option they prefer. If they choose option 1 or 2, move (not copy) the files to the destination.
-
----
 
 ## Output Summary
 

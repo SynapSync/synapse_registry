@@ -1,8 +1,8 @@
 {
   "$schema": "https://synapsync.dev/schemas/registry.json",
   "version": "1.0.0",
-  "lastUpdated": "2026-02-17T00:00:00Z",
-  "totalCognitives": 6,
+  "lastUpdated": "2026-02-18T00:00:00Z",
+  "totalCognitives": 7,
   "cognitives": [
     {
       "name": "skill-creator",
@@ -139,7 +139,7 @@
     {
       "name": "sprint-forge",
       "type": "skill",
-      "version": "1.2.0",
+      "version": "1.3.0",
       "description": "Adaptive sprint workflow — analysis, roadmap, iterative sprints, debt tracking, and context persistence",
       "author": "synapsync",
       "category": "workflow",
@@ -166,6 +166,35 @@
       ],
       "downloads": 0,
       "path": "cognitives/skills/workflow/sprint-forge"
+    },
+    {
+      "name": "project-brain",
+      "type": "skill",
+      "version": "1.0.0",
+      "description": "Loads a project brain document to restore full session context for any agent",
+      "author": "synapsync",
+      "category": "workflow",
+      "tags": [
+        "context-restoration",
+        "session",
+        "brain",
+        "handoff",
+        "continuity",
+        "obsidian",
+        "markdown",
+        "context-persistence"
+      ],
+      "providers": [
+        "claude",
+        "openai",
+        "cursor",
+        "windsurf",
+        "copilot",
+        "gemini",
+        "codex"
+      ],
+      "downloads": 0,
+      "path": "cognitives/skills/workflow/project-brain"
     }
   ]
 }

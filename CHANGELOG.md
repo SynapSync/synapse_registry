@@ -8,6 +8,11 @@ Format based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and th
 
 _No unreleased changes._
 
+## [2026-02-18]
+
+### Changed
+- **sprint-forge** skill (workflow, v1.3.0): Replaced staging pattern with interactive path resolution. Before writing the first file, the skill asks where to save documents — option 1 local default (`{cwd}/.agents/sprint-forge/{project-name}/`), option 2 any custom filesystem or vault path (`{root}/{project-name}/`). Removed post-production and post-sprint delivery steps from INIT and SPRINT modes. Added Step 0 to SPRINT and STATUS modes for locating `{output_dir}` in future sessions. Fixed example path in `reentry-generator.md` to reflect the correct namespace convention.
+
 ## [2026-02-17]
 
 ### Added

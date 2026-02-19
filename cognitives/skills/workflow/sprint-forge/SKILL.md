@@ -8,7 +8,7 @@ description: >
 license: Apache-2.0
 metadata:
   author: synapsync
-  version: "1.2"
+  version: "1.3"
   scope: [root]
   auto_invoke:
     # English triggers
@@ -30,6 +30,12 @@ metadata:
     - "Revisa la deuda técnica"
     - "Inicia un workflow de proyecto iterativo"
   changelog:
+    - version: "1.3"
+      date: "2026-02-18"
+      changes:
+        - "Replaced staging pattern with interactive path resolution (ask once before first write)"
+        - "Removed post-production delivery steps from INIT and SPRINT"
+        - "Added Step 0 to SPRINT and STATUS for locating {output_dir} in future sessions"
     - version: "1.2"
       date: "2026-02-17"
       changes:
@@ -205,5 +211,6 @@ This will: read all sprints, calculate metrics, display progress and accumulated
 
 | Version | Date | Changes |
 |---------|------|---------|
+| 1.3 | 2026-02-18 | Interactive path resolution — ask once before first write, option 1 local default, option 2 custom root. Removed staging pattern and post-delivery steps. |
 | 1.2 | 2026-02-17 | Deterministic staging pattern (.agents/staging/), post-production delivery step, {output_dir} variable rename |
 | 1.0 | 2026-02-16 | Initial release — INIT, SPRINT, STATUS modes. Adaptive roadmap, formal debt tracking, re-entry prompts, language-agnostic design. |
