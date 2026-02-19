@@ -58,6 +58,7 @@ metadata:
         - "Accumulated Context contradiction check with retirement flow"
         - "Session Retrospective section — process reflection (friction, pivots, time sinks)"
         - "Next Steps anti-fabrication guard — only explicitly discussed items, no inference"
+        - "Language separation — conversation in user's language, brain document always in English"
     - version: "2.0"
       date: "2026-02-19"
       changes:
@@ -127,9 +128,10 @@ A markdown file that captures project state, session history, architecture decis
 >
 > Ask for the path once and remember it for the session. Auto-discovery in `.agents/project-brain/` runs first. Don't re-ask unless the user wants to change the path.
 
-> **RULE 6 — LANGUAGE MATCH**
+> **RULE 6 — LANGUAGE SEPARATION**
 >
-> Respond in the same language the user used. Brain document content is presented as-is, never translated.
+> **Conversation** (briefings, confirmations, questions) → respond in the same language the user used.
+> **Brain document content** (what gets written to file) → always in English, regardless of conversation language. Technical artifacts must be consistent across sessions.
 
 ---
 
@@ -227,6 +229,6 @@ new session        → project-brain LOAD → full context restored
 
 | Version | Date | Changes |
 |---------|------|---------|
-| 2.1 | 2026-02-19 | Hardening: pre-write backup, format marker, session ID idempotency, semantic dedup, markdown-aware split, session archive, Key Files staleness check, context contradiction retirement, session retrospective, next steps anti-fabrication |
+| 2.1 | 2026-02-19 | Hardening: pre-write backup, format marker, session ID idempotency, semantic dedup, markdown-aware split, session archive, Key Files staleness check, context contradiction retirement, session retrospective, next steps anti-fabrication, language separation |
 | 2.0 | 2026-02-19 | SAVE mode (INIT + UPDATE), auto-discovery, standard brain format, incremental merge, session compaction, backward-compatible parsing, modular assets |
 | 1.0 | 2026-02-18 | Initial release — LOAD mode, Obsidian MCP + filesystem fallback, format-agnostic parsing |
