@@ -1,6 +1,6 @@
 {
   "$schema": "https://synapsync.dev/schemas/registry.json",
-  "version": "1.0.2",
+  "version": "1.1.0",
   "lastUpdated": "2026-02-19T00:00:00Z",
   "totalCognitives": 7,
   "cognitives": [
