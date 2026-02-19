@@ -2,7 +2,7 @@
   "$schema": "https://synapsync.dev/schemas/cognitive-manifest.json",
   "name": "obsidian",
   "type": "skill",
-  "version": "3.4.0",
+  "version": "3.5.0",
   "description": "Unified Obsidian vault manager: sync documents, read notes, and search knowledge",
   "author": {
     "name": "SynapSync",
@@ -37,6 +37,14 @@
     "mcp": ["obsidian"]
   },
   "changelog": [
+    {
+      "version": "3.5.0",
+      "date": "2026-02-19",
+      "changes": [
+        "Branded AGENTS.md block support — vault_destination config persisted in synapsync-skills Configuration table",
+        "New vault_destination config key remembered across sessions (no re-prompting)"
+      ]
+    },
     {
       "version": "3.4.0",
       "date": "2026-02-17",
@@ -106,5 +114,5 @@
     }
   ],
   "createdAt": "2026-02-12T00:00:00Z",
-  "updatedAt": "2026-02-17T00:00:00Z"
+  "updatedAt": "2026-02-19T23:00:00Z"
 }

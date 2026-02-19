@@ -9,7 +9,7 @@ description: >
 license: Apache-2.0
 metadata:
   author: synapsync
-  version: "2.2"
+  version: "2.3"
   scope: [root]
   auto_invoke:
     # English triggers — LOAD
@@ -45,6 +45,12 @@ metadata:
     - "escribe el resumen de sesion"
     - "persiste esta sesion"
   changelog:
+    - version: "2.3"
+      date: "2026-02-19"
+      changes:
+        - "Branded AGENTS.md block format with <!-- synapsync-skills:start/end --> delimiters"
+        - "Single Configuration table where any skill can add its config keys"
+        - "Visible rendered markdown table (replaces hidden HTML comment)"
     - version: "2.2"
       date: "2026-02-19"
       changes:
@@ -148,7 +154,7 @@ A markdown file that captures project state, session history, architecture decis
 
 Before starting any mode workflow, resolve `{brain_dir}` — the directory where brain documents are stored.
 
-1. **Read** `{cwd}/AGENTS.md` → scan for `<!-- synapsync:config -->` block
+1. **Read** `{cwd}/AGENTS.md` → scan for `<!-- synapsync-skills:start -->` block → find `## Configuration` table → parse `brain_dir` row
 2. If `brain_dir` found → use it, done
 3. If not found → scan default `.agents/project-brain/` for `.md` files
    - If brain files exist → use `.agents/project-brain`, persist to AGENTS.md
@@ -253,6 +259,7 @@ new session        → project-brain LOAD → full context restored
 
 | Version | Date | Changes |
 |---------|------|---------|
+| 2.3 | 2026-02-19 | Branded AGENTS.md block format (`<!-- synapsync-skills:start/end -->`), single Configuration table (replaces hidden HTML comment) |
 | 2.2 | 2026-02-19 | Configurable brain directory via AGENTS.md config block, `{brain_dir}` variable, backward-compatible auto-discovery fallback, new brain-config.md helper |
 | 2.1 | 2026-02-19 | Hardening: pre-write backup, format marker, session ID idempotency, semantic dedup, markdown-aware split, session archive, Key Files staleness check, context contradiction retirement, session retrospective, next steps anti-fabrication, language separation |
 | 2.0 | 2026-02-19 | SAVE mode (INIT + UPDATE), auto-discovery, standard brain format, incremental merge, session compaction, backward-compatible parsing, modular assets |

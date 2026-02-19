@@ -38,6 +38,7 @@ Every cognitive lives in `cognitives/{type}s/{category}/{name}/` and must contai
 - **code-analyzer** (`cognitives/skills/analytics/code-analyzer/`) — Analyzes code modules and generates structured technical reports with architecture diagrams.
 - **obsidian** (`cognitives/skills/integrations/obsidian/`) — Unified Obsidian vault manager with SYNC and READ modes. Syncs documents to vault and reads/searches notes via MCP. Includes the Obsidian markdown standard specification and linter as internal assets. Claude-only.
 - **sprint-forge** (`cognitives/skills/workflow/sprint-forge/`) — Adaptive sprint workflow with 3 modes (INIT, SPRINT, STATUS). Deep analysis, evolving roadmap, one-at-a-time sprints, formal debt tracking, and re-entry prompts for context persistence. Language-agnostic. Modular assets: 3 modes, 4 helpers, 4 templates.
+- **project-brain** (`cognitives/skills/workflow/project-brain/`) — Session memory for AI agents: LOAD mode recovers context, SAVE mode persists sessions. Auto-discovery of brain documents, incremental merge, configurable brain directory via AGENTS.md branded block.
 
 ### Agents
 - **feature-branch-manager** (`cognitives/agents/general/feature-branch-manager/`) — Git workflow agent for branch creation, pushing, and PR creation. Claude-only.
@@ -103,11 +104,17 @@ Skills use YAML frontmatter with: `name`, `description`, `license`, `metadata` (
 
 **Important**: Do NOT put `output_dir` in frontmatter. Output paths use a deterministic staging convention (see below).
 
-### Staging Output Convention
+### Configuration Resolution Convention
 
-Skills that produce output documents (reports, plans, analysis) write to a **deterministic local staging directory**. No config file needed — the path is computed automatically.
+Skills that persist configuration (output paths, vault destinations, etc.) use the **branded AGENTS.md block** as primary config source, with a deterministic staging fallback.
 
-**Staging path formula:**
+**AGENTS.md branded block** (`<!-- synapsync-skills:start/end -->`):
+
+Skills read and write config keys to a shared `## Configuration` table inside the branded block in the project's `AGENTS.md`. This is the **primary** config source — values persist across sessions. See `project-brain/assets/helpers/brain-config.md` for the full block template and 6-case persistence rules.
+
+**Deterministic staging fallback:**
+
+If no branded block or config key is found, skills compute a staging path automatically:
 
 ```
 {output_dir} = .agents/staging/{skill-name}/{project-name}/
@@ -117,10 +124,10 @@ Skills that produce output documents (reports, plans, analysis) write to a **det
 - `{project-name}` — inferred from the current directory name or git repository name
 
 **How skills resolve `{output_dir}`:**
-1. Infer the project name from the current directory name or git repository name
-2. Set `{output_dir}` = `.agents/staging/{skill-name}/{project-name}/`
-3. Create the directory if it doesn't exist
-4. Present the resolved path to the user before proceeding
+1. **Read** `{cwd}/AGENTS.md` → scan for `<!-- synapsync-skills:start -->` block → find `## Configuration` table → parse `output_dir` row
+2. If `output_dir` found → use it, done
+3. If not found → fall back to deterministic staging: `.agents/staging/{skill-name}/{project-name}/`
+4. **Persist** the resolved value to the AGENTS.md Configuration table
 
 **When creating a new skill that produces output**, you MUST:
 1. Use `{output_dir}` for all output paths (e.g., `{output_dir}/planning/`, `{output_dir}/technical/`)
@@ -133,11 +140,15 @@ Skills that produce output documents (reports, plans, analysis) write to a **det
 ```markdown
 ## Configuration Resolution
 
-Before starting any workflow step, resolve the `{output_dir}` path — the local staging directory where all output documents are stored.
+Before starting any workflow step, resolve `{output_dir}` — the directory where output documents are stored.
 
-1. **Infer** the project name from the current directory name or git repository name
-2. **Set** `{output_dir}` = `.agents/staging/{skill-name}/{project-name}/`
-3. **Create** the directory if it doesn't exist
+1. **Read** `{cwd}/AGENTS.md` → scan for `<!-- synapsync-skills:start -->` block → find `## Configuration` table → parse `output_dir` row
+2. If `output_dir` found → use it, done
+3. If not found → fall back to deterministic staging:
+   - **Infer** the project name from the current directory name or git repository name
+   - **Set** `{output_dir}` = `.agents/staging/{skill-name}/{project-name}/`
+   - **Create** the directory if it doesn't exist
+   - **Persist** to AGENTS.md Configuration table
 4. **Present** the resolved path to the user before proceeding
 ```
 
@@ -169,9 +180,10 @@ This project uses conventional commits: `feat:`, `fix:`, `chore:`, `docs:`, etc.
 - Maximum 10 tags per cognitive
 - Description maximum 100 characters
 - Skills that produce output MUST use `{output_dir}` variable (never hardcoded paths)
-- Skills that produce output MUST include a `## Configuration Resolution` section
-- No `output_dir` field in SKILL.md frontmatter (resolved at runtime via staging convention)
+- Skills that produce output MUST include a `## Configuration Resolution` section with branded AGENTS.md block as primary source
+- No `output_dir` field in SKILL.md frontmatter (resolved at runtime via branded block or staging fallback)
 - Skills that produce output MUST include a post-production delivery step
+- Skills that persist config MUST use the branded `<!-- synapsync-skills:start/end -->` block in AGENTS.md
 
 ## Working on This Repo
 

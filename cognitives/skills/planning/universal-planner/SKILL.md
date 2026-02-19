@@ -7,7 +7,7 @@ description: >
 license: Apache-2.0
 metadata:
   author: synapsync
-  version: "3.2"
+  version: "3.3"
   scope: [root]
   auto_invoke:
     - "Planning a new project, feature, refactor, or any software work"
@@ -19,6 +19,11 @@ metadata:
     - "Work on the next sprint from the planning"
     - "Continue executing the plan"
   changelog:
+    - version: "3.3"
+      date: "2026-02-19"
+      changes:
+        - "Branded AGENTS.md block support — output_dir config persisted in synapsync-skills Configuration table"
+        - "New output_dir config key supplements deterministic staging fallback"
     - version: "3.2"
       date: "2026-02-17"
       changes:
@@ -186,13 +191,15 @@ When in PLAN mode, detect the planning sub-mode. See [assets/modes/PLAN.md](asse
 
 ## Configuration Resolution
 
-See [assets/helpers/config-resolver.md](assets/helpers/config-resolver.md) for the standardized resolution workflow.
+Before starting any mode workflow, resolve `{output_dir}` — the directory where planning documents are stored.
 
-**Quick summary:**
-1. Infer project name from directory/git
-2. Set `{output_dir}` = `.agents/staging/universal-planner/{project-name}/`
-3. Create directory if needed
-4. Use `{output_dir}/` for all output paths
+1. **Read** `{cwd}/AGENTS.md` → scan for `<!-- synapsync-skills:start -->` block → find `## Configuration` table → parse `output_dir` row
+2. If `output_dir` found → use it, done
+3. If not found → fall back to deterministic staging: `.agents/staging/universal-planner/{project-name}/`, then persist to AGENTS.md Configuration table
+
+The skill follows the same 6-case persistence rules for the branded block. See [project-brain brain-config.md](../../workflow/project-brain/assets/helpers/brain-config.md) for the full block template and persistence algorithm.
+
+See [assets/helpers/config-resolver.md](assets/helpers/config-resolver.md) for the full resolution workflow with deterministic staging fallback.
 
 All `{output_dir}` references depend on this resolution.
 
@@ -302,6 +309,7 @@ Common issues and resolutions for both PLAN and EXECUTE modes.
 
 | Version | Date | Changes |
 |---------|------|---------|
+| 3.3 | 2026-02-19 | Branded AGENTS.md block support. `output_dir` config key persisted in Configuration table — supplements deterministic staging fallback. |
 | 3.2 | 2026-02-17 | Staging pattern migration — deterministic .agents/staging/ output, config-resolver rewrite, {output_dir} rename, post-production delivery |
 | 3.1 | 2026-02-14 | Audit remediation — unified granularity, PROGRESS template, before/after fields, fast paths, failed status, language standardization |
 | 3.0 | 2026-02-13 | Consolidated universal-planner + universal-planner-executor — two modes (PLAN/EXECUTE), shared config, merged troubleshooting |

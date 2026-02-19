@@ -7,7 +7,7 @@ description: >
 license: Apache-2.0
 metadata:
   author: synapsync
-  version: "3.4"
+  version: "3.5"
   scope: [root]
   auto_invoke:
     - "sync * to obsidian"
@@ -19,6 +19,11 @@ metadata:
     - "lee de obsidian"
     - "busca en obsidian"
   changelog:
+    - version: "3.5"
+      date: "2026-02-19"
+      changes:
+        - "Branded AGENTS.md block support — vault_destination config persisted in synapsync-skills Configuration table"
+        - "New vault_destination config key remembered across sessions (no re-prompting)"
     - version: "3.4"
       date: "2026-02-19"
       changes:
@@ -282,14 +287,15 @@ Read, search, and reason over vault notes to provide contextual knowledge for de
 
 ## Configuration Resolution
 
-The obsidian skill does not produce output to `{output_dir}` — it reads FROM the vault and writes TO the vault. However, it works closely with producer skills (universal-planner, code-analyzer, sprint-forge) that stage their output in `.agents/staging/{skill-name}/{project-name}/`.
+Before starting any mode workflow, resolve `{vault_destination}` — the subpath within the Obsidian vault where this project's documents are synced.
 
-**When the user says "sync my output to vault"**, obsidian SYNC mode:
-1. Detects `.agents/staging/` in the project root
-2. Lists available skill output directories
-3. Lets the user pick which skill's output to sync
-4. Syncs all files from the selected staging directory to the vault
-5. Optionally cleans up the staging directory after successful sync
+1. **Read** `{cwd}/AGENTS.md` → scan for `<!-- synapsync-skills:start -->` block → find `## Configuration` table → parse `vault_destination` row
+2. If `vault_destination` found → use it as the default vault destination, done
+3. If not found → ask the user for the vault destination path, then persist to the Configuration table in AGENTS.md
+
+The obsidian skill follows the same 6-case persistence rules as other skills. See [project-brain brain-config.md](../../../workflow/project-brain/assets/helpers/brain-config.md) for the full block template and persistence algorithm.
+
+**Staging-aware**: The skill also works closely with producer skills (universal-planner, code-analyzer, sprint-forge) that stage their output in `.agents/staging/{skill-name}/{project-name}/`. When the user says "sync my output to vault", SYNC mode detects `.agents/staging/`, lists available directories, lets the user pick, and syncs to `{vault_destination}`.
 
 ---
 
@@ -379,6 +385,7 @@ Agent needs context → obsidian READ mode retrieves from vault
 
 | Version | Date | Changes |
 |---------|------|---------|
+| 3.5 | 2026-02-19 | Branded AGENTS.md block support. `vault_destination` config key persisted in Configuration table — no re-prompting across sessions. |
 | 3.4 | 2026-02-17 | Staging convention migration — batch-move-from-staging workflow, {output_dir} rename, staging-aware Configuration Resolution |
 | 3.3 | 2026-02-14 | SYNC mode filesystem fallback. MCP optional. Step 0 access mode detection. YAML serialization guidance. All helpers updated with fallback paths. |
 | 3.2 | 2026-02-13 | Full MCP tool coherence (13/13 tools). Added delete/move/patch/metadata tools. Fixed manage_tags contract. Optimized cross-ref and ranking helpers. |

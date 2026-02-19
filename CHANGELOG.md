@@ -7,7 +7,11 @@ Format based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and th
 ## [Unreleased]
 
 ### Changed
-- **project-brain** skill (workflow, v2.2.0): Configurable brain directory via AGENTS.md. New `{brain_dir}` variable resolved from `<!-- synapsync:config -->` block in AGENTS.md, with backward-compatible auto-discovery fallback. Custom SAVE paths now persist and are found by subsequent LOADs. New `brain-config.md` helper. LOAD and SAVE modes gain Step 0 for directory resolution.
+- **project-brain** skill (workflow, v2.3.0): Branded AGENTS.md block format with `<!-- synapsync-skills:start/end -->` delimiters and a single Configuration table (replaces hidden `<!-- synapsync:config -->` HTML comment). Any skill can add its config keys to the table. Updated brain-config.md helper with 6-case persistence rules for block creation/update.
+- **obsidian** skill (integrations, v3.5.0): Branded AGENTS.md block support. New `vault_destination` config key persisted in `<!-- synapsync-skills:start/end -->` Configuration table — vault path is remembered across sessions, no re-prompting needed.
+- **sprint-forge** skill (workflow, v1.4.0): Branded AGENTS.md block support. New `output_dir` config key persisted in `<!-- synapsync-skills:start/end -->` Configuration table — output directory remembered across sessions, supplements auto-discovery and re-entry prompts.
+- **universal-planner** skill (planning, v3.3.0): Branded AGENTS.md block support. New `output_dir` config key persisted in `<!-- synapsync-skills:start/end -->` Configuration table — supplements deterministic staging fallback.
+- **code-analyzer** skill (analytics, v2.3.0): Branded AGENTS.md block support. New `output_dir` config key persisted in `<!-- synapsync-skills:start/end -->` Configuration table — supplements deterministic staging fallback.
 
 ## [2026-02-19]
 

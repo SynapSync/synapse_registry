@@ -55,7 +55,7 @@
     {
       "name": "code-analyzer",
       "type": "skill",
-      "version": "2.2.0",
+      "version": "2.3.0",
       "description": "Analyzes code modules and generates structured technical reports with architecture diagrams",
       "author": "synapsync",
       "category": "analytics",
@@ -84,7 +84,7 @@
     {
       "name": "universal-planner",
       "type": "skill",
-      "version": "3.2.0",
+      "version": "3.3.0",
       "description": "Unified planning and execution skill for any software scenario with PLAN and EXECUTE modes",
       "author": "synapsync",
       "category": "planning",
@@ -115,7 +115,7 @@
     {
       "name": "obsidian",
       "type": "skill",
-      "version": "3.4.0",
+      "version": "3.5.0",
       "description": "Unified Obsidian vault manager: sync documents, read notes, and search knowledge",
       "author": "synapsync",
       "category": "integrations",
@@ -139,7 +139,7 @@
     {
       "name": "sprint-forge",
       "type": "skill",
-      "version": "1.3.0",
+      "version": "1.4.0",
       "description": "Adaptive sprint workflow — analysis, roadmap, iterative sprints, debt tracking, and context persistence",
       "author": "synapsync",
       "category": "workflow",
@@ -170,7 +170,7 @@
     {
       "name": "project-brain",
       "type": "skill",
-      "version": "2.2.0",
+      "version": "2.3.0",
       "description": "Session memory for AI agents — load context, save sessions, evolve knowledge",
       "author": "synapsync",
       "category": "workflow",

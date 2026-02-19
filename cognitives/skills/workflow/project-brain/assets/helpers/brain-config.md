@@ -6,18 +6,35 @@ Helper for resolving `{brain_dir}` — the directory where brain documents are s
 
 ## Config Format
 
-The brain directory is persisted in `{cwd}/AGENTS.md` inside an HTML comment block:
+The brain directory is persisted in `{cwd}/AGENTS.md` inside the **SynapSync Skills block** — a branded, visible section where installed skills store their configuration.
+
+### Block Template
 
 ```markdown
-<!-- synapsync:config -->
-brain_dir: .agents/project-brain
-<!-- /synapsync:config -->
+<!-- synapsync-skills:start -->
+# {Project Name} Skills Guidelines
+
+## How to Use This Guide
+
+This section of the `AGENTS.md` file contains project-specific guidelines and available skills from [SynapSync Registry](https://github.com/SynapSync/synapse-registry).
+
+## Configuration
+
+| Key | Value | Description |
+|-----|-------|-------------|
+| `brain_dir` | `.agents/project-brain` | Session memory for AI agents — load context, save sessions, evolve knowledge |
+
+---
+<!-- synapsync-skills:end -->
 ```
 
-- HTML comment delimiters — invisible when rendered, safe to append
-- Simple `key: value` lines inside the block
-- Relative paths only, no trailing slash
-- Extensible for future synapsync keys
+### Block Rules
+
+- **Delimiters**: `<!-- synapsync-skills:start -->` and `<!-- synapsync-skills:end -->`
+- **`{Project Name}`**: inferred from the current directory name or git repository name, title-cased (e.g., `my-app` → `My App`)
+- **Configuration table**: single `Key | Value | Description` table where any skill can add/update its own rows
+- `Description` column contains the skill's short description (from manifest) so readers know what each key is for
+- Any installed skill can add its config keys to the Configuration table (e.g., `brain_dir`, `output_dir`)
 
 ---
 
@@ -28,12 +45,13 @@ Run this **before** any path-dependent step in LOAD or SAVE:
 ### Step 1 — Read AGENTS.md
 
 1. Read `{cwd}/AGENTS.md`
-2. Scan for a `<!-- synapsync:config -->` … `<!-- /synapsync:config -->` block
-3. If the block exists and contains a `brain_dir:` line → extract the value, set `{brain_dir}`, done
+2. Scan for a `<!-- synapsync-skills:start -->` … `<!-- synapsync-skills:end -->` block
+3. If the block exists → find `## Configuration` table → look for a `brain_dir` row
+4. If the `brain_dir` row exists → extract the value, set `{brain_dir}`, done
 
 ### Step 2 — Auto-Discovery Fallback
 
-If AGENTS.md doesn't exist, has no config block, or the block has no `brain_dir:` key:
+If AGENTS.md doesn't exist, has no SynapSync Skills block, or the block has no `brain_dir` key in the Configuration table:
 
 1. Scan the default path `{cwd}/.agents/project-brain/` for `.md` files
 2. If **brain files found** → set `{brain_dir}` = `.agents/project-brain`, then **persist** to AGENTS.md (see Persistence Rules below)
@@ -62,25 +80,39 @@ After resolving `{brain_dir}`:
 
 ## Persistence Rules
 
-After resolving `{brain_dir}`, persist the value to AGENTS.md so future sessions skip the resolution:
+After resolving `{brain_dir}`, persist the value to AGENTS.md so future sessions skip the resolution.
 
-| Scenario | Action |
-|----------|--------|
-| No AGENTS.md exists | Create `{cwd}/AGENTS.md` with just the config block |
-| AGENTS.md exists, no config block | Append the config block at the end of the file |
-| Config block exists, `brain_dir` value is different | Update the `brain_dir:` line in place |
-| Config block exists, `brain_dir` value is the same | No-op |
+| # | Scenario | Action |
+|---|----------|--------|
+| 1 | No AGENTS.md exists | Create `{cwd}/AGENTS.md` with the full branded block (template below) including the `brain_dir` row |
+| 2 | AGENTS.md exists, no `<!-- synapsync-skills:start -->` block | Append the full branded block at the end of the file (with a blank line for separation) |
+| 3 | Block exists, no `## Configuration` section | Add `## Configuration` section with the `brain_dir` row before the closing `---` line |
+| 4 | Block exists, `## Configuration` exists, no `brain_dir` row | Add `brain_dir` row to the Configuration table |
+| 5 | Block exists, `## Configuration` exists, `brain_dir` value is different | Update the `brain_dir` row in place |
+| 6 | Block exists, `## Configuration` exists, `brain_dir` value is the same | No-op |
 
-**Config block to write:**
+### Block to Write (cases 1 and 2)
 
 ```markdown
 
-<!-- synapsync:config -->
-brain_dir: {brain_dir}
-<!-- /synapsync:config -->
+<!-- synapsync-skills:start -->
+# {Project Name} Skills Guidelines
+
+## How to Use This Guide
+
+This section of the `AGENTS.md` file contains project-specific guidelines and available skills from [SynapSync Registry](https://github.com/SynapSync/synapse-registry).
+
+## Configuration
+
+| Key | Value | Description |
+|-----|-------|-------------|
+| `brain_dir` | {brain_dir} | Session memory for AI agents — load context, save sessions, evolve knowledge |
+
+---
+<!-- synapsync-skills:end -->
 ```
 
-When appending, add a blank line before the block for separation.
+When appending (case 2), add a blank line before the block for separation.
 
 ---
 
@@ -103,4 +135,4 @@ Once `{brain_dir}` is resolved, all path references in LOAD, SAVE, and helpers u
 | AGENTS.md exists but is not readable | Warn user, fall back to auto-discovery |
 | AGENTS.md is not writable (persistence fails) | Warn user, continue with resolved `{brain_dir}` in memory — the session still works, but the next session will re-resolve |
 | `brain_dir` path in AGENTS.md points to a non-existent directory | Check if it's a LOAD (error — brain expected) or SAVE INIT (OK — will create). For LOAD, report the path and ask user to confirm or provide an alternative |
-| Config block is malformed (missing closing tag, no key-value lines) | Ignore the block, fall back to auto-discovery, warn user |
+| SynapSync Skills block is malformed (missing closing tag, no Configuration table) | Ignore the block, fall back to auto-discovery, warn user |

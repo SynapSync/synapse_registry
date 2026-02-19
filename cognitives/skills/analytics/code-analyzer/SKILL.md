@@ -6,10 +6,15 @@ description: >
 license: Apache-2.0
 metadata:
   author: synapsync
-  version: "2.2"
+  version: "2.3"
   scope: [root]
   auto_invoke: "When the user asks to analyze, explain, or document a code module or file"
   changelog:
+    - version: "2.3"
+      date: "2026-02-19"
+      changes:
+        - "Branded AGENTS.md block support — output_dir config persisted in synapsync-skills Configuration table"
+        - "New output_dir config key supplements deterministic staging fallback"
     - version: "2.2"
       date: "2026-02-17"
       changes:
@@ -98,12 +103,18 @@ The user provides:
 
 ## Configuration Resolution
 
-Before starting any workflow step, resolve the `{output_dir}` path — the local staging directory where all output documents are stored.
+Before starting any workflow step, resolve `{output_dir}` — the directory where output documents are stored.
 
-1. **Infer** the project name from the current directory name or git repository name
-2. **Set** `{output_dir}` = `.agents/staging/code-analyzer/{project-name}/`
-3. **Create** the directory if it doesn't exist
+1. **Read** `{cwd}/AGENTS.md` → scan for `<!-- synapsync-skills:start -->` block → find `## Configuration` table → parse `output_dir` row
+2. If `output_dir` found → use it, done
+3. If not found → fall back to deterministic staging:
+   - **Infer** the project name from the current directory name or git repository name
+   - **Set** `{output_dir}` = `.agents/staging/code-analyzer/{project-name}/`
+   - **Create** the directory if it doesn't exist
+   - **Persist** to AGENTS.md Configuration table
 4. **Present** the resolved path to the user before proceeding
+
+The skill follows the same 6-case persistence rules for the branded block. See [project-brain brain-config.md](../../workflow/project-brain/assets/helpers/brain-config.md) for the full block template and persistence algorithm.
 
 > **IMPORTANT**: Every `{output_dir}` reference in this skill depends on this resolution.
 
@@ -346,6 +357,7 @@ See [assets/templates/REPORT.md](assets/templates/REPORT.md) and [assets/templat
 
 ## Version History
 
+- **2.3** (2026-02-19): Branded AGENTS.md block support. `output_dir` config key persisted in Configuration table — supplements deterministic staging fallback.
 - **2.2** (2026-02-17): Staging pattern migration — deterministic .agents/staging/ output, {output_dir} rename, post-production delivery
 - **2.0** (2026-02-11): Obsidian-native output — rich frontmatter, wiki-links, bidirectional references, metric tables, `## Referencias`
 - **1.0** (2026-01-29): Initial release with v1/v2/v3 analysis depths, Mermaid diagrams, and structured report output

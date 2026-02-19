@@ -2,7 +2,7 @@
   "$schema": "https://synapsync.dev/schemas/cognitive-manifest.json",
   "name": "universal-planner",
   "type": "skill",
-  "version": "3.2.0",
+  "version": "3.3.0",
   "description": "Unified planning and execution skill for any software scenario with PLAN and EXECUTE modes",
   "author": {
     "name": "SynapSync",
@@ -46,6 +46,14 @@
     "examples": 8
   },
   "changelog": [
+    {
+      "version": "3.3.0",
+      "date": "2026-02-19",
+      "changes": [
+        "Branded AGENTS.md block support — output_dir config persisted in synapsync-skills Configuration table",
+        "New output_dir config key supplements deterministic staging fallback"
+      ]
+    },
     {
       "version": "3.2.0",
       "date": "2026-02-17",
@@ -114,5 +122,5 @@
     }
   ],
   "createdAt": "2026-02-04T00:00:00Z",
-  "updatedAt": "2026-02-17T00:00:00Z"
+  "updatedAt": "2026-02-19T23:00:00Z"
 }

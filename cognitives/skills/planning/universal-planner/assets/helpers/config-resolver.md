@@ -21,6 +21,16 @@ Every skill that produces documents needs to know WHERE to save them. Instead of
 
 Follow these steps at the **beginning** of any skill execution that generates output:
 
+### Step 0: Check AGENTS.md Branded Block
+
+Before computing anything, check if `{output_dir}` is already persisted in the project's AGENTS.md:
+
+1. Read `{cwd}/AGENTS.md`
+2. Scan for `<!-- synapsync-skills:start -->` … `<!-- synapsync-skills:end -->` block
+3. Find `## Configuration` table → look for an `output_dir` row
+4. If found → set `{output_dir}` to the value, **skip to Step 4** (present to user)
+5. If not found → continue to Step 1 (deterministic staging fallback)
+
 ### Step 1: Infer Project Name
 
 Infer the project name from:
@@ -69,7 +79,11 @@ Output documents will be stored in: .agents/staging/universal-planner/{project-n
 Proceed?
 ```
 
-### Step 5: Use {output_dir}
+### Step 5: Persist to AGENTS.md
+
+After resolving `{output_dir}` (whether from the branded block or deterministic staging), persist the value to the Configuration table in AGENTS.md so future sessions skip the resolution. Follow the 6-case persistence rules from [project-brain brain-config.md](../../../workflow/project-brain/assets/helpers/brain-config.md).
+
+### Step 6: Use {output_dir}
 
 Throughout the skill, use `{output_dir}` as a variable:
 
@@ -176,5 +190,5 @@ Then invoke the workflow before any output generation.
 ## Version
 
 Created: 2026-02-12 (v2.1.0)
-Updated: 2026-02-17 (v3.2.0) — Migrated from cognitive.config.json to deterministic staging paths
+Updated: 2026-02-19 (v3.3.0) — Added Step 0 branded AGENTS.md block check and Step 5 persistence
 Pattern: Shared helper for output path resolution

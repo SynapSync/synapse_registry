@@ -8,7 +8,7 @@ description: >
 license: Apache-2.0
 metadata:
   author: synapsync
-  version: "1.3"
+  version: "1.4"
   scope: [root]
   auto_invoke:
     # English triggers
@@ -30,6 +30,11 @@ metadata:
     - "Revisa la deuda técnica"
     - "Inicia un workflow de proyecto iterativo"
   changelog:
+    - version: "1.4"
+      date: "2026-02-19"
+      changes:
+        - "Branded AGENTS.md block support — output_dir config persisted in synapsync-skills Configuration table"
+        - "New output_dir config key remembered across sessions via AGENTS.md (supplements auto-discovery and re-entry prompts)"
     - version: "1.3"
       date: "2026-02-18"
       changes:
@@ -125,6 +130,22 @@ This skill works for **any** project type, language, or framework.
 
 ---
 
+## Configuration Resolution
+
+Before starting any mode workflow, resolve `{output_dir}` — the directory where sprint-forge documents are stored.
+
+1. **Read** `{cwd}/AGENTS.md` → scan for `<!-- synapsync-skills:start -->` block → find `## Configuration` table → parse `output_dir` row
+2. If `output_dir` found → use it, done
+3. If not found → fall back to existing behavior:
+   - Scan `{cwd}/.agents/sprint-forge/` for project directories (auto-discovery)
+   - If found → use it, persist to AGENTS.md Configuration table
+   - If not found → ask user (INIT mode asks before first write; SPRINT/STATUS ask for path)
+4. After resolving, persist `output_dir` to the Configuration table
+
+The skill follows the same 6-case persistence rules for the branded block. See [project-brain brain-config.md](../project-brain/assets/helpers/brain-config.md) for the full block template and persistence algorithm.
+
+---
+
 ## Mode Detection
 
 | Mode | EN Signals | ES Signals | What It Does |
@@ -211,6 +232,7 @@ This will: read all sprints, calculate metrics, display progress and accumulated
 
 | Version | Date | Changes |
 |---------|------|---------|
+| 1.4 | 2026-02-19 | Branded AGENTS.md block support. `output_dir` config key persisted in Configuration table — supplements auto-discovery and re-entry prompts. |
 | 1.3 | 2026-02-18 | Interactive path resolution — ask once before first write, option 1 local default, option 2 custom root. Removed staging pattern and post-delivery steps. |
 | 1.2 | 2026-02-17 | Deterministic staging pattern (.agents/staging/), post-production delivery step, {output_dir} variable rename |
 | 1.0 | 2026-02-16 | Initial release — INIT, SPRINT, STATUS modes. Adaptive roadmap, formal debt tracking, re-entry prompts, language-agnostic design. |
