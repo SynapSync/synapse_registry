@@ -6,7 +6,8 @@ Format based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and th
 
 ## [Unreleased]
 
-_No unreleased changes._
+### Changed
+- **project-brain** skill (workflow, v2.2.0): Configurable brain directory via AGENTS.md. New `{brain_dir}` variable resolved from `<!-- synapsync:config -->` block in AGENTS.md, with backward-compatible auto-discovery fallback. Custom SAVE paths now persist and are found by subsequent LOADs. New `brain-config.md` helper. LOAD and SAVE modes gain Step 0 for directory resolution.
 
 ## [2026-02-19]
 

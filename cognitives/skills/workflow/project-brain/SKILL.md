@@ -9,7 +9,7 @@ description: >
 license: Apache-2.0
 metadata:
   author: synapsync
-  version: "2.1"
+  version: "2.2"
   scope: [root]
   auto_invoke:
     # English triggers — LOAD
@@ -45,6 +45,15 @@ metadata:
     - "escribe el resumen de sesion"
     - "persiste esta sesion"
   changelog:
+    - version: "2.2"
+      date: "2026-02-19"
+      changes:
+        - "Configurable brain directory via AGENTS.md config block"
+        - "New {brain_dir} variable resolved from <!-- synapsync:config --> in AGENTS.md"
+        - "Backward-compatible auto-discovery fallback when no config exists"
+        - "Custom SAVE paths now persist and are found by subsequent LOADs"
+        - "New brain-config.md helper for shared resolution algorithm"
+        - "LOAD and SAVE modes gain Step 0 for directory resolution"
     - version: "2.1"
       date: "2026-02-19"
       changes:
@@ -84,7 +93,7 @@ allowed-tools: Read, Edit, Write, Glob, Grep, ToolSearch, AskUserQuestion
 This skill uses a modular assets architecture. Detailed workflows, helpers, and templates are in the [assets/](assets/) directory:
 
 - **[assets/modes/](assets/modes/)** — LOAD and SAVE mode workflows
-- **[assets/helpers/](assets/helpers/)** — Incremental merge algorithm
+- **[assets/helpers/](assets/helpers/)** — Brain directory config resolution, incremental merge algorithm
 - **[assets/templates/](assets/templates/)** — Standard brain document format
 
 See [assets/README.md](assets/README.md) for full directory documentation.
@@ -126,12 +135,26 @@ A markdown file that captures project state, session history, architecture decis
 
 > **RULE 5 — PATH RESOLUTION ONCE**
 >
-> Ask for the path once and remember it for the session. Auto-discovery in `.agents/project-brain/` runs first. Don't re-ask unless the user wants to change the path.
+> Resolve `{brain_dir}` once per session via AGENTS.md config (see Configuration Resolution). The resolved path is used for all operations. Don't re-ask unless the user wants to change the path.
 
 > **RULE 6 — LANGUAGE SEPARATION**
 >
 > **Conversation** (briefings, confirmations, questions) → respond in the same language the user used.
 > **Brain document content** (what gets written to file) → always in English, regardless of conversation language. Technical artifacts must be consistent across sessions.
+
+---
+
+## Configuration Resolution
+
+Before starting any mode workflow, resolve `{brain_dir}` — the directory where brain documents are stored.
+
+1. **Read** `{cwd}/AGENTS.md` → scan for `<!-- synapsync:config -->` block
+2. If `brain_dir` found → use it, done
+3. If not found → scan default `.agents/project-brain/` for `.md` files
+   - If brain files exist → use `.agents/project-brain`, persist to AGENTS.md
+   - If nothing found → ask user (default or custom), persist to AGENTS.md
+
+Full resolution algorithm: see [assets/helpers/brain-config.md](assets/helpers/brain-config.md)
 
 ---
 
@@ -158,7 +181,7 @@ Use at the start of a session to restore context:
 Load the project brain.
 ```
 
-This will: check `.agents/project-brain/` for existing documents, read the brain, parse sections, and deliver a context briefing with project identity, active state, last session, and next steps.
+This will: resolve `{brain_dir}` from AGENTS.md (or auto-discover), scan for existing documents, read the brain, parse sections, and deliver a context briefing with project identity, active state, last session, and next steps.
 
 **Full workflow:** See [assets/modes/LOAD.md](assets/modes/LOAD.md)
 
@@ -180,6 +203,7 @@ This will: detect if a brain exists (UPDATE) or not (INIT), gather session summa
 
 | Capability | LOAD | SAVE (INIT) | SAVE (UPDATE) |
 |-----------|:----:|:-----------:|:-------------:|
+| Resolve `{brain_dir}` from AGENTS.md | Yes | Yes | Yes |
 | Auto-discover brain documents | Yes | No | Yes |
 | Read brain from Obsidian MCP | Yes | No | No |
 | Read brain from filesystem | Yes | No | No |
@@ -220,7 +244,7 @@ new session        → project-brain LOAD → full context restored
 2. **Single file**: One brain document per project — not a recursive folder reader
 3. **No synthesis**: If the brain document is outdated, the briefing reflects that
 4. **MCP for Obsidian only in LOAD**: SAVE always writes to filesystem (Obsidian syncs via the `obsidian` skill if needed)
-5. **Session Log size**: Compacted at 15+ entries — older sessions are archived to `.agents/project-brain/archive/` and replaced with a summary paragraph
+5. **Session Log size**: Compacted at 15+ entries — older sessions are archived to `{brain_dir}/archive/` and replaced with a summary paragraph
 6. **No auto-save**: SAVE must be explicitly invoked — the agent doesn't auto-save on exit
 
 ---
@@ -229,6 +253,7 @@ new session        → project-brain LOAD → full context restored
 
 | Version | Date | Changes |
 |---------|------|---------|
+| 2.2 | 2026-02-19 | Configurable brain directory via AGENTS.md config block, `{brain_dir}` variable, backward-compatible auto-discovery fallback, new brain-config.md helper |
 | 2.1 | 2026-02-19 | Hardening: pre-write backup, format marker, session ID idempotency, semantic dedup, markdown-aware split, session archive, Key Files staleness check, context contradiction retirement, session retrospective, next steps anti-fabrication, language separation |
 | 2.0 | 2026-02-19 | SAVE mode (INIT + UPDATE), auto-discovery, standard brain format, incremental merge, session compaction, backward-compatible parsing, modular assets |
 | 1.0 | 2026-02-18 | Initial release — LOAD mode, Obsidian MCP + filesystem fallback, format-agnostic parsing |

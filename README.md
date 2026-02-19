@@ -56,7 +56,7 @@ synapse-registry/
 | [code-analyzer](cognitives/skills/analytics/code-analyzer/) | analytics | 2.2.0 | Analyzes code modules and generates structured technical reports with architecture diagrams |
 | [obsidian](cognitives/skills/integrations/obsidian/) | integrations | 3.4.0 | Unified Obsidian vault manager: sync documents, read notes, and search knowledge via MCP |
 | [sprint-forge](cognitives/skills/workflow/sprint-forge/) | workflow | 1.3.0 | Adaptive sprint workflow — analysis, roadmap, iterative sprints, debt tracking, and context persistence |
-| [project-brain](cognitives/skills/workflow/project-brain/) | workflow | 2.1.0 | Session memory for AI agents — load context, save sessions, evolve knowledge |
+| [project-brain](cognitives/skills/workflow/project-brain/) | workflow | 2.2.0 | Session memory for AI agents — load context, save sessions, evolve knowledge |
 
 ### Agents
 

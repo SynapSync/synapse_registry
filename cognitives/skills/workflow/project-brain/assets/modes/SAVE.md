@@ -4,9 +4,17 @@ Saves session context to a brain document. Two sub-modes: **INIT** (create new) 
 
 ---
 
-## Step 0 — Detect Sub-Mode
+## Step 0 — Resolve Brain Directory
 
-1. Check `{cwd}/.agents/project-brain/` for existing `.md` files
+Resolve `{brain_dir}` using the [brain-config helper](../helpers/brain-config.md). This determines where brain documents are stored before any file operations.
+
+After this step, `{brain_dir}` is set (e.g., `.agents/project-brain` or a custom path from AGENTS.md).
+
+---
+
+## Step 1 — Detect Sub-Mode
+
+1. Check `{cwd}/{brain_dir}/` for existing `.md` files
 2. If **at least one file exists** → **UPDATE** (ask which file if multiple)
 3. If **no files exist** → **INIT**
 
@@ -14,26 +22,26 @@ The user can override: "save as new brain" forces INIT even if one exists.
 
 ---
 
-## Step 1 — Resolve Output Path (INIT only)
+## Step 2 — Resolve Output Path (INIT only)
 
 Ask before the first write:
 
 > "Where should I save the brain document for **{project_name}**?
 >
-> 1. **Local** (default) — `.agents/project-brain/{project-name}.md`
+> 1. **Local** (default) — `{brain_dir}/{project-name}.md`
 > 2. **Custom path** — provide a root and I'll save to `{root}/{project-name}.md`"
 
 Path resolution:
-- **Option 1**: `{cwd}/.agents/project-brain/{project-name}.md` — create `.agents/project-brain/` if needed
-- **Option 2**: `{user-root}/{project-name}.md` — save directly, no `project-brain/` namespace
+- **Option 1**: `{cwd}/{brain_dir}/{project-name}.md` — create `{brain_dir}/` if needed
+- **Option 2**: `{user-root}/{project-name}.md` — save directly, no `project-brain/` namespace. After writing, persist the custom `{brain_dir}` to AGENTS.md if not already done (see [brain-config helper](../helpers/brain-config.md)).
 
 `{project-name}` is inferred from the current directory name or git repository name (kebab-case).
 
-For UPDATE, the path is already known from Step 0.
+For UPDATE, the path is already known from Step 1.
 
 ---
 
-## Step 2 — Gather Session Context
+## Step 3 — Gather Session Context
 
 **Session ID**: Generate a Session ID at the start: `SID: {YYYYMMDD-HHMM}` using the current date and time.
 
@@ -73,7 +81,7 @@ Do NOT write until the user confirms.
 
 ---
 
-## Step 3 — Write (INIT) or Merge (UPDATE)
+## Step 4 — Write (INIT) or Merge (UPDATE)
 
 ### INIT Sub-Mode
 
@@ -83,6 +91,7 @@ Do NOT write until the user confirms.
    - Accumulated Context starts empty (just headers) unless the user provided architecture decisions
    - Set metadata: `Last updated: {today}`, `Sessions: 1`
 2. Write the file to the resolved path
+3. After writing, persist `{brain_dir}` to AGENTS.md if not already done (see [brain-config helper](../helpers/brain-config.md))
 
 ### UPDATE Sub-Mode
 
@@ -124,7 +133,7 @@ Use the incremental merge algorithm (see [helpers/incremental-merge.md](../helpe
 
 ---
 
-## Step 4 — Confirm
+## Step 5 — Confirm
 
 Show a summary of what was saved:
 

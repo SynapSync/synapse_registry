@@ -4,25 +4,33 @@ Loads a brain document and delivers a structured context briefing. Supports auto
 
 ---
 
-## Step 0 — Auto-Discovery
+## Step 0 — Resolve Brain Directory
 
-Before asking the user for a path, check if a brain document already exists locally:
+Resolve `{brain_dir}` using the [brain-config helper](../helpers/brain-config.md). This determines where brain documents are stored before any file operations.
 
-1. Scan `{cwd}/.agents/project-brain/` for `.md` files
-2. If **one file found** → offer it:
-   > "Found brain: `.agents/project-brain/{name}.md` — Load this?"
-   - If yes → proceed to Step 2 with that path
-   - If no → Step 1
-3. If **multiple files found** → ask which one:
-   > "Found {N} brain documents in `.agents/project-brain/`:
-   > 1. `{name1}.md`
-   > 2. `{name2}.md`
-   > Which one should I load?"
-4. If **no files found** → Step 1
+After this step, `{brain_dir}` is set (e.g., `.agents/project-brain` or a custom path from AGENTS.md).
 
 ---
 
-## Step 1 — Resolve Source Path (Fallback)
+## Step 1 — Auto-Discovery
+
+Before asking the user for a path, check if a brain document already exists locally:
+
+1. Scan `{cwd}/{brain_dir}/` for `.md` files
+2. If **one file found** → offer it:
+   > "Found brain: `{brain_dir}/{name}.md` — Load this?"
+   - If yes → proceed to Step 3 with that path
+   - If no → Step 2
+3. If **multiple files found** → ask which one:
+   > "Found {N} brain documents in `{brain_dir}/`:
+   > 1. `{name1}.md`
+   > 2. `{name2}.md`
+   > Which one should I load?"
+4. If **no files found** → Step 2
+
+---
+
+## Step 2 — Resolve Source Path (Fallback)
 
 If auto-discovery found nothing or the user declined, ask for the source:
 
@@ -46,7 +54,7 @@ Path classification:
 
 ---
 
-## Step 2 — Read + Parse
+## Step 3 — Read + Parse
 
 Read the document using the resolved access method.
 
@@ -91,7 +99,7 @@ Any `.md` file that doesn't match the above. Read the full document and derive s
 
 ---
 
-## Step 3 — Briefing
+## Step 4 — Briefing
 
 Present a concise context briefing. Only show what's essential for starting work — don't dump the entire document.
 

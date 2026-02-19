@@ -35,7 +35,7 @@ Helper for SAVE UPDATE mode. Merges new session data into an existing brain docu
 When the Session Log exceeds **15 entries**, compact the oldest sessions:
 
 1. Identify sessions older than the most recent 10
-2. **Archive**: Write the individual entries to `{cwd}/.agents/project-brain/archive/{project-name}-sessions-1-{M}.md`
+2. **Archive**: Write the individual entries to `{cwd}/{brain_dir}/archive/{project-name}-sessions-1-{M}.md`
 3. Collapse them into a single summary block in the brain document:
 
 ```markdown
@@ -43,7 +43,7 @@ When the Session Log exceeds **15 entries**, compact the oldest sessions:
 
 {One-paragraph summary covering what sessions 1 through M accomplished, key decisions made, and major milestones reached.}
 
-> Full entries archived: `.agents/project-brain/archive/{project-name}-sessions-1-{M}.md`
+> Full entries archived: `{brain_dir}/archive/{project-name}-sessions-1-{M}.md`
 ```
 
 4. Place the summary block **at the bottom** of the Session Log (after all individual entries)
