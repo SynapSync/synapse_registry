@@ -277,9 +277,7 @@ After calculating partial scores, identify the top ~10 candidates. Only then rea
 
 ```
 mcp__obsidian__read_multiple_notes(
-  paths: [...top 10 candidate paths...],
-  includeContent: true,
-  includeFrontmatter: false  // already have it from Step 1
+  paths: [...top 10 candidate paths...]
 )
 ```
 

@@ -525,8 +525,8 @@ mcp__obsidian__move_note(
 3. **Ask user** for destination mapping
 4. **Move notes sequentially**: `mcp__obsidian__move_note(...)` for each
 5. **Update cross-references** if filenames changed:
-   - Use `search_notes(query: "[[old-name]]")` to find referencing notes
-   - Use `patch_note` to update wiki-links in other notes
+   - Use `mcp__obsidian__search_notes(query: "[[old-name]]")` to find referencing notes
+   - Use `mcp__obsidian__patch_note` to update wiki-links in other notes
 6. **Report** all moves with old and new paths
 
 > **Caution**: Moving a note breaks existing `[[wiki-links]]` if the filename changes. Obsidian handles this automatically if "Automatically update internal links" is enabled. If not, use `patch_note` to update references.

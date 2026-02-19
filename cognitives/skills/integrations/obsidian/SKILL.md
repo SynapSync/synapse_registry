@@ -20,8 +20,11 @@ metadata:
     - "busca en obsidian"
   changelog:
     - version: "3.4"
-      date: "2026-02-17"
+      date: "2026-02-19"
       changes:
+        - "Fix SYNC.md:528 — search_notes and patch_note missing mcp__obsidian__ prefix"
+        - "Fix priority-ranking.md — remove unsupported params from read_multiple_notes"
+        - "Fix obsidian-linter.md:234 — version regex now accepts 3-part semver"
         - "Staging convention, batch-move-from-staging, {output_dir} rename"
     - version: "3.3"
       date: "2026-02-14"

@@ -11,6 +11,7 @@ _No unreleased changes._
 ## [2026-02-19]
 
 ### Changed
+- **obsidian** skill (integrations, v3.4.0): Three bug fixes — (1) SYNC.md:528 `search_notes`/`patch_note` missing `mcp__obsidian__` prefix; (2) `priority-ranking.md` `read_multiple_notes` called with unsupported params `includeContent`/`includeFrontmatter`; (3) `obsidian-linter.md` version regex `/^\d+\.\d+$/` rejecting 3-part semver — fixed to `/^\d+\.\d+(\.\d+)?$/`.
 - **sprint-forge** skill (workflow, v1.3.0): Fixed misleading claim in INIT Step 2 — `{output_dir}` is not "stored in README.md". Replaced with accurate discovery rules: option 1 paths are auto-discovered by scanning `.agents/sprint-forge/`; option 2 (custom) paths must be provided via re-entry prompt or explicit message.
 
 ## [2026-02-18]

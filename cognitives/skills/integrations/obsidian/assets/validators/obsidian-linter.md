@@ -231,7 +231,7 @@ date: Match /^\d{4}-\d{2}-\d{2}$/
 updated: Match /^\d{4}-\d{2}-\d{2}$/
 type: Must be in [analysis, conventions, requirements, architecture, plan, execution-plan, sprint-plan, progress, technical-report, refactor-plan, retrospective, decision-log, data-model, flow-diagram]
 status: Must be in [active, draft, completed, superseded, archived]
-version: Match /^\d+\.\d+$/
+version: Match /^\d+\.\d+(\.\d+)?$/
 tags: Array, max length 10
 related: Array, all items match /^\[\[.+\]\]$/
 ```
