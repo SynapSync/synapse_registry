@@ -8,6 +8,11 @@ Format based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and th
 
 _No unreleased changes._
 
+## [2026-02-19]
+
+### Changed
+- **sprint-forge** skill (workflow, v1.3.0): Fixed misleading claim in INIT Step 2 — `{output_dir}` is not "stored in README.md". Replaced with accurate discovery rules: option 1 paths are auto-discovered by scanning `.agents/sprint-forge/`; option 2 (custom) paths must be provided via re-entry prompt or explicit message.
+
 ## [2026-02-18]
 
 ### Changed

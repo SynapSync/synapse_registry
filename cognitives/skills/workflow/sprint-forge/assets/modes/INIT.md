@@ -61,7 +61,9 @@ Set `{output_dir}` based on the choice:
 - **Option 1**: `{cwd}/.agents/sprint-forge/{project-name}/` — `sprint-forge/` acts as a namespace inside `.agents/` (shared with other skills)
 - **Option 2**: `{user-provided-root}/{project-name}/` — the user's path is already the destination, no extra namespace added
 
-The resolved `{output_dir}` is stored in the project README.md so SPRINT and STATUS modes can locate it in future sessions without asking again.
+How SPRINT and STATUS locate `{output_dir}` in future sessions:
+- **Option 1**: Auto-discovered by scanning `{cwd}/.agents/sprint-forge/` — no re-entry prompt needed
+- **Option 2**: Must be provided via the re-entry prompt — custom paths cannot be auto-discovered
 
 Confirm with the user:
 
