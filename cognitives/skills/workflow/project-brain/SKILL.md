@@ -157,8 +157,8 @@ Before starting any mode workflow, resolve `{brain_dir}` — the directory where
 1. **Read** `{cwd}/AGENTS.md` → scan for `<!-- synapsync-skills:start -->` block → find `## Configuration` table → parse `brain_dir` row
 2. If `brain_dir` found → use it, done
 3. If not found → **ask the user**:
-   - Option A: **Use default** (`.agents/staging/project-brain/{project-name}/`)
-   - Option B: **Provide a custom path**
+   - Option A: **Use default** (`.agents/staging/project-brain/`)
+   - Or select "Other" to write a custom path
 4. **Persist** the chosen value to AGENTS.md Configuration table
 
 Full resolution algorithm: see [assets/helpers/brain-config.md](assets/helpers/brain-config.md)

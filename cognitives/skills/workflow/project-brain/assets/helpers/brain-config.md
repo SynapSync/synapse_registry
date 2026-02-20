@@ -22,7 +22,7 @@ This section of the `AGENTS.md` file contains project-specific guidelines and av
 
 | Key | Value | Description |
 |-----|-------|-------------|
-| `brain_dir` | `.agents/staging/project-brain/{project-name}` | Session memory for AI agents — load context, save sessions, evolve knowledge |
+| `brain_dir` | `.agents/staging/project-brain` | Session memory for AI agents — load context, save sessions, evolve knowledge |
 
 ---
 <!-- synapsync-skills:end -->
@@ -59,12 +59,10 @@ AskUserQuestion:
   header: "Brain dir"
   options:
     - label: "Default (Recommended)"
-      description: ".agents/staging/project-brain/{project-name}/"
-    - label: "Custom path"
-      description: "Provide a relative path from project root"
+      description: ".agents/staging/project-brain/"
 ```
 
-Set `{brain_dir}` to the chosen path, then **persist** to AGENTS.md (see Persistence Rules below).
+The built-in "Other" option (shown as "Write your custom path") lets the user type a relative path directly. Set `{brain_dir}` to the chosen or typed path, then **persist** to AGENTS.md (see Persistence Rules below).
 
 ### Step 3 — Validate
 
@@ -118,9 +116,9 @@ Once `{brain_dir}` is resolved, all path references in LOAD, SAVE, and helpers u
 
 | Variable | Expands To | Example |
 |----------|-----------|---------|
-| `{brain_dir}/` | Brain document directory | `.agents/staging/project-brain/my-app/` |
-| `{brain_dir}/{project-name}.md` | Default brain file path | `.agents/staging/project-brain/my-app/my-app.md` |
-| `{brain_dir}/archive/` | Session archive directory | `.agents/staging/project-brain/my-app/archive/` |
+| `{brain_dir}/` | Brain document directory | `.agents/staging/project-brain/` |
+| `{brain_dir}/{project-name}.md` | Default brain file path | `.agents/staging/project-brain/my-app.md` |
+| `{brain_dir}/archive/` | Session archive directory | `.agents/staging/project-brain/archive/` |
 
 ---
 
