@@ -1,6 +1,6 @@
 # LOAD Mode
 
-Loads a brain document and delivers a structured context briefing. Supports auto-discovery, Obsidian MCP, filesystem paths, and three document formats (v2.0, v1.0, free-form).
+Loads a brain document and delivers a structured context briefing. Supports Obsidian MCP, filesystem paths, and three document formats (v2.0, v1.0, free-form).
 
 ---
 
@@ -8,31 +8,30 @@ Loads a brain document and delivers a structured context briefing. Supports auto
 
 Resolve `{brain_dir}` using the [brain-config helper](../helpers/brain-config.md). This determines where brain documents are stored before any file operations.
 
-After this step, `{brain_dir}` is set (e.g., `.agents/project-brain` or a custom path from AGENTS.md).
+After this step, `{brain_dir}` is set (e.g., `.agents/staging/project-brain/my-app` or a custom path from AGENTS.md).
 
 ---
 
-## Step 1 — Auto-Discovery
+## Step 1 — Discover Brain Document
 
-Before asking the user for a path, check if a brain document already exists locally:
+Scan `{cwd}/{brain_dir}/` for `.md` files:
 
-1. Scan `{cwd}/{brain_dir}/` for `.md` files
-2. If **one file found** → offer it:
+1. If **one file found** → offer it:
    > "Found brain: `{brain_dir}/{name}.md` — Load this?"
    - If yes → proceed to Step 3 with that path
    - If no → Step 2
-3. If **multiple files found** → ask which one:
+2. If **multiple files found** → ask which one:
    > "Found {N} brain documents in `{brain_dir}/`:
    > 1. `{name1}.md`
    > 2. `{name2}.md`
    > Which one should I load?"
-4. If **no files found** → Step 2
+3. If **no files found** → Step 2
 
 ---
 
-## Step 2 — Resolve Source Path (Fallback)
+## Step 2 — Resolve Source Path
 
-If auto-discovery found nothing or the user declined, ask for the source:
+If no brain documents were found in `{brain_dir}`, or the user declined, ask for the source:
 
 ```
 AskUserQuestion:

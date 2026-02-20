@@ -22,7 +22,7 @@ This section of the `AGENTS.md` file contains project-specific guidelines and av
 
 | Key | Value | Description |
 |-----|-------|-------------|
-| `brain_dir` | `.agents/project-brain` | Session memory for AI agents — load context, save sessions, evolve knowledge |
+| `brain_dir` | `.agents/staging/project-brain/{project-name}` | Session memory for AI agents — load context, save sessions, evolve knowledge |
 
 ---
 <!-- synapsync-skills:end -->
@@ -49,26 +49,22 @@ Run this **before** any path-dependent step in LOAD or SAVE:
 3. If the block exists → find `## Configuration` table → look for a `brain_dir` row
 4. If the `brain_dir` row exists → extract the value, set `{brain_dir}`, done
 
-### Step 2 — Auto-Discovery Fallback
+### Step 2 — Ask the User
 
-If AGENTS.md doesn't exist, has no SynapSync Skills block, or the block has no `brain_dir` key in the Configuration table:
-
-1. Scan the default path `{cwd}/.agents/project-brain/` for `.md` files
-2. If **brain files found** → set `{brain_dir}` = `.agents/project-brain`, then **persist** to AGENTS.md (see Persistence Rules below)
-3. If **no brain files found** → ask the user:
+If AGENTS.md doesn't exist, has no SynapSync Skills block, or the block has no `brain_dir` key in the Configuration table, **ask the user**:
 
 ```
 AskUserQuestion:
   question: "Where should brain documents be stored?"
   header: "Brain dir"
   options:
-    - label: "Default"
-      description: ".agents/project-brain/ (recommended)"
+    - label: "Default (Recommended)"
+      description: ".agents/staging/project-brain/{project-name}/"
     - label: "Custom path"
       description: "Provide a relative path from project root"
 ```
 
-4. Set `{brain_dir}` to the chosen path, then **persist** to AGENTS.md
+Set `{brain_dir}` to the chosen path, then **persist** to AGENTS.md (see Persistence Rules below).
 
 ### Step 3 — Validate
 
@@ -122,9 +118,9 @@ Once `{brain_dir}` is resolved, all path references in LOAD, SAVE, and helpers u
 
 | Variable | Expands To | Example |
 |----------|-----------|---------|
-| `{brain_dir}/` | Brain document directory | `.agents/project-brain/` |
-| `{brain_dir}/{project-name}.md` | Default brain file path | `.agents/project-brain/my-app.md` |
-| `{brain_dir}/archive/` | Session archive directory | `.agents/project-brain/archive/` |
+| `{brain_dir}/` | Brain document directory | `.agents/staging/project-brain/my-app/` |
+| `{brain_dir}/{project-name}.md` | Default brain file path | `.agents/staging/project-brain/my-app/my-app.md` |
+| `{brain_dir}/archive/` | Session archive directory | `.agents/staging/project-brain/my-app/archive/` |
 
 ---
 
@@ -132,7 +128,7 @@ Once `{brain_dir}` is resolved, all path references in LOAD, SAVE, and helpers u
 
 | Error | Action |
 |-------|--------|
-| AGENTS.md exists but is not readable | Warn user, fall back to auto-discovery |
+| AGENTS.md exists but is not readable | Warn user, ask the user for `{brain_dir}` path |
 | AGENTS.md is not writable (persistence fails) | Warn user, continue with resolved `{brain_dir}` in memory — the session still works, but the next session will re-resolve |
 | `brain_dir` path in AGENTS.md points to a non-existent directory | Check if it's a LOAD (error — brain expected) or SAVE INIT (OK — will create). For LOAD, report the path and ask user to confirm or provide an alternative |
-| SynapSync Skills block is malformed (missing closing tag, no Configuration table) | Ignore the block, fall back to auto-discovery, warn user |
+| SynapSync Skills block is malformed (missing closing tag, no Configuration table) | Ignore the block, warn user, ask for `{brain_dir}` path |
