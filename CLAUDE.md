@@ -102,22 +102,22 @@ The central index at the root. When adding a cognitive, an entry must also be ad
 
 Skills use YAML frontmatter with: `name`, `description`, `license`, `metadata` (author, version, scope, auto_invoke), and `allowed-tools`.
 
-**Important**: Do NOT put `output_dir` in frontmatter. Output paths use a deterministic staging convention (see below).
+**Important**: Do NOT put `output_dir` in frontmatter. Output paths are resolved at runtime via the Configuration Resolution convention (see below).
 
 ### Configuration Resolution Convention
 
-Skills that persist configuration (output paths, vault destinations, etc.) use the **branded AGENTS.md block** as primary config source, with a deterministic staging fallback.
+Skills that persist configuration (output paths, vault destinations, etc.) use the **branded AGENTS.md block** as the single source of truth. When no config exists, skills **ask the user** for their preferred path before writing anything.
 
 **AGENTS.md branded block** (`<!-- synapsync-skills:start/end -->`):
 
-Skills read and write config keys to a shared `## Configuration` table inside the branded block in the project's `AGENTS.md`. This is the **primary** config source — values persist across sessions. See `project-brain/assets/helpers/brain-config.md` for the full block template and 6-case persistence rules.
+Skills read and write config keys to a shared `## Configuration` table inside the branded block in the project's `AGENTS.md`. This is the **only** config source — values persist across sessions. See `project-brain/assets/helpers/brain-config.md` for the full block template and 6-case persistence rules.
 
-**Deterministic staging fallback:**
+**Default staging path** (offered as an option, never used silently):
 
-If no branded block or config key is found, skills compute a staging path automatically:
+When a skill needs to ask the user for a path, it offers a default option:
 
 ```
-{output_dir} = .agents/staging/{skill-name}/{project-name}/
+.agents/staging/{skill-name}/{project-name}/
 ```
 
 - `{skill-name}` — the skill's name (e.g., `universal-planner`, `code-analyzer`, `sprint-forge`)
@@ -126,8 +126,13 @@ If no branded block or config key is found, skills compute a staging path automa
 **How skills resolve `{output_dir}`:**
 1. **Read** `{cwd}/AGENTS.md` → scan for `<!-- synapsync-skills:start -->` block → find `## Configuration` table → parse `output_dir` row
 2. If `output_dir` found → use it, done
-3. If not found → fall back to deterministic staging: `.agents/staging/{skill-name}/{project-name}/`
-4. **Persist** the resolved value to the AGENTS.md Configuration table
+3. If not found → **ask the user**:
+   - Option A: **Use default** → `.agents/staging/{skill-name}/{project-name}/`
+   - Option B: **Provide a custom path** → user specifies their preferred directory
+4. **Persist** the chosen value to the AGENTS.md Configuration table
+5. **Present** the resolved path to the user before proceeding
+
+**IMPORTANT**: Skills must NEVER silently fall back to staging. Always ask the user first.
 
 **When creating a new skill that produces output**, you MUST:
 1. Use `{output_dir}` for all output paths (e.g., `{output_dir}/planning/`, `{output_dir}/technical/`)
@@ -144,12 +149,11 @@ Before starting any workflow step, resolve `{output_dir}` — the directory wher
 
 1. **Read** `{cwd}/AGENTS.md` → scan for `<!-- synapsync-skills:start -->` block → find `## Configuration` table → parse `output_dir` row
 2. If `output_dir` found → use it, done
-3. If not found → fall back to deterministic staging:
-   - **Infer** the project name from the current directory name or git repository name
-   - **Set** `{output_dir}` = `.agents/staging/{skill-name}/{project-name}/`
-   - **Create** the directory if it doesn't exist
-   - **Persist** to AGENTS.md Configuration table
-4. **Present** the resolved path to the user before proceeding
+3. If not found → **ask the user**:
+   - Option A: **Use default** (`.agents/staging/{skill-name}/{project-name}/`)
+   - Option B: **Provide a custom path**
+4. **Persist** the chosen value to AGENTS.md Configuration table
+5. **Present** the resolved path to the user before proceeding
 ```
 
 **Standard Post-Production Delivery step** (add at end of skill workflow):
@@ -161,7 +165,7 @@ After all documents are generated in `{output_dir}`, offer the user delivery opt
 
 1. **Sync to Obsidian vault** — use the `obsidian` skill (SYNC mode) to move output to the vault
 2. **Move to custom path** — user specifies a destination and files are moved there
-3. **Keep in staging** — leave files in `.agents/staging/` for later use
+3. **Keep in place** — leave files in `{output_dir}` for later use
 
 Ask the user which option they prefer. If they choose option 1 or 2, move (not copy) the files to the destination.
 ```
@@ -181,7 +185,7 @@ This project uses conventional commits: `feat:`, `fix:`, `chore:`, `docs:`, etc.
 - Description maximum 100 characters
 - Skills that produce output MUST use `{output_dir}` variable (never hardcoded paths)
 - Skills that produce output MUST include a `## Configuration Resolution` section with branded AGENTS.md block as primary source
-- No `output_dir` field in SKILL.md frontmatter (resolved at runtime via branded block or staging fallback)
+- No `output_dir` field in SKILL.md frontmatter (resolved at runtime via branded block or user prompt)
 - Skills that produce output MUST include a post-production delivery step
 - Skills that persist config MUST use the branded `<!-- synapsync-skills:start/end -->` block in AGENTS.md
 

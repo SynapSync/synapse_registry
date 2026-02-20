@@ -6,12 +6,21 @@ Resolve the `{output_dir}` path that determines where all planning output docume
 
 ## Why This Exists
 
-Every skill that produces documents needs to know WHERE to save them. Instead of config files, we use a **deterministic staging path** — computed from the skill name and project name. No user interaction needed for path resolution.
+Every skill that produces documents needs to know WHERE to save them. The **single source of truth** is the branded AGENTS.md block — a persistent config that remembers the path across sessions. When no config exists (first-time use), skills **ask the user** for their preferred path, persist it to AGENTS.md, and never ask again.
 
-## Staging Path Formula
+## Resolution Priority
+
+1. **AGENTS.md branded block** (primary) → `<!-- synapsync-skills:start -->` Configuration table → `output_dir` row
+2. **Ask the user** (first-time only) → offer default or custom path → persist to AGENTS.md
+
+**IMPORTANT**: Skills must NEVER silently write to a path without asking the user first. The default staging path is only an **option** offered to the user, not an automatic fallback.
+
+## Default Staging Path (offered as option)
+
+When asking the user, offer this as the default option:
 
 ```
-{output_dir} = .agents/staging/{skill-name}/{project-name}/
+.agents/staging/{skill-name}/{project-name}/
 ```
 
 - `{skill-name}` — the skill's name (e.g., `universal-planner`, `code-analyzer`, `sprint-forge`)
@@ -21,71 +30,55 @@ Every skill that produces documents needs to know WHERE to save them. Instead of
 
 Follow these steps at the **beginning** of any skill execution that generates output:
 
-### Step 0: Check AGENTS.md Branded Block
+### Step 1: Check AGENTS.md Branded Block
 
-Before computing anything, check if `{output_dir}` is already persisted in the project's AGENTS.md:
+Before anything else, check if `{output_dir}` is already persisted in the project's AGENTS.md:
 
 1. Read `{cwd}/AGENTS.md`
 2. Scan for `<!-- synapsync-skills:start -->` … `<!-- synapsync-skills:end -->` block
 3. Find `## Configuration` table → look for an `output_dir` row
 4. If found → set `{output_dir}` to the value, **skip to Step 4** (present to user)
-5. If not found → continue to Step 1 (deterministic staging fallback)
+5. If not found → continue to Step 2 (ask user)
 
-### Step 1: Infer Project Name
+### Step 2: Ask the User
 
-Infer the project name from:
+If no `output_dir` is configured, **ask the user** where they want output stored:
 
-1. **Git repository name** (if in a git repo)
-2. **Current directory name** (fallback)
-
-```bash
-# Get git repo name
-git remote get-url origin | sed 's/.*\///' | sed 's/\.git$//'
-
-# Or use directory name
-basename $(pwd)
-```
-
-### Step 2: Compute Staging Path
-
-Set `{output_dir}` using the formula:
+1. Infer the project name from git repo or directory name
+2. Present two options:
 
 ```
-{output_dir} = .agents/staging/universal-planner/{project-name}/
+AskUserQuestion:
+  question: "Where should output documents be stored?"
+  header: "Output dir"
+  options:
+    - label: "Default (Recommended)"
+      description: ".agents/staging/{skill-name}/{project-name}/"
+    - label: "Custom path"
+      description: "Provide a relative path from project root"
 ```
 
-**Example:**
+3. If user chooses **default** → set `{output_dir}` = `.agents/staging/{skill-name}/{project-name}/`
+4. If user chooses **custom** → set `{output_dir}` to the path the user provides
 
-```
-Project: my-awesome-app
-{output_dir} = .agents/staging/universal-planner/my-awesome-app/
-```
+### Step 3: Persist to AGENTS.md
 
-### Step 3: Create Directory
-
-If the directory doesn't exist, create it:
-
-```bash
-mkdir -p .agents/staging/universal-planner/{project-name}
-```
+Persist `{output_dir}` to the Configuration table in AGENTS.md so future sessions resolve at Step 1 directly. Follow the 6-case persistence rules from [project-brain brain-config.md](../../../workflow/project-brain/assets/helpers/brain-config.md).
 
 ### Step 4: Present to User
 
 Inform the user of the resolved path:
 
 ```
-Output documents will be stored in: .agents/staging/universal-planner/{project-name}/
+Output documents will be stored in: {output_dir}/
 
 Proceed?
 ```
 
-### Step 5: Persist to AGENTS.md
+### Step 5: Create Directory and Use {output_dir}
 
-After resolving `{output_dir}` (whether from the branded block or deterministic staging), persist the value to the Configuration table in AGENTS.md so future sessions skip the resolution. Follow the 6-case persistence rules from [project-brain brain-config.md](../../../workflow/project-brain/assets/helpers/brain-config.md).
-
-### Step 6: Use {output_dir}
-
-Throughout the skill, use `{output_dir}` as a variable:
+1. Create the directory if it doesn't exist
+2. Throughout the skill, use `{output_dir}` as a variable:
 
 ```
 {output_dir}/planning/{feature-name}/
@@ -99,9 +92,9 @@ The skill replaces `{output_dir}` with the resolved value.
 
 **Rules:**
 
-- **Path type:** Relative to project root (always starts with `.agents/staging/`)
-- **No trailing slash in the stored value:** `.agents/staging/universal-planner/my-project` (not `.agents/staging/universal-planner/my-project/`). When using the value, append `/` as needed (e.g., `{output_dir}/planning/`).
-- **Deterministic:** Same project + same skill = same path, every time. No user input needed for resolution.
+- **Path type:** Relative to project root. Can be any user-configured value (e.g., `docs/planning`, `output/reports`, or `.agents/staging/...`).
+- **No trailing slash in the stored value:** `docs/planning` (not `docs/planning/`). When using the value, append `/` as needed (e.g., `{output_dir}/planning/`).
+- **Resolved once:** After first resolution, the value is persisted in AGENTS.md and reused in all future sessions.
 
 ## Error Handling
 
@@ -110,7 +103,7 @@ The skill replaces `{output_dir}` with the resolved value.
 If the directory cannot be created (permissions issue):
 
 ```
-ERROR: Cannot create staging directory: .agents/staging/universal-planner/{project-name}
+ERROR: Cannot create directory: {output_dir}
 
 Please check permissions or specify an alternative path.
 ```
@@ -121,30 +114,72 @@ If neither git remote nor directory name yields a usable slug:
 
 ```
 Could not infer the project name. What should I call this project?
-(This will be used for the output path: .agents/staging/universal-planner/{your-name}/)
+(This will be used for the default output path: .agents/staging/{skill-name}/{your-name}/)
 ```
 
 ## Example: Full Resolution Flow
 
-**Scenario:** User invokes `universal-planner` in a project directory.
+**Scenario A:** User invokes `universal-planner` in a project with AGENTS.md configured.
 
 ```
-Step 1: Infer project name
-→ Git repo: "my-awesome-app"
-→ Project name: "my-awesome-app"
+Step 1: Check AGENTS.md branded block
+→ Found <!-- synapsync-skills:start --> block
+→ Configuration table has output_dir = "docs/planning"
+→ {output_dir} = docs/planning
+→ Skip to Step 4
 
-Step 2: Compute staging path
-→ {output_dir} = .agents/staging/universal-planner/my-awesome-app/
+Step 4: Present to user
+→ "Output documents will be stored in: docs/planning/"
 
-Step 3: Create directory
-→ mkdir -p .agents/staging/universal-planner/my-awesome-app
+Step 5: Use output_dir
+→ Planning output will go to:
+   docs/planning/planning/new-feature/
+```
+
+**Scenario B:** First-time use — no AGENTS.md exists.
+
+```
+Step 1: Check AGENTS.md branded block
+→ No AGENTS.md found → continue to Step 2
+
+Step 2: Ask the user
+→ "Where should output documents be stored?"
+→ User chooses: "Custom path" → provides "my-project/planning"
+→ {output_dir} = my-project/planning
+
+Step 3: Persist to AGENTS.md
+→ Create AGENTS.md with branded block containing output_dir = "my-project/planning"
+→ Next invocation will resolve from AGENTS.md directly (Scenario A)
+
+Step 4: Present to user
+→ "Output documents will be stored in: my-project/planning/"
+
+Step 5: Create directory and use output_dir
+→ mkdir -p my-project/planning
+→ Planning output will go to:
+   my-project/planning/planning/new-feature/
+```
+
+**Scenario C:** First-time use — user chooses default.
+
+```
+Step 1: Check AGENTS.md branded block
+→ No AGENTS.md found → continue to Step 2
+
+Step 2: Ask the user
+→ "Where should output documents be stored?"
+→ User chooses: "Default" → .agents/staging/universal-planner/my-awesome-app/
+→ {output_dir} = .agents/staging/universal-planner/my-awesome-app
+
+Step 3: Persist to AGENTS.md
+→ Create AGENTS.md with branded block containing output_dir row
+→ Next invocation will resolve from AGENTS.md directly (Scenario A)
 
 Step 4: Present to user
 → "Output documents will be stored in: .agents/staging/universal-planner/my-awesome-app/"
 
-Step 5: Use output_dir
-→ Planning output will go to:
-   .agents/staging/universal-planner/my-awesome-app/planning/new-feature/
+Step 5: Create directory and use output_dir
+→ mkdir -p .agents/staging/universal-planner/my-awesome-app
 ```
 
 ## Usage in Skills
@@ -158,9 +193,9 @@ See [assets/helpers/config-resolver.md](assets/helpers/config-resolver.md) for t
 
 **Quick summary:**
 
-1. Infer project name from directory/git
-2. Set `{output_dir}` = `.agents/staging/{skill-name}/{project-name}/`
-3. Create directory if needed
+1. Check `AGENTS.md` branded block for persisted `output_dir` → if found, use it
+2. If not found → **ask the user** (default `.agents/staging/...` or custom path)
+3. Persist chosen value to AGENTS.md Configuration table
 4. Use `{output_dir}/` for all output paths
 ```
 
@@ -168,18 +203,25 @@ Then invoke the workflow before any output generation.
 
 ## Rationale
 
-**Why deterministic staging paths?**
+**Why AGENTS.md branded block as single source?**
 
-- **No config files needed** — eliminates `cognitive.config.json` complexity
-- **Predictable** — same project always gets the same path
-- **Local-first** — output stays in the project directory until the user decides where it goes
-- **Post-production delivery** — after generating docs, the user can sync to Obsidian vault, move to a custom path, or keep in staging
+- **Persistent** — resolved once, remembered across all sessions and skills
+- **User-configurable** — users choose their own path, not forced into staging
+- **Shared** — all skills read/write the same Configuration table, avoiding fragmentation
+- **Visible** — config lives in a committed file, not hidden state
 
-**Why `.agents/staging/`?**
+**Why ask the user instead of silent fallback?**
+
+- **User control** — the user decides where their output goes from the very first invocation
+- **No surprises** — output never ends up in an unexpected directory
+- **One-time cost** — the user is asked only once; the answer is persisted for all future sessions
+
+**Why `.agents/staging/` as the default option?**
 
 - `.agents/` is a hidden directory (gitignored) — keeps project root clean
 - `staging/` makes it clear these are temporary outputs awaiting delivery
 - `{skill-name}/` prevents collision between skills
+- It's a sensible default for users who don't have a preference
 
 ## Related
 
@@ -190,5 +232,5 @@ Then invoke the workflow before any output generation.
 ## Version
 
 Created: 2026-02-12 (v2.1.0)
-Updated: 2026-02-19 (v3.3.0) — Added Step 0 branded AGENTS.md block check and Step 5 persistence
+Updated: 2026-02-20 (v4.0.0) — Breaking: staging is no longer a silent fallback. Skills MUST ask the user when no AGENTS.md config exists. Rewrote entire workflow, examples, rationale.
 Pattern: Shared helper for output path resolution

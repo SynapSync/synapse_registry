@@ -136,11 +136,10 @@ Before starting any mode workflow, resolve `{output_dir}` — the directory wher
 
 1. **Read** `{cwd}/AGENTS.md` → scan for `<!-- synapsync-skills:start -->` block → find `## Configuration` table → parse `output_dir` row
 2. If `output_dir` found → use it, done
-3. If not found → fall back to existing behavior:
-   - Scan `{cwd}/.agents/sprint-forge/` for project directories (auto-discovery)
-   - If found → use it, persist to AGENTS.md Configuration table
-   - If not found → ask user (INIT mode asks before first write; SPRINT/STATUS ask for path)
-4. After resolving, persist `output_dir` to the Configuration table
+3. If not found → **ask the user**:
+   - Option A: **Use default** (`.agents/staging/sprint-forge/{project-name}/`)
+   - Option B: **Provide a custom path**
+4. **Persist** the chosen value to AGENTS.md Configuration table
 
 The skill follows the same 6-case persistence rules for the branded block. See [project-brain brain-config.md](../project-brain/assets/helpers/brain-config.md) for the full block template and persistence algorithm.
 

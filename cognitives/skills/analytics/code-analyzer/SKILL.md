@@ -107,12 +107,11 @@ Before starting any workflow step, resolve `{output_dir}` — the directory wher
 
 1. **Read** `{cwd}/AGENTS.md` → scan for `<!-- synapsync-skills:start -->` block → find `## Configuration` table → parse `output_dir` row
 2. If `output_dir` found → use it, done
-3. If not found → fall back to deterministic staging:
-   - **Infer** the project name from the current directory name or git repository name
-   - **Set** `{output_dir}` = `.agents/staging/code-analyzer/{project-name}/`
-   - **Create** the directory if it doesn't exist
-   - **Persist** to AGENTS.md Configuration table
-4. **Present** the resolved path to the user before proceeding
+3. If not found → **ask the user**:
+   - Option A: **Use default** (`.agents/staging/code-analyzer/{project-name}/`)
+   - Option B: **Provide a custom path**
+4. **Persist** the chosen value to AGENTS.md Configuration table
+5. **Present** the resolved path to the user before proceeding
 
 The skill follows the same 6-case persistence rules for the branded block. See [project-brain brain-config.md](../../workflow/project-brain/assets/helpers/brain-config.md) for the full block template and persistence algorithm.
 

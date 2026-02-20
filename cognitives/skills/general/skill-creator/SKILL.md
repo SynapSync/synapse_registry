@@ -132,12 +132,17 @@ Avoid these mistakes when creating skills:
 
 ## Configuration Resolution
 
-Before creating any skill, resolve the `{output_dir}` path — the local staging directory where output documents are stored.
+Before creating any skill, resolve `{output_dir}` — the directory where output documents are stored.
 
-1. **Infer** the project name from the current directory name or git repository name
-2. **Set** `{output_dir}` = `.agents/staging/skill-creator/{project-name}/`
-3. **Create** the directory if it doesn't exist
-4. **Present** the resolved path to the user before proceeding
+1. **Read** `{cwd}/AGENTS.md` → scan for `<!-- synapsync-skills:start -->` block → find `## Configuration` table → parse `output_dir` row
+2. If `output_dir` found → use it, done
+3. If not found → **ask the user**:
+   - Option A: **Use default** (`.agents/staging/skill-creator/{project-name}/`)
+   - Option B: **Provide a custom path**
+4. **Persist** the chosen value to AGENTS.md Configuration table
+5. **Present** the resolved path to the user before proceeding
+
+The skill follows the same 6-case persistence rules for the branded block. See [project-brain brain-config.md](../../workflow/project-brain/assets/helpers/brain-config.md) for the full block template and persistence algorithm.
 
 > **IMPORTANT**: Every `{output_dir}` reference in this skill depends on this resolution.
 

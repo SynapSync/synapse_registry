@@ -187,24 +187,18 @@ The obsidian skill requires the **Obsidian MCP server** for full functionality:
 | `planning` | Project planning, SDLC, requirements, architecture |
 | `workflow` | Sprint workflows, iterative processes, adaptive execution |
 
-## Staging Output Convention
+## Output Path Convention
 
-Skills that produce output documents (reports, plans, analysis) write to a **deterministic local staging directory** instead of hardcoded paths. No config file needed.
+Skills that produce output documents (reports, plans, analysis) resolve their output path from the **AGENTS.md branded block**. When no config exists (first-time use), skills **ask the user** for their preferred path before writing anything.
 
 ### How It Works
 
-Every skill that produces output computes its staging path automatically:
+1. **Read** `AGENTS.md` → look for `output_dir` in the `<!-- synapsync-skills:start -->` Configuration table
+2. If found → use it, done
+3. If not found → **ask the user**: use default (`.agents/staging/{skill-name}/{project-name}/`) or provide a custom path
+4. **Persist** the chosen value to AGENTS.md so future sessions skip the prompt
 
-```
-{output_dir} = .agents/staging/{skill-name}/{project-name}/
-```
-
-Skills auto-discover the project name at runtime:
-1. Infer project name from git repo or directory name
-2. Compute `{output_dir}` = `.agents/staging/{skill-name}/{project-name}/`
-3. Create directory if needed, present to user, proceed
-
-After generating output, skills offer **post-production delivery**: sync to Obsidian vault, move to a custom path, or keep in staging.
+After generating output, skills offer **post-production delivery**: sync to Obsidian vault, move to a custom path, or keep in place.
 
 ### For Skill Authors
 
@@ -213,7 +207,8 @@ If your skill produces output files, you **must**:
 2. Include a `## Configuration Resolution` section before the Workflow section (see [CLAUDE.md](CLAUDE.md) for the standard template)
 3. Never hardcode output paths -- no `.synapsync/` or absolute paths
 4. Never put `output_dir` in SKILL.md frontmatter
-5. Include a post-production delivery step at the end of the workflow
+5. Never silently fall back to staging -- always ask the user when no config exists
+6. Include a post-production delivery step at the end of the workflow
 
 ## Contributing
 

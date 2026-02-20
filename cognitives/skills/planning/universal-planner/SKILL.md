@@ -195,11 +195,11 @@ Before starting any mode workflow, resolve `{output_dir}` — the directory wher
 
 1. **Read** `{cwd}/AGENTS.md` → scan for `<!-- synapsync-skills:start -->` block → find `## Configuration` table → parse `output_dir` row
 2. If `output_dir` found → use it, done
-3. If not found → fall back to deterministic staging: `.agents/staging/universal-planner/{project-name}/`, then persist to AGENTS.md Configuration table
+3. If not found → **ask the user**: default (`.agents/staging/universal-planner/{project-name}/`) or custom path → persist chosen value to AGENTS.md Configuration table
 
 The skill follows the same 6-case persistence rules for the branded block. See [project-brain brain-config.md](../../workflow/project-brain/assets/helpers/brain-config.md) for the full block template and persistence algorithm.
 
-See [assets/helpers/config-resolver.md](assets/helpers/config-resolver.md) for the full resolution workflow with deterministic staging fallback.
+See [assets/helpers/config-resolver.md](assets/helpers/config-resolver.md) for the full resolution workflow.
 
 All `{output_dir}` references depend on this resolution.
 

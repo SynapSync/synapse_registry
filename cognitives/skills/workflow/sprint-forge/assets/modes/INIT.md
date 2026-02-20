@@ -49,21 +49,23 @@ Gather or detect the following configuration:
 | **Codebase Path** | The absolute path to the codebase. Usually the current working directory. |
 | **Sprint Output Dir** | `{output_dir}/sprints/` (automatic, resolved below) |
 
-**Before writing any file**, ask the user where sprint-forge documents should be saved:
+**Resolve `{output_dir}`** using the standard Configuration Resolution:
+
+1. **Read** `{cwd}/AGENTS.md` → scan for `<!-- synapsync-skills:start -->` block → find `## Configuration` table → parse `output_dir` row
+2. If `output_dir` found → use it, skip to confirmation below
+3. If not found → **ask the user**:
 
 > "Where should I save sprint-forge documents for **{project_name}**?
 >
-> 1. **Local** (default) — `{cwd}/.agents/sprint-forge/{project-name}/`
-> 2. **Custom path** — provide a filesystem or Obsidian vault path and files will be saved directly to `{root}/{project-name}/`"
+> 1. **Default** (Recommended) — `.agents/staging/sprint-forge/{project-name}/`
+> 2. **Custom path** — provide your preferred directory"
 
 Set `{output_dir}` based on the choice:
 
-- **Option 1**: `{cwd}/.agents/sprint-forge/{project-name}/` — `sprint-forge/` acts as a namespace inside `.agents/` (shared with other skills)
-- **Option 2**: `{user-provided-root}/{project-name}/` — the user's path is already the destination, no extra namespace added
+- **Option 1**: `.agents/staging/sprint-forge/{project-name}/`
+- **Option 2**: the path the user provides
 
-How SPRINT and STATUS locate `{output_dir}` in future sessions:
-- **Option 1**: Auto-discovered by scanning `{cwd}/.agents/sprint-forge/` — no re-entry prompt needed
-- **Option 2**: Must be provided via the re-entry prompt — custom paths cannot be auto-discovered
+**Persist** the chosen value to the AGENTS.md Configuration table (6-case persistence rules). Future sessions (SPRINT, STATUS) will resolve `{output_dir}` from AGENTS.md directly — no auto-discovery needed.
 
 Confirm with the user:
 
