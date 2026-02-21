@@ -1,40 +1,6 @@
 # Brain Directory Configuration
 
-Helper for resolving `{brain_dir}` — the directory where brain documents are stored. Both LOAD and SAVE modes call this before any file operations.
-
----
-
-## Config Format
-
-The brain directory is persisted in `{cwd}/AGENTS.md` inside the **SynapSync Skills block** — a branded, visible section where installed skills store their configuration.
-
-### Block Template
-
-```markdown
-<!-- synapsync-skills:start -->
-# {Project Name} Skills Guidelines
-
-## How to Use This Guide
-
-This section of the `AGENTS.md` file contains project-specific guidelines and available skills from [SynapSync Registry](https://github.com/SynapSync/synapse-registry).
-
-## Configuration
-
-| Key | Value | Description |
-|-----|-------|-------------|
-| `brain_dir` | `.agents/staging/project-brain` | Session memory for AI agents — load context, save sessions, evolve knowledge |
-
----
-<!-- synapsync-skills:end -->
-```
-
-### Block Rules
-
-- **Delimiters**: `<!-- synapsync-skills:start -->` and `<!-- synapsync-skills:end -->`
-- **`{Project Name}`**: inferred from the current directory name or git repository name, title-cased (e.g., `my-app` → `My App`)
-- **Configuration table**: single `Key | Value | Description` table where any skill can add/update its own rows
-- `Description` column contains the skill's short description (from manifest) so readers know what each key is for
-- Any installed skill can add its config keys to the Configuration table (e.g., `brain_dir`, `output_dir`)
+Helper for persisting `{brain_dir}` to AGENTS.md. For the resolution algorithm (read → ask → validate), see [brain-resolve.md](brain-resolve.md).
 
 ---
 
@@ -108,25 +74,3 @@ This section of the `AGENTS.md` file contains project-specific guidelines and av
 
 When appending (case 2), add a blank line before the block for separation.
 
----
-
-## Variable Usage
-
-Once `{brain_dir}` is resolved, all path references in LOAD, SAVE, and helpers use it:
-
-| Variable | Expands To | Example |
-|----------|-----------|---------|
-| `{brain_dir}/` | Brain document directory | `.agents/staging/project-brain/` |
-| `{brain_dir}/{project-name}.md` | Default brain file path | `.agents/staging/project-brain/my-app.md` |
-| `{brain_dir}/archive/` | Session archive directory | `.agents/staging/project-brain/archive/` |
-
----
-
-## Error Handling
-
-| Error | Action |
-|-------|--------|
-| AGENTS.md exists but is not readable | Warn user, ask the user for `{brain_dir}` path |
-| AGENTS.md is not writable (persistence fails) | Warn user, continue with resolved `{brain_dir}` in memory — the session still works, but the next session will re-resolve |
-| `brain_dir` path in AGENTS.md points to a non-existent directory | Check if it's a LOAD (error — brain expected) or SAVE INIT (OK — will create). For LOAD, report the path and ask user to confirm or provide an alternative |
-| SynapSync Skills block is malformed (missing closing tag, no Configuration table) | Ignore the block, warn user, ask for `{brain_dir}` path |

@@ -7,7 +7,7 @@ description: >
 license: Apache-2.0
 metadata:
   author: synapsync
-  version: "3.5"
+  version: "3.6"
   scope: [root]
   auto_invoke:
     - "sync * to obsidian"
@@ -18,58 +18,6 @@ metadata:
     - "guardar en obsidian"
     - "lee de obsidian"
     - "busca en obsidian"
-  changelog:
-    - version: "3.5"
-      date: "2026-02-19"
-      changes:
-        - "Branded AGENTS.md block support — vault_destination config persisted in synapsync-skills Configuration table"
-        - "New vault_destination config key remembered across sessions (no re-prompting)"
-    - version: "3.4"
-      date: "2026-02-19"
-      changes:
-        - "Fix SYNC.md:528 — search_notes and patch_note missing mcp__obsidian__ prefix"
-        - "Fix priority-ranking.md — remove unsupported params from read_multiple_notes"
-        - "Fix obsidian-linter.md:234 — version regex now accepts 3-part semver"
-        - "Staging convention, batch-move-from-staging, {output_dir} rename"
-    - version: "3.3"
-      date: "2026-02-14"
-      changes:
-        - "SYNC mode filesystem fallback: full self-sufficiency without MCP"
-        - "Added Step 0 access mode detection to SYNC (mirrors READ pattern)"
-        - "Added YAML serialization guidance for filesystem write operations"
-        - "Updated all helpers with filesystem fallback paths"
-        - "MCP changed from hard dependency to optional (recommended)"
-        - "Updated Rule 1 to conditional access mode detection"
-    - version: "3.2"
-      date: "2026-02-13"
-      changes:
-        - "Full MCP tool coherence: all 13 tools documented (was 7)"
-        - "Added 6 missing tools: delete_note, patch_note, update_frontmatter, get_frontmatter, get_notes_info, move_note"
-        - "Fixed manage_tags contract (operation not action, note-level scope)"
-        - "Documented write_note mode param, search_notes/read_multiple_notes extended params"
-        - "Optimized cross-ref-validator and priority-ranking with metadata-fast-path tools"
-        - "Added optional archive/delete and move/reorganize SYNC workflows"
-    - version: "3.1"
-      date: "2026-02-13"
-      changes:
-        - "Added i18n documentation for bilingual (EN/ES) design"
-        - "Added Tool Dependencies section with MCP tool contracts"
-        - "Reconciled type taxonomy to 14 types (removed note, meeting, reference)"
-        - "Added ambiguous intent disambiguation step"
-        - "Slimmed assets/README.md to minimal index"
-        - "Added batch size limits (max 20 files)"
-        - "Added Windows path support in fallback mode"
-        - "Added negative weights for superseded/archived in priority ranking"
-        - "Versioned the Obsidian markdown standard (v1.0)"
-        - "Clarified cognitive.config.json and mcp__obsidian__write_note contracts"
-    - version: "3.0"
-      date: "2026-02-12"
-      changes:
-        - "Consolidated obsidian-sync + obsidian-reader into single skill"
-        - "Mode-based architecture: SYNC mode (write) + READ mode (read/search)"
-        - "Progressive disclosure: modes load only when relevant"
-        - "Shared helpers across modes (frontmatter-generator, cross-ref-validator, etc.)"
-        - "Follows 2026 best practices: single-agent with skills pattern"
 allowed-tools: Read, Write, Glob, Grep, Bash, ToolSearch, AskUserQuestion
 ---
 
@@ -154,55 +102,9 @@ This skill supports **bilingual operation** (English + Spanish):
 
 ## Tool Dependencies
 
-This skill depends on two categories of tools:
+This skill uses **native Claude Code tools** (Read, Write, Glob, Grep, Bash, ToolSearch, AskUserQuestion) and **13 Obsidian MCP tools** (deferred — must be loaded via ToolSearch before first use; see Rule 1).
 
-### Native Claude Code Tools (provided by runtime)
-
-These tools are part of the Claude Code environment and require no special setup:
-
-| Tool | Usage in This Skill |
-|------|-------------------|
-| `ToolSearch` | Load deferred MCP tools before first use. Input: `query` string (e.g., `"+obsidian write"`). Output: loaded tool definitions. |
-| `AskUserQuestion` | Prompt user for choices (vault destination, config paths). Input: `questions` array with `question`, `header`, `options`. Output: user selection. |
-| `Read` | Read local files. Input: `file_path` (absolute). Output: file content with line numbers. |
-| `Write` | Create/overwrite files. Input: `file_path`, `content`. |
-| `Glob` | Find files by pattern. Input: `pattern` (e.g., `"**/*.md"`). Output: matching file paths. |
-| `Grep` | Search file contents. Input: `pattern`, `path`, `type`. Output: matching lines/files. |
-| `Bash` | Run shell commands. Input: `command` string. Output: stdout/stderr. |
-
-### MCP Tools (require Obsidian REST API server)
-
-These tools are **deferred** — they must be loaded via `ToolSearch` before first use. They will fail if called without loading.
-
-#### Core Read/Write Tools
-
-| Tool | Parameters | Description |
-|------|-----------|-------------|
-| `mcp__obsidian__write_note` | `path` (string): vault-relative path. `content` (string): markdown body **without** frontmatter YAML block. `frontmatter` (object, optional): key-value pairs to serialize as YAML. `mode` (string, optional): `"overwrite"` (default), `"append"`, or `"prepend"`. | Write a note to the vault. The MCP server serializes frontmatter and prepends it to content. Use `mode: "append"` to add content to an existing note without replacing it. |
-| `mcp__obsidian__read_note` | `path` (string): vault-relative path. `prettyPrint` (boolean, optional). | Read a note. Returns content with frontmatter. |
-| `mcp__obsidian__read_multiple_notes` | `paths` (string[], max 10): vault-relative paths. `includeContent` (boolean, optional, default true). `includeFrontmatter` (boolean, optional, default true). `prettyPrint` (boolean, optional). | Read multiple notes in one call. Use `includeContent: false` for metadata-only batch reads. |
-| `mcp__obsidian__patch_note` | `path` (string): vault-relative path. `oldString` (string): exact string to replace. `newString` (string): replacement. `replaceAll` (boolean, optional, default false). | Efficient partial edit — replace a specific string without rewriting the entire note. Fails on multiple matches unless `replaceAll: true`. |
-| `mcp__obsidian__delete_note` | `path` (string): vault-relative path. `confirmPath` (string): must exactly match `path`. | Delete a note permanently. Requires double confirmation. Always confirm with user before calling. |
-| `mcp__obsidian__move_note` | `oldPath` (string): current path. `newPath` (string): destination path. `overwrite` (boolean, optional, default false). | Move or rename a note. Use for reorganization and archiving workflows. |
-
-#### Metadata Tools
-
-| Tool | Parameters | Description |
-|------|-----------|-------------|
-| `mcp__obsidian__get_frontmatter` | `path` (string): vault-relative path. `prettyPrint` (boolean, optional). | Extract frontmatter without reading content. Fast path for ranking, filtering, and compliance checks. |
-| `mcp__obsidian__update_frontmatter` | `path` (string): vault-relative path. `frontmatter` (object): fields to update. `merge` (boolean, optional, default true). | Update frontmatter without touching note body. Preferred over full read+write for metadata-only changes (cross-ref fixes, status updates). |
-| `mcp__obsidian__get_notes_info` | `paths` (string[]): vault-relative paths. `prettyPrint` (boolean, optional). | Get metadata for multiple notes without reading content. Ideal for batch pre-checks, ranking, and existence validation. |
-
-#### Discovery Tools
-
-| Tool | Parameters | Description |
-|------|-----------|-------------|
-| `mcp__obsidian__search_notes` | `query` (string): search text. `searchContent` (boolean, optional, default true). `searchFrontmatter` (boolean, optional, default false). `caseSensitive` (boolean, optional, default false). `limit` (number, optional, default 5, max 20). `prettyPrint` (boolean, optional). | Full-text search. Use `searchFrontmatter: true` for metadata queries. |
-| `mcp__obsidian__list_directory` | `path` (string, optional, default "/"): vault-relative directory. `prettyPrint` (boolean, optional). | List files and subdirectories. |
-| `mcp__obsidian__get_vault_stats` | `recentCount` (number, optional, default 5, max 20). `prettyPrint` (boolean, optional). | Get vault statistics and recently modified notes. |
-| `mcp__obsidian__manage_tags` | `path` (string): vault-relative path to a **single note**. `operation` (string): `"add"`, `"remove"`, or `"list"`. `tags` (string[], required for add/remove). | Manage tags on a single note. **Not** a vault-wide tag listing tool. For vault-wide tag discovery, use `search_notes` with `searchFrontmatter: true`. |
-
-> **Note**: The `mcp__obsidian__write_note` tool accepts `frontmatter` as a **separate parameter** (a JSON object), not as part of `content`. Pass raw markdown body in `content` and structured metadata in `frontmatter`. The MCP server serializes the frontmatter into YAML and prepends it. If directories in `path` don't exist, they are created automatically. The `mode` parameter controls write behavior: `"overwrite"` (default) replaces the entire note, `"append"` adds to the end, `"prepend"` adds to the beginning.
+For detailed MCP tool parameter contracts and gotchas, see [assets/helpers/tool-reference.md](assets/helpers/tool-reference.md).
 
 ---
 
@@ -252,35 +154,50 @@ AskUserQuestion:
 
 ---
 
+## Asset Loading (Mode-Gated)
+
+After detecting the mode, read ONLY the assets listed for that mode. Do NOT read assets for other modes — they waste context tokens.
+
+| Mode | Read These Assets | Do NOT Read |
+|------|-------------------|-------------|
+| **SYNC** | `assets/modes/SYNC.md` | READ.md, priority-ranking.md, obsidian-linter.md |
+| **READ** | `assets/modes/READ.md` | SYNC.md, frontmatter-generator.md, cross-ref-validator.md, batch-sync-pattern.md |
+
+Each mode asset references its required helpers and standards internally. Read them on-demand as the mode workflow instructs — not upfront.
+
+For MCP tool parameter contracts (needed in both modes), see [assets/helpers/tool-reference.md](assets/helpers/tool-reference.md) — read only if ToolSearch output is insufficient.
+
+---
+
 ## Mode Workflows
 
 ### SYNC Mode - Write to Obsidian Vault
 
 Sync markdown documents from workspace to Obsidian vault with proper frontmatter and cross-reference validation.
 
-**Full workflow:** [assets/modes/SYNC.md](assets/modes/SYNC.md)
+**Assets to read now:** [assets/modes/SYNC.md](assets/modes/SYNC.md) (references frontmatter-generator, cross-ref-validator, batch-sync-pattern on-demand)
 
 **Quick summary:**
 1. Identify source files (Glob workspace docs)
 2. Detect access mode (MCP or filesystem fallback)
 3. Browse vault and ask user for destination
 4. Read source files
-5. Generate frontmatter (→ [frontmatter-generator](assets/helpers/frontmatter-generator.md))
+5. Generate frontmatter (→ SYNC.md references [frontmatter-generator](assets/helpers/frontmatter-generator.md))
 6. Write to vault with `mcp__obsidian__write_note`
-7. Validate cross-references (→ [cross-ref-validator](assets/helpers/cross-ref-validator.md))
+7. Validate cross-references (→ SYNC.md references [cross-ref-validator](assets/helpers/cross-ref-validator.md))
 8. Report results
 
 ### READ Mode - Read from Obsidian Vault
 
 Read, search, and reason over vault notes to provide contextual knowledge for decision-making.
 
-**Full workflow:** [assets/modes/READ.md](assets/modes/READ.md)
+**Assets to read now:** [assets/modes/READ.md](assets/modes/READ.md) (references priority-ranking, obsidian-linter on-demand)
 
 **Quick summary:**
 1. Load MCP tools (fallback to filesystem if MCP unavailable)
 2. Parse user intent (read note, search, get project context, answer question)
 3. Execute operation (search/read/reason)
-4. Rank results by priority (→ [priority-ranking](assets/helpers/priority-ranking.md))
+4. Rank results by priority (→ READ.md references [priority-ranking](assets/helpers/priority-ranking.md))
 5. Present structured output with source citations
 
 ---
@@ -378,18 +295,3 @@ Agent needs context → obsidian READ mode retrieves from vault
 | "Multiple matches found" | SYNC | `patch_note` with `replaceAll: false` fails on multiple matches; set `replaceAll: true` or refine the string |
 | "Frontmatter merge conflict" | SYNC | `update_frontmatter` with `merge: true` preserves existing; use `merge: false` to replace entirely |
 | Slow metadata queries | READ | Use `get_frontmatter` or `get_notes_info` instead of reading full notes |
-
----
-
-## Version History
-
-| Version | Date | Changes |
-|---------|------|---------|
-| 3.5 | 2026-02-19 | Branded AGENTS.md block support. `vault_destination` config key persisted in Configuration table — no re-prompting across sessions. |
-| 3.4 | 2026-02-17 | Staging convention migration — batch-move-from-staging workflow, {output_dir} rename, staging-aware Configuration Resolution |
-| 3.3 | 2026-02-14 | SYNC mode filesystem fallback. MCP optional. Step 0 access mode detection. YAML serialization guidance. All helpers updated with fallback paths. |
-| 3.2 | 2026-02-13 | Full MCP tool coherence (13/13 tools). Added delete/move/patch/metadata tools. Fixed manage_tags contract. Optimized cross-ref and ranking helpers. |
-| 3.1 | 2026-02-13 | Audit remediation: i18n docs, tool contracts, taxonomy reconciliation (14 types), disambiguation, batch limits, negative weights. |
-| 3.0 | 2026-02-12 | Consolidated obsidian-sync + obsidian-reader. Mode-based architecture (SYNC + READ). Shared helpers. |
-| 2.x | 2026-02-11 | (obsidian-sync v2.1.0) Assets pattern, cross-ref validation |
-| 1.x | 2026-02-10 | (obsidian-reader v1.2.0) Compliance check, priority ranking |

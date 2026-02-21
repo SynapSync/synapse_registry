@@ -14,7 +14,8 @@ assets/
 │   ├── frontmatter-generator.md  — Generate/enrich Obsidian frontmatter
 │   ├── cross-ref-validator.md    — Validate bidirectional references
 │   ├── batch-sync-pattern.md     — Optimized batch file sync
-│   └── priority-ranking.md       — Rank search results by relevance
+│   ├── priority-ranking.md       — Rank search results by relevance
+│   └── tool-reference.md         — MCP tool parameter contracts and gotchas
 ├── standards/
 │   └── obsidian-md-standard.md   — Authoritative spec (14-type taxonomy, frontmatter schema, wiki-links)
 └── validators/

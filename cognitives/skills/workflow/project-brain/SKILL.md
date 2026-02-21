@@ -9,7 +9,7 @@ description: >
 license: Apache-2.0
 metadata:
   author: synapsync
-  version: "2.3"
+  version: "2.5"
   scope: [root]
   auto_invoke:
     # English triggers — LOAD
@@ -44,51 +44,6 @@ metadata:
     - "guarda lo que hicimos"
     - "escribe el resumen de sesion"
     - "persiste esta sesion"
-  changelog:
-    - version: "2.3"
-      date: "2026-02-19"
-      changes:
-        - "Branded AGENTS.md block format with <!-- synapsync-skills:start/end --> delimiters"
-        - "Single Configuration table where any skill can add its config keys"
-        - "Visible rendered markdown table (replaces hidden HTML comment)"
-    - version: "2.2"
-      date: "2026-02-19"
-      changes:
-        - "Configurable brain directory via AGENTS.md config block"
-        - "New {brain_dir} variable resolved from <!-- synapsync:config --> in AGENTS.md"
-        - "Backward-compatible auto-discovery fallback when no config exists"
-        - "Custom SAVE paths now persist and are found by subsequent LOADs"
-        - "New brain-config.md helper for shared resolution algorithm"
-        - "LOAD and SAVE modes gain Step 0 for directory resolution"
-    - version: "2.1"
-      date: "2026-02-19"
-      changes:
-        - "Pre-write backup (.bak) before merge in SAVE UPDATE mode"
-        - "Explicit brain-format marker (<!-- brain-format: v2.0 -->) in template and LOAD parsing"
-        - "Session ID (SID: YYYYMMDD-HHMM) for idempotent saves with duplicate detection"
-        - "Semantic duplicate detection replaces non-implementable >80% overlap heuristic"
-        - "Markdown-aware section splitting (respects code fences)"
-        - "Session Log compaction now archives full entries before summarizing"
-        - "Key Files staleness check verifies files still exist during merge"
-        - "Accumulated Context contradiction check with retirement flow"
-        - "Session Retrospective section — process reflection (friction, pivots, time sinks)"
-        - "Next Steps anti-fabrication guard — only explicitly discussed items, no inference"
-        - "Language separation — conversation in user's language, brain document always in English"
-    - version: "2.0"
-      date: "2026-02-19"
-      changes:
-        - "Added SAVE mode with INIT and UPDATE sub-modes"
-        - "Auto-discovery of brain documents in .agents/project-brain/"
-        - "Standard brain document format (BRAIN-DOCUMENT template)"
-        - "Incremental merge algorithm for non-destructive updates"
-        - "Session Log with newest-first ordering and compaction at 15+ entries"
-        - "Backward-compatible parsing: v2.0, v1.0, and free-form formats"
-        - "Interactive path resolution (ask once, remember)"
-        - "Modular assets architecture (modes, helpers, templates)"
-    - version: "1.0"
-      date: "2026-02-18"
-      changes:
-        - "Initial release — single LOAD mode, Obsidian MCP + filesystem fallback, format-agnostic parsing"
 allowed-tools: Read, Edit, Write, Glob, Grep, ToolSearch, AskUserQuestion
 ---
 
@@ -178,31 +133,41 @@ Full resolution algorithm: see [assets/helpers/brain-config.md](assets/helpers/b
 
 ---
 
+## Asset Loading (Mode-Gated)
+
+After detecting the mode, read ONLY the assets listed for that mode. Do NOT read assets for other modes — they waste context tokens.
+
+| Mode | Read These Assets | Do NOT Read |
+|------|-------------------|-------------|
+| **LOAD** | `assets/modes/LOAD.md`, `assets/helpers/brain-resolve.md` | SAVE.md, brain-config.md, incremental-merge.md, BRAIN-DOCUMENT.md |
+| **SAVE INIT** | `assets/modes/SAVE.md`, `assets/helpers/brain-config.md`, `assets/templates/BRAIN-DOCUMENT.md` | LOAD.md, brain-resolve.md, incremental-merge.md |
+| **SAVE UPDATE** | `assets/modes/SAVE.md`, `assets/helpers/brain-config.md`, `assets/helpers/incremental-merge.md` | LOAD.md, brain-resolve.md, BRAIN-DOCUMENT.md |
+
+Read the mode asset first, then follow its internal references to helpers/templates as needed.
+
+---
+
 ## Quick Start
 
 ### LOAD Mode
 
 Use at the start of a session to restore context:
 
-```
-Load the project brain.
-```
+> Load the project brain.
 
-This will: resolve `{brain_dir}` from AGENTS.md (or auto-discover), scan for existing documents, read the brain, parse sections, and deliver a context briefing with project identity, active state, last session, and next steps.
+This will: resolve `{brain_dir}` from AGENTS.md, scan for existing documents, read the brain, parse sections, and deliver a context briefing.
 
-**Full workflow:** See [assets/modes/LOAD.md](assets/modes/LOAD.md)
+**Assets to read now:** [assets/modes/LOAD.md](assets/modes/LOAD.md) + [brain-resolve.md](assets/helpers/brain-resolve.md)
 
 ### SAVE Mode
 
 Use at the end of a session to persist what happened:
 
-```
-Save the session to the brain.
-```
+> Save the session to the brain.
 
-This will: detect if a brain exists (UPDATE) or not (INIT), gather session summary/decisions/discoveries/files/next-steps, confirm with you, and write or merge the brain document.
+This will: detect if a brain exists (UPDATE) or not (INIT), gather session data, confirm with you, and write or merge the brain document.
 
-**Full workflow:** See [assets/modes/SAVE.md](assets/modes/SAVE.md)
+**Assets to read now:** [assets/modes/SAVE.md](assets/modes/SAVE.md) + [brain-config.md](assets/helpers/brain-config.md) (SAVE.md references additional helpers per sub-mode)
 
 ---
 
@@ -253,15 +218,3 @@ new session        → project-brain LOAD → full context restored
 4. **MCP for Obsidian only in LOAD**: SAVE always writes to filesystem (Obsidian syncs via the `obsidian` skill if needed)
 5. **Session Log size**: Compacted at 15+ entries — older sessions are archived to `{brain_dir}/archive/` and replaced with a summary paragraph
 6. **No auto-save**: SAVE must be explicitly invoked — the agent doesn't auto-save on exit
-
----
-
-## Version History
-
-| Version | Date | Changes |
-|---------|------|---------|
-| 2.3 | 2026-02-19 | Branded AGENTS.md block format (`<!-- synapsync-skills:start/end -->`), single Configuration table (replaces hidden HTML comment) |
-| 2.2 | 2026-02-19 | Configurable brain directory via AGENTS.md config block, `{brain_dir}` variable, backward-compatible auto-discovery fallback, new brain-config.md helper |
-| 2.1 | 2026-02-19 | Hardening: pre-write backup, format marker, session ID idempotency, semantic dedup, markdown-aware split, session archive, Key Files staleness check, context contradiction retirement, session retrospective, next steps anti-fabrication, language separation |
-| 2.0 | 2026-02-19 | SAVE mode (INIT + UPDATE), auto-discovery, standard brain format, incremental merge, session compaction, backward-compatible parsing, modular assets |
-| 1.0 | 2026-02-18 | Initial release — LOAD mode, Obsidian MCP + filesystem fallback, format-agnostic parsing |

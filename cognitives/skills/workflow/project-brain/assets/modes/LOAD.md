@@ -6,7 +6,7 @@ Loads a brain document and delivers a structured context briefing. Supports Obsi
 
 ## Step 0 — Resolve Brain Directory
 
-Resolve `{brain_dir}` using the [brain-config helper](../helpers/brain-config.md). This determines where brain documents are stored before any file operations.
+Resolve `{brain_dir}` using the [brain-resolve helper](../helpers/brain-resolve.md).
 
 After this step, `{brain_dir}` is set (e.g., `.agents/staging/project-brain/my-app` or a custom path from AGENTS.md).
 

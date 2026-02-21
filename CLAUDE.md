@@ -104,6 +104,23 @@ Skills use YAML frontmatter with: `name`, `description`, `license`, `metadata` (
 
 **Important**: Do NOT put `output_dir` in frontmatter. Output paths are resolved at runtime via the Configuration Resolution convention (see below).
 
+### Lazy Asset Loading Convention
+
+Modular skills (2+ modes) MUST include mode-gated asset loading instructions in SKILL.md to prevent agents from reading unnecessary assets.
+
+**Required pattern**: After `## Mode Detection`, add `## Asset Loading (Mode-Gated)` with a table:
+
+| Mode | Read These Assets | Do NOT Read |
+|------|-------------------|-------------|
+| **MODE_A** | `mode-a.md`, `shared.md` | mode-b.md, b-only.md |
+
+**Rules:**
+- "Do NOT Read" column is mandatory — explicit exclusion is more effective than omission
+- Quick Start uses "**Assets to read now:**" (imperative) instead of "See [file]" (passive reference)
+- Mode-specific helpers are referenced from within the mode asset, not from SKILL.md
+- `changelog:` key MUST NOT appear in SKILL.md frontmatter (canonical source: `manifest.json`)
+- `## Version History` section MUST NOT appear in SKILL.md body
+
 ### Configuration Resolution Convention
 
 Skills that persist configuration (output paths, vault destinations, etc.) use the **branded AGENTS.md block** as the single source of truth. When no config exists, skills **ask the user** for their preferred path before writing anything.
@@ -188,6 +205,9 @@ This project uses conventional commits: `feat:`, `fix:`, `chore:`, `docs:`, etc.
 - No `output_dir` field in SKILL.md frontmatter (resolved at runtime via branded block or user prompt)
 - Skills that produce output MUST include a post-production delivery step
 - Skills that persist config MUST use the branded `<!-- synapsync-skills:start/end -->` block in AGENTS.md
+- Modular skills (2+ modes) MUST have `## Asset Loading (Mode-Gated)` section
+- SKILL.md frontmatter MUST NOT contain `changelog:` key (use manifest.json)
+- SKILL.md body MUST NOT contain `## Version History` section
 
 ## Working on This Repo
 
