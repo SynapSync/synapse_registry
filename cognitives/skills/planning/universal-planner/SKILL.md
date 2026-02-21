@@ -7,7 +7,7 @@ description: >
 license: Apache-2.0
 metadata:
   author: synapsync
-  version: "3.3"
+  version: "3.4"
   scope: [root]
   auto_invoke:
     - "Planning a new project, feature, refactor, or any software work"
@@ -18,42 +18,6 @@ metadata:
     - "Start implementing the sprints"
     - "Work on the next sprint from the planning"
     - "Continue executing the plan"
-  changelog:
-    - version: "3.3"
-      date: "2026-02-19"
-      changes:
-        - "Branded AGENTS.md block support — output_dir config persisted in synapsync-skills Configuration table"
-        - "New output_dir config key supplements deterministic staging fallback"
-    - version: "3.2"
-      date: "2026-02-17"
-      changes:
-        - "Deterministic staging pattern, config-resolver rewrite, {output_dir} rename, post-production delivery"
-    - version: "3.1"
-      date: "2026-02-14"
-      changes:
-        - "Audit remediation: unified granularity, PROGRESS template, before/after fields, fast paths, failed status"
-        - "Section Applicability tables, REFACTOR/TECH_DEBT disambiguation, language standardization"
-    - version: "3.0"
-      date: "2026-02-13"
-      changes:
-        - "Consolidated universal-planner + universal-planner-executor into unified skill"
-        - "Two top-level modes: PLAN (documentation only) and EXECUTE (implementation only)"
-        - "Hard boundary between modes via capability matrix"
-        - "Shared config resolution, Obsidian standard, sprint structure"
-        - "Merged troubleshooting guides"
-        - "Breaking change: replaces both universal-planner v2.1 and universal-planner-executor v2.1"
-    - version: "2.0"
-      date: "2026-02-11"
-      changes:
-        - "Obsidian-native output: rich frontmatter, wiki-links, bidirectional references"
-        - "PROGRESS.md and sprint plans include full frontmatter with progress tracking"
-        - "Graduation gates, metric tables, and carried-forward sections in sprints"
-        - "Optional retrospective generation at sprint completion"
-    - version: "1.0"
-      date: "2026-02-04"
-      changes:
-        - "Initial release — unified from project-planner, sdlc-planner, and universal prompt templates"
-        - "Six adaptive planning modes"
 allowed-tools: Read, Edit, Write, Glob, Grep, Bash, Task
 ---
 
@@ -146,6 +110,41 @@ When in PLAN mode, detect the planning sub-mode. See [assets/modes/PLAN.md](asse
 
 ---
 
+## Asset Loading (Mode-Gated)
+
+After detecting the mode, read ONLY the assets listed for that mode. Do NOT read assets for other modes — they waste context tokens.
+
+| Mode | Read These Assets | Do NOT Read |
+|------|-------------------|-------------|
+| **PLAN** | `output-resolve.md`, `PLAN.md`, detected sub-mode `.md` | EXECUTE.md, config-resolver.md, decision-log.md, code-quality-standards.md, unrelated sub-mode files, examples/, validators/ |
+| **EXECUTE** | `output-resolve.md`, `EXECUTE.md`, `decision-log.md`, `code-quality-standards.md` | PLAN.md, config-resolver.md, all sub-mode files, templates/, examples/, validators/ |
+
+**PLAN sub-mode loading**: After detecting the sub-mode from user input, read ONLY that file (e.g., `NEW_FEATURE.md`). Do NOT read the other 5 sub-mode files. Templates are loaded on-demand as each workflow step references them.
+
+**On-demand helpers** (both modes): `troubleshooting.md` — read only when issues arise. `config-resolver.md` — loaded only when `output-resolve.md` can't find existing config (first-time setup).
+
+---
+
+## Quick Start
+
+### PLAN Mode
+
+Use when planning any software work:
+
+> Plan the authentication system for the app.
+
+**Assets to read now:** [output-resolve.md](assets/helpers/output-resolve.md) + [PLAN.md](assets/modes/PLAN.md) — then read only the detected sub-mode file from assets/modes/.
+
+### EXECUTE Mode
+
+Use when implementing an existing plan:
+
+> Execute the project plan.
+
+**Assets to read now:** [output-resolve.md](assets/helpers/output-resolve.md) + [EXECUTE.md](assets/modes/EXECUTE.md) + [decision-log.md](assets/helpers/decision-log.md) + [code-quality-standards.md](assets/helpers/code-quality-standards.md)
+
+---
+
 ## Capabilities Matrix
 
 | Capability | PLAN Mode | EXECUTE Mode |
@@ -197,9 +196,7 @@ Before starting any mode workflow, resolve `{output_dir}` — the directory wher
 2. If `output_dir` found → use it, done
 3. If not found → **ask the user**: default (`.agents/staging/universal-planner/{project-name}/`) or custom path → persist chosen value to AGENTS.md Configuration table
 
-The skill follows the same 6-case persistence rules for the branded block. See [project-brain brain-config.md](../../workflow/project-brain/assets/helpers/brain-config.md) for the full block template and persistence algorithm.
-
-See [assets/helpers/config-resolver.md](assets/helpers/config-resolver.md) for the full resolution workflow.
+See [assets/helpers/output-resolve.md](assets/helpers/output-resolve.md) for the lightweight resolver. For full persistence rules and error handling, see [assets/helpers/config-resolver.md](assets/helpers/config-resolver.md).
 
 All `{output_dir}` references depend on this resolution.
 
@@ -302,16 +299,3 @@ Common issues and resolutions for both PLAN and EXECUTE modes.
 7. **Sequential execution**: EXECUTE mode processes one sprint at a time, in order
 8. **External blockers**: Cannot resolve dependencies on external teams or services — logs them and moves on
 9. **Context window**: For projects with more than 4 sprints, consider executing sprints in separate sessions to avoid context exhaustion. EXECUTE mode can resume from the last incomplete sprint.
-
----
-
-## Version History
-
-| Version | Date | Changes |
-|---------|------|---------|
-| 3.3 | 2026-02-19 | Branded AGENTS.md block support. `output_dir` config key persisted in Configuration table — supplements deterministic staging fallback. |
-| 3.2 | 2026-02-17 | Staging pattern migration — deterministic .agents/staging/ output, config-resolver rewrite, {output_dir} rename, post-production delivery |
-| 3.1 | 2026-02-14 | Audit remediation — unified granularity, PROGRESS template, before/after fields, fast paths, failed status, language standardization |
-| 3.0 | 2026-02-13 | Consolidated universal-planner + universal-planner-executor — two modes (PLAN/EXECUTE), shared config, merged troubleshooting |
-| 2.0 | 2026-02-11 | Obsidian-native output — frontmatter, wiki-links, bidirectional references, graduation gates, metric tables |
-| 1.0 | 2026-02-04 | Initial release — unified from project-planner v1.2, sdlc-planner v1.0, and universal prompt templates |

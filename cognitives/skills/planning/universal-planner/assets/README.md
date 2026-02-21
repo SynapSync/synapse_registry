@@ -1,6 +1,6 @@
 # Universal Planner Assets
 
-Supporting files for the universal-planner skill (v3.1.0).
+Supporting files for the universal-planner skill (v3.4.0).
 
 ## Directory Structure
 
@@ -30,7 +30,8 @@ assets/
 
 | File | Purpose |
 |------|---------|
-| `config-resolver.md` | `{output_dir}` configuration resolution workflow |
+| `output-resolve.md` | Lightweight `{output_dir}` resolver — common-case fast path |
+| `config-resolver.md` | Full persistence rules, error handling, and block template for first-time setup |
 | `decision-log.md` | Decision log format for EXECUTE mode |
 | `code-quality-standards.md` | Production code standards for EXECUTE mode |
 | `troubleshooting.md` | Common issues for both PLAN and EXECUTE modes |

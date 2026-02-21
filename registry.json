@@ -84,7 +84,7 @@
     {
       "name": "universal-planner",
       "type": "skill",
-      "version": "3.3.0",
+      "version": "3.4.0",
       "description": "Unified planning and execution skill for any software scenario with PLAN and EXECUTE modes",
       "author": "synapsync",
       "category": "planning",
