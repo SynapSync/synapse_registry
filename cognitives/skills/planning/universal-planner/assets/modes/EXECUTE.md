@@ -267,7 +267,7 @@ When all sprints are completed:
 
 After project completion (or after any sprint if the user requests), offer to move the staging output to a final destination:
 
-1. **Sync to Obsidian vault** — use the `obsidian` skill (SYNC mode) to move planning output to the vault
+1. **Sync to Obsidian vault** — invoke the `obsidian` skill in SYNC mode (see invocation below)
 2. **Move to custom path** — user specifies a destination and files are moved there
 3. **Keep in staging** — leave files in `.agents/staging/universal-planner/` for later use
 
@@ -276,6 +276,12 @@ Ask the user:
 > "Your planning/execution output is in `.agents/staging/universal-planner/{project-name}/`. Would you like to move it somewhere?"
 
 If they choose option 1 or 2, move (not copy) the files to the destination. If they choose option 3, do nothing.
+
+**Obsidian invocation (option 1):**
+- **Preferred**: `Skill("obsidian")`, then say "sync the files in {output_dir} to the vault"
+- **Alternative**: Say "sync the output to obsidian" (triggers auto_invoke)
+- **Subagent fallback**: Read the obsidian SKILL.md and follow SYNC mode workflow
+- **NEVER** call `mcp__obsidian__*` tools directly — always go through the obsidian skill
 
 ---
 

@@ -6,41 +6,9 @@ description: >
 license: Apache-2.0
 metadata:
   author: synapsync
-  version: "3.2"
+  version: "3.3"
   scope: [root]
   auto_invoke: "when user asks to create, document, refactor or standardize agent skills"
-  changelog:
-    - version: "3.2"
-      date: "2026-02-17"
-      changes:
-        - "Deterministic staging pattern, {output_dir} rename"
-    - version: "3.1"
-      date: "2026-02-11"
-      changes:
-        - "Added note about ## Obsidian Output Standard for skills that write .md output"
-        - "Updated advanced template with optional Obsidian Output Standard placeholder"
-    - version: "3.0"
-      date: "2026-01-28"
-      changes:
-        - "Migrated to SynapSync ecosystem"
-        - "Updated categories to match SynapSync registry"
-        - "Updated sync command to synapsync sync"
-        - "Updated paths to {output_dir}/skills/"
-    - version: "2.3"
-      date: "2026-01-20"
-      changes:
-        - "Added Skill Evaluation Checklist for quick validation"
-        - "Added 'Default to NO' principle for skill creation"
-    - version: "2.2"
-      date: "2026-01-20"
-      changes:
-        - "Added Common Anti-Patterns section with 10 specific anti-patterns"
-        - "Split templates into SKILL-TEMPLATE-BASIC.md and SKILL-TEMPLATE-ADVANCED.md"
-    - version: "2.1"
-      date: "2026-01-20"
-      changes:
-        - "Added Basic and Advanced templates for different skill complexities"
-        - "Added Template Selection Guide with decision trees"
 allowed-tools: Read, Edit, Write, Glob, Grep, Bash, WebFetch, WebSearch, Task
 ---
 
@@ -405,17 +373,6 @@ allowed-tools: Read, Edit, Write, Glob, Grep, Bash, Task
 {Realistic example of what the skill produces}
 ```
 
-## Version History
-
-- **1.0** (YYYY-MM-DD): Initial release
-
-## Future Enhancements
-
-- [ ] {Planned improvement 1}
-- [ ] {Planned improvement 2}
-
-```
-
 ---
 
 ## Naming Conventions
@@ -507,8 +464,6 @@ When generating a new skill, include sections based on complexity:
 - **Safety Features**: For destructive operations (explicit safeguards)
 - **Troubleshooting**: Common issues and solutions (FAQ format)
 - **Example Output**: Show realistic output (with proper formatting)
-- **Version History**: Track evolution over time
-- **Future Enhancements**: Planned improvements (checkbox format)
 - **Obsidian Output Standard**: If the skill writes `.md` files to `{output_dir}`, it MUST include a `## Obsidian Output Standard` section with the appropriate Obsidian output rules inline (frontmatter schema, wiki-links, type taxonomy, bidirectional references)
 
 ---
@@ -669,7 +624,6 @@ You do NOT need to manually copy skills to each provider folder. The CLI creates
 - Safety Features
 - Troubleshooting
 - Example Output
-- Version History
 
 **Why Advanced Template**: Multi-step workflow, produces reports, has safety concerns, integrates with other skills.
 

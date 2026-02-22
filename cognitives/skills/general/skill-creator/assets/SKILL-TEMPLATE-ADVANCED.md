@@ -235,17 +235,3 @@ allowed-tools: Read, Edit, Write, Glob, Grep, Bash, WebFetch, WebSearch, Task
 - **Documentation**: See [references/](references/) for local developer guide links
 - **External**: [Link text](URL) - {Brief description}
 
----
-
-## Version History
-{OPTIONAL: Track evolution - Remove if not applicable}
-
-- **1.0** (YYYY-MM-DD): Initial release
-
----
-
-## Future Enhancements
-{OPTIONAL: Planned improvements - Remove if not applicable}
-
-- [ ] {Planned improvement 1}
-- [ ] {Planned improvement 2}

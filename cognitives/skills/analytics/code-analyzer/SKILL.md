@@ -6,35 +6,9 @@ description: >
 license: Apache-2.0
 metadata:
   author: synapsync
-  version: "2.3"
+  version: "2.5"
   scope: [root]
   auto_invoke: "When the user asks to analyze, explain, or document a code module or file"
-  changelog:
-    - version: "2.3"
-      date: "2026-02-19"
-      changes:
-        - "Branded AGENTS.md block support — output_dir config persisted in synapsync-skills Configuration table"
-        - "New output_dir config key supplements deterministic staging fallback"
-    - version: "2.2"
-      date: "2026-02-17"
-      changes:
-        - "Deterministic staging pattern, {output_dir} rename, post-production delivery"
-    - version: "2.1"
-      date: "2026-02-12"
-      changes:
-        - "Migrated to modular assets pattern"
-        - "Removed all external path references for self-containment"
-    - version: "2.0"
-      date: "2026-02-11"
-      changes:
-        - "Obsidian-native output: rich frontmatter, wiki-links, bidirectional references"
-        - "Added metric tables (before/after/delta) to REPORT.md template"
-        - "Added ## Referencias section to all output templates"
-        - "Wiki-links between REPORT.md and REFACTOR.md when both exist"
-    - version: "1.0"
-      date: "2026-01-29"
-      changes:
-        - "Initial release with full module analysis, Mermaid diagrams, and structured report output"
 allowed-tools: Read, Edit, Write, Glob, Grep, Bash, Task
 ---
 
@@ -332,11 +306,17 @@ Before executing a sprint that modifies a module, run `code-analyzer` to documen
 
 After generating the technical report (and refactoring recommendations if v3), offer the user delivery options:
 
-1. **Sync to Obsidian vault** — use the `obsidian` skill (SYNC mode) to move the report to the vault
+1. **Sync to Obsidian vault** — invoke the `obsidian` skill in SYNC mode (see invocation below)
 2. **Move to custom path** — user specifies a destination and files are moved there
-3. **Keep in staging** — leave files in `.agents/staging/code-analyzer/` for later use
+3. **Keep in staging** — leave files in `{output_dir}` for later use
 
 Ask the user which option they prefer.
+
+**Obsidian invocation (option 1):**
+- **Preferred**: `Skill("obsidian")`, then say "sync the files in {output_dir} to the vault"
+- **Alternative**: Say "sync the output to obsidian" (triggers auto_invoke)
+- **Subagent fallback**: Read the obsidian SKILL.md and follow SYNC mode workflow
+- **NEVER** call `mcp__obsidian__*` tools directly — always go through the obsidian skill
 
 ---
 
@@ -353,13 +333,6 @@ Ask the user which option they prefer.
 ## Example Output
 
 See [assets/templates/REPORT.md](assets/templates/REPORT.md) and [assets/templates/REFACTOR.md](assets/templates/REFACTOR.md) for complete examples including Executive Summary, Communication Maps, Mermaid diagrams, and all other sections.
-
-## Version History
-
-- **2.3** (2026-02-19): Branded AGENTS.md block support. `output_dir` config key persisted in Configuration table — supplements deterministic staging fallback.
-- **2.2** (2026-02-17): Staging pattern migration — deterministic .agents/staging/ output, {output_dir} rename, post-production delivery
-- **2.0** (2026-02-11): Obsidian-native output — rich frontmatter, wiki-links, bidirectional references, metric tables, `## Referencias`
-- **1.0** (2026-01-29): Initial release with v1/v2/v3 analysis depths, Mermaid diagrams, and structured report output
 
 ## Future Enhancements
 

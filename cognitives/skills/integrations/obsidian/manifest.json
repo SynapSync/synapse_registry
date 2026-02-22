@@ -2,7 +2,7 @@
   "$schema": "https://synapsync.dev/schemas/cognitive-manifest.json",
   "name": "obsidian",
   "type": "skill",
-  "version": "3.6.0",
+  "version": "3.8.0",
   "description": "Unified Obsidian vault manager: sync documents, read notes, and search knowledge",
   "author": {
     "name": "SynapSync",
@@ -37,6 +37,22 @@
     "mcp": ["obsidian"]
   },
   "changelog": [
+    {
+      "version": "3.8.0",
+      "date": "2026-02-21",
+      "changes": [
+        "Expanded auto_invoke patterns for broader trigger matching (EN/ES, SYNC/READ)",
+        "Added RULE 0 — SKILL BEFORE MCP guardrail to prevent direct MCP tool calls",
+        "Added Cross-Skill Invocation section with 3-priority invocation guide"
+      ]
+    },
+    {
+      "version": "3.7.0",
+      "date": "2026-02-21",
+      "changes": [
+        "Add Quick Start section with mode-specific asset references"
+      ]
+    },
     {
       "version": "3.6.0",
       "date": "2026-02-20",
@@ -126,5 +142,5 @@
     }
   ],
   "createdAt": "2026-02-12T00:00:00Z",
-  "updatedAt": "2026-02-20T00:00:00Z"
+  "updatedAt": "2026-02-21T00:00:00Z"
 }

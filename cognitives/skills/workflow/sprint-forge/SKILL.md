@@ -8,7 +8,7 @@ description: >
 license: Apache-2.0
 metadata:
   author: synapsync
-  version: "1.4"
+  version: "1.6"
   scope: [root]
   auto_invoke:
     # English triggers
@@ -29,27 +29,6 @@ metadata:
     - "Estado del proyecto o progreso"
     - "Revisa la deuda técnica"
     - "Inicia un workflow de proyecto iterativo"
-  changelog:
-    - version: "1.4"
-      date: "2026-02-19"
-      changes:
-        - "Branded AGENTS.md block support — output_dir config persisted in synapsync-skills Configuration table"
-        - "New output_dir config key remembered across sessions via AGENTS.md (supplements auto-discovery and re-entry prompts)"
-    - version: "1.3"
-      date: "2026-02-18"
-      changes:
-        - "Replaced staging pattern with interactive path resolution (ask once before first write)"
-        - "Removed post-production delivery steps from INIT and SPRINT"
-        - "Added Step 0 to SPRINT and STATUS for locating {output_dir} in future sessions"
-    - version: "1.2"
-      date: "2026-02-17"
-      changes:
-        - "Deterministic staging pattern, post-production delivery, {output_dir} rename"
-    - version: "1.0"
-      date: "2026-02-16"
-      changes:
-        - "Initial release — INIT, SPRINT, STATUS modes"
-        - "Adaptive roadmap, formal debt tracking, re-entry prompts"
 allowed-tools: Read, Edit, Write, Glob, Grep, Bash, Task
 ---
 
@@ -159,6 +138,20 @@ The skill follows the same 6-case persistence rules for the branded block. See [
 
 ---
 
+## Asset Loading (Mode-Gated)
+
+After detecting the mode, read ONLY the assets listed for that mode. Do NOT read assets for other modes — they waste context tokens.
+
+| Mode | Read These Assets | Do NOT Read |
+|------|-------------------|-------------|
+| **INIT** | `INIT.md`, `analysis-guide.md`, `reentry-generator.md` | SPRINT.md, STATUS.md, sprint-generator.md, debt-tracker.md |
+| **SPRINT** | `SPRINT.md`, `sprint-generator.md`, `debt-tracker.md`, `reentry-generator.md` | INIT.md, STATUS.md, analysis-guide.md |
+| **STATUS** | `STATUS.md`, `debt-tracker.md` | INIT.md, SPRINT.md, analysis-guide.md, sprint-generator.md, reentry-generator.md, all templates |
+
+**On-demand assets**: Templates are loaded as each workflow step references them, not upfront.
+
+---
+
 ## Quick Start
 
 ### INIT Mode
@@ -209,7 +202,7 @@ This will: read all sprints, calculate metrics, display progress and accumulated
 
 | Skill | Integration |
 |-------|------------|
-| `obsidian` | INIT: Use SYNC mode to save findings and roadmap to vault. SPRINT: Use SYNC to update sprint files. STATUS: Use READ to access vault data. Falls back to filesystem if MCP is not available. |
+| `obsidian` | INIT: Save findings and roadmap to vault (SYNC). SPRINT: Update sprint files (SYNC). STATUS: Access vault data (READ). Invoke via `Skill("obsidian")` or say "sync to obsidian" / "read from obsidian". Subagent fallback: read obsidian SKILL.md directly. Never call `mcp__obsidian__*` without the skill. |
 | `code-analyzer` | INIT: Can be used as a preliminary step. The code-analyzer reports feed into Sprint Forge findings, providing structured technical input for the roadmap. |
 
 ---
@@ -224,14 +217,3 @@ This will: read all sprints, calculate metrics, display progress and accumulated
 6. **No automated validation**: Cannot verify that the roadmap matches codebase reality — relies on thorough analysis during INIT
 7. **External blockers**: Cannot resolve dependencies on external teams — logs them as blocked tasks and moves on
 8. **Debt resolution**: Debt items require explicit action to close — they don't auto-resolve
-
----
-
-## Version History
-
-| Version | Date | Changes |
-|---------|------|---------|
-| 1.4 | 2026-02-19 | Branded AGENTS.md block support. `output_dir` config key persisted in Configuration table — supplements auto-discovery and re-entry prompts. |
-| 1.3 | 2026-02-18 | Interactive path resolution — ask once before first write, option 1 local default, option 2 custom root. Removed staging pattern and post-delivery steps. |
-| 1.2 | 2026-02-17 | Deterministic staging pattern (.agents/staging/), post-production delivery step, {output_dir} variable rename |
-| 1.0 | 2026-02-16 | Initial release — INIT, SPRINT, STATUS modes. Adaptive roadmap, formal debt tracking, re-entry prompts, language-agnostic design. |

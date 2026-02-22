@@ -180,11 +180,17 @@ Before starting any workflow step, resolve `{output_dir}` — the directory wher
 
 After all documents are generated in `{output_dir}`, offer the user delivery options:
 
-1. **Sync to Obsidian vault** — use the `obsidian` skill (SYNC mode) to move output to the vault
+1. **Sync to Obsidian vault** — invoke the `obsidian` skill in SYNC mode (see invocation below)
 2. **Move to custom path** — user specifies a destination and files are moved there
 3. **Keep in place** — leave files in `{output_dir}` for later use
 
 Ask the user which option they prefer. If they choose option 1 or 2, move (not copy) the files to the destination.
+
+**Obsidian invocation (option 1):**
+- **Preferred**: `Skill("obsidian")`, then say "sync the files in {output_dir} to the vault"
+- **Alternative**: Say "sync the output to obsidian" (triggers auto_invoke)
+- **Subagent fallback**: Read the obsidian SKILL.md and follow SYNC mode workflow
+- **NEVER** call `mcp__obsidian__*` tools directly — always go through the obsidian skill
 ```
 
 ## Commit Convention
@@ -209,9 +215,88 @@ This project uses conventional commits: `feat:`, `fix:`, `chore:`, `docs:`, etc.
 - SKILL.md frontmatter MUST NOT contain `changelog:` key (use manifest.json)
 - SKILL.md body MUST NOT contain `## Version History` section
 
+## Skill Update Protocol
+
+Every time a cognitive is modified — any change, no matter how small — the following files MUST be updated. This is the single most common operation in this repo and the most error-prone. Follow this checklist exactly.
+
+### Step 1: Make the Change
+
+Edit the content file (`SKILL.md`, assets, etc.) with the actual change.
+
+### Step 2: Version Bump (4 files)
+
+All 4 version sources must stay in sync:
+
+| File | Field | Format | Example |
+|------|-------|--------|---------|
+| `SKILL.md` frontmatter | `metadata.version` | `"X.Y"` (no patch) | `"3.8"` |
+| `manifest.json` | `version` | `"X.Y.0"` (full semver) | `"3.8.0"` |
+| `registry.json` | `version` (in the cognitive's entry) | `"X.Y.0"` | `"3.8.0"` |
+| `README.md` | Version column in "Available Cognitives" table | `X.Y.0` | `3.8.0` |
+
+**When to bump:**
+- **Minor** (X.Y → X.Y+1): New features, new sections, behavior changes, expanded patterns — this is the default for most changes
+- **Major** (X → X+1): Breaking changes, mode restructuring, consolidations
+- **Patch** (X.Y.Z → X.Y.Z+1): NOT used — frontmatter has no patch slot, so every change bumps minor
+
+### Step 3: Changelog (2 files)
+
+| File | What to update |
+|------|---------------|
+| `manifest.json` | Prepend a new entry to the `changelog[]` array with `version`, `date` (today), and `changes[]` |
+| `CHANGELOG.md` | Add entry under `[Unreleased]` in the appropriate subsection (Added, Changed, Fixed, Removed) |
+
+### Step 4: Timestamp
+
+| File | Field | Value |
+|------|-------|-------|
+| `manifest.json` | `updatedAt` | Today's date in ISO 8601 (`"YYYY-MM-DDT00:00:00Z"`) |
+
+### Step 5: Conditional Updates
+
+Check if any of these apply:
+
+| Condition | Files to update |
+|-----------|----------------|
+| Description or tags changed | `manifest.json` (`description`, `tags`) AND `registry.json` (must match) |
+| Cross-skill behavior changed | Other skills' `## Integration with Other Skills` tables |
+| Assets added or removed | `manifest.json` `assets` counts |
+| New provider added | `manifest.json` AND `registry.json` `providers[]` |
+| Convention changed | `CLAUDE.md` (templates, validation rules) |
+| Obsidian skill changed significantly | `README.md` "Obsidian Integration" section |
+
+### Step 6: Post-Update Validation
+
+Verify these constraints before committing:
+
+- [ ] Frontmatter `"X.Y"` matches manifest `"X.Y.0"` (ignoring patch)
+- [ ] `manifest.json` version = `registry.json` version
+- [ ] `registry.json` version = `README.md` table version
+- [ ] `description` ≤ 100 characters
+- [ ] `tags` ≤ 10 items
+- [ ] No `changelog:` key in SKILL.md frontmatter
+- [ ] No `## Version History` section in SKILL.md body
+- [ ] If modular (2+ modes): `## Asset Loading (Mode-Gated)` section exists
+- [ ] If produces output: `## Configuration Resolution` section exists + `{output_dir}` used + post-production delivery exists
+- [ ] If invokes obsidian: uses `Skill("obsidian")` or auto_invoke, never direct `mcp__obsidian__*` calls
+
+### Quick Reference: Files Touched per Skill Change
+
+```
+cognitives/skills/{category}/{name}/SKILL.md    ← content + frontmatter version
+cognitives/skills/{category}/{name}/manifest.json ← version + changelog + updatedAt
+registry.json                                     ← version
+README.md                                         ← version in table
+CHANGELOG.md                                      ← [Unreleased] entry
+```
+
+Minimum: **5 files** per change. With conditional updates, potentially more.
+
 ## Working on This Repo
 
 - No build steps, no tests, no package manager — this is a pure content registry
 - Changes typically involve adding new cognitives or updating existing ones
+- **Always follow the Skill Update Protocol above** when modifying any cognitive
 - Always keep `registry.json` in sync when adding/removing cognitives
+- Use `make release` to bump the registry version, tag, and push
 - Empty category directories are intentional placeholders

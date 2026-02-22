@@ -9,7 +9,7 @@ description: >
 license: Apache-2.0
 metadata:
   author: synapsync
-  version: "2.5"
+  version: "2.6"
   scope: [root]
   auto_invoke:
     # English triggers — LOAD
@@ -193,7 +193,7 @@ This will: detect if a brain exists (UPDATE) or not (INIT), gather session data,
 | Skill | Integration |
 |-------|------------|
 | `sprint-forge` | LOAD reads sprint-forge re-entry prompts. SAVE captures sprint progress as session entries. |
-| `obsidian` | LOAD can read brain documents from Obsidian vault via MCP with filesystem fallback. |
+| `obsidian` | LOAD can read brain documents from vault via obsidian READ mode. Invoke via `Skill("obsidian")` or say "read from obsidian". Subagent fallback: read obsidian SKILL.md directly. Never call `mcp__obsidian__*` without the skill. |
 | `universal-planner` | LOAD reads planning documents. SAVE captures planning decisions. |
 
 **Composition patterns:**

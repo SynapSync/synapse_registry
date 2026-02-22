@@ -7,7 +7,7 @@ description: >
 license: Apache-2.0
 metadata:
   author: synapsync
-  version: "3.4"
+  version: "3.5"
   scope: [root]
   auto_invoke:
     - "Planning a new project, feature, refactor, or any software work"
@@ -276,7 +276,7 @@ Every task must include: checkbox, file paths (when applicable), before/after co
 |-------|------------|
 | `code-analyzer` | Use before PLAN mode (REFACTOR or TECH_DEBT sub-mode) to get a detailed technical report as input |
 | `skill-creator` | Reference when building skills that complement planning outputs |
-| `obsidian` | Use to sync planning output to Obsidian vault or read notes for context |
+| `obsidian` | Sync planning output to vault or read notes for context. Invoke via `Skill("obsidian")` or say "sync to obsidian". Subagent fallback: read obsidian SKILL.md directly. Never call `mcp__obsidian__*` without the skill. |
 
 ---
 

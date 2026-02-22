@@ -2,7 +2,7 @@
   "$schema": "https://synapsync.dev/schemas/cognitive-manifest.json",
   "name": "universal-planner",
   "type": "skill",
-  "version": "3.4.0",
+  "version": "3.5.0",
   "description": "Unified planning and execution skill for any software scenario with PLAN and EXECUTE modes",
   "author": {
     "name": "SynapSync",
@@ -46,6 +46,14 @@
     "examples": 8
   },
   "changelog": [
+    {
+      "version": "3.5.0",
+      "date": "2026-02-21",
+      "changes": [
+        "Updated Integration table with explicit obsidian skill invocation and MCP guardrail",
+        "Updated EXECUTE mode Post-Production Delivery with obsidian invocation block"
+      ]
+    },
     {
       "version": "3.4.0",
       "date": "2026-02-20",
@@ -134,5 +142,5 @@
     }
   ],
   "createdAt": "2026-02-04T00:00:00Z",
-  "updatedAt": "2026-02-20T00:00:00Z"
+  "updatedAt": "2026-02-21T00:00:00Z"
 }

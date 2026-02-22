@@ -2,7 +2,7 @@
   "$schema": "https://synapsync.dev/schemas/cognitive-manifest.json",
   "name": "code-analyzer",
   "type": "skill",
-  "version": "2.3.0",
+  "version": "2.5.0",
   "description": "Analyzes code modules and generates structured technical reports with architecture diagrams",
   "author": {
     "name": "SynapSync",
@@ -42,6 +42,20 @@
   },
   "changelog": [
     {
+      "version": "2.5.0",
+      "date": "2026-02-21",
+      "changes": [
+        "Updated Post-Production Delivery with explicit obsidian skill invocation and MCP guardrail"
+      ]
+    },
+    {
+      "version": "2.4.0",
+      "date": "2026-02-21",
+      "changes": [
+        "Remove changelog from frontmatter, remove Version History section"
+      ]
+    },
+    {
       "version": "2.3.0",
       "date": "2026-02-19",
       "changes": [
@@ -80,5 +94,5 @@
     }
   ],
   "createdAt": "2026-01-29T00:00:00Z",
-  "updatedAt": "2026-02-19T23:00:00Z"
+  "updatedAt": "2026-02-21T00:00:00Z"
 }

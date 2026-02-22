@@ -7,17 +7,41 @@ description: >
 license: Apache-2.0
 metadata:
   author: synapsync
-  version: "3.6"
+  version: "3.8"
   scope: [root]
   auto_invoke:
+    # English — SYNC
     - "sync * to obsidian"
     - "save * to obsidian"
+    - "write * to obsidian"
+    - "move * to obsidian"
+    - "send * to obsidian"
+    - "sync * to vault"
+    - "save * to vault"
+    - "write * to vault"
+    - "move * to vault"
+    - "send * to vault"
+    - "sync the output to *"
+    # English — READ
     - "read obsidian notes about *"
     - "search my vault for *"
     - "check obsidian for *"
+    - "read from vault *"
+    - "search obsidian for *"
+    - "what do my notes say about *"
+    # Spanish — SYNC
     - "guardar en obsidian"
+    - "sincronizar a obsidian"
+    - "manda * a obsidian"
+    - "guardar en el vault"
+    - "enviar a obsidian"
+    - "sincronizar al vault"
+    # Spanish — READ
     - "lee de obsidian"
     - "busca en obsidian"
+    - "busca en el vault"
+    - "consulta en obsidian"
+    - "lee del vault"
 allowed-tools: Read, Write, Glob, Grep, Bash, ToolSearch, AskUserQuestion
 ---
 
@@ -61,6 +85,13 @@ This skill supports **bilingual operation** (English + Spanish):
 ---
 
 ## Critical Rules
+
+> **RULE 0 — SKILL BEFORE MCP: NEVER BYPASS THIS SKILL**
+>
+> When performing ANY Obsidian vault operation, you MUST follow this skill's workflow (SYNC or READ mode) BEFORE calling any `mcp__obsidian__*` tools. Direct MCP calls skip frontmatter generation, cross-reference validation, vault destination resolution, and the Obsidian markdown standard. The MCP tools are implementation details used BY this skill — they are not standalone operations.
+>
+> **If you have this skill loaded**: Read the appropriate mode asset and follow the workflow.
+> **If another skill tells you to "use the obsidian skill"**: Invoke it via `Skill("obsidian")` or say "sync to obsidian" to trigger auto_invoke. If neither is available, read this SKILL.md directly before proceeding.
 
 > **RULE 1 — DETECT ACCESS MODE FIRST**
 >
@@ -169,6 +200,26 @@ For MCP tool parameter contracts (needed in both modes), see [assets/helpers/too
 
 ---
 
+## Quick Start
+
+### SYNC Mode
+
+Use to save documents from workspace to your Obsidian vault:
+
+> Sync this report to obsidian.
+
+**Assets to read now:** [assets/modes/SYNC.md](assets/modes/SYNC.md) (references frontmatter-generator, cross-ref-validator, batch-sync-pattern on-demand)
+
+### READ Mode
+
+Use to read, search, and reason over your vault notes:
+
+> Read my vault notes about the architecture.
+
+**Assets to read now:** [assets/modes/READ.md](assets/modes/READ.md) (references priority-ranking, obsidian-linter on-demand)
+
+---
+
 ## Mode Workflows
 
 ### SYNC Mode - Write to Obsidian Vault
@@ -253,6 +304,38 @@ For compliance validation, see [assets/validators/obsidian-linter.md](assets/val
 Producer skill generates docs → obsidian SYNC mode writes to vault
 Agent needs context → obsidian READ mode retrieves from vault
 ```
+
+## Cross-Skill Invocation
+
+When another skill or agent needs to invoke obsidian, use this priority order:
+
+### Priority 1: Skill Tool (recommended)
+
+If running in Claude Code with skills loaded:
+
+```
+Skill("obsidian")
+```
+
+Then describe the operation (e.g., "sync the files in .agents/staging/code-analyzer/ to the vault").
+
+### Priority 2: Natural Language Trigger
+
+Say a phrase that matches auto_invoke:
+
+- "Sync the output to obsidian"
+- "Save these reports to the vault"
+- "Guardar en obsidian"
+
+### Priority 3: Direct SKILL.md Read (subagents without skill context)
+
+If the Skill tool is unavailable (e.g., team subagents via Task tool), read the SKILL.md directly:
+
+```
+Read: cognitives/skills/integrations/obsidian/SKILL.md
+```
+
+Then follow the SYNC or READ mode workflow. NEVER call `mcp__obsidian__*` tools without reading this skill first.
 
 ---
 

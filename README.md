@@ -23,7 +23,10 @@ npx skills update
 ```
 synapse-registry/
 ├── README.md                           # This file
+├── CLAUDE.md                           # Project conventions for AI agents
+├── CHANGELOG.md                        # Release history
 ├── CONTRIBUTING.md                     # Guide for contributors
+├── Makefile                            # Release automation (make release)
 ├── registry.json                       # Central index of all cognitives
 │
 ├── cognitives/                         # Public registry content (downloadable)
@@ -51,12 +54,12 @@ synapse-registry/
 
 | Name | Category | Version | Description |
 |------|----------|---------|-------------|
-| [skill-creator](cognitives/skills/general/skill-creator/) | general | 3.2.0 | Creates AI skills following SynapSync spec with templates and best practices |
-| [universal-planner](cognitives/skills/planning/universal-planner/) | planning | 3.3.0 | Unified planning and execution skill for any software scenario with PLAN and EXECUTE modes |
-| [code-analyzer](cognitives/skills/analytics/code-analyzer/) | analytics | 2.3.0 | Analyzes code modules and generates structured technical reports with architecture diagrams |
-| [obsidian](cognitives/skills/integrations/obsidian/) | integrations | 3.5.0 | Unified Obsidian vault manager: sync documents, read notes, and search knowledge via MCP |
-| [sprint-forge](cognitives/skills/workflow/sprint-forge/) | workflow | 1.4.0 | Adaptive sprint workflow — analysis, roadmap, iterative sprints, debt tracking, and context persistence |
-| [project-brain](cognitives/skills/workflow/project-brain/) | workflow | 2.3.0 | Session memory for AI agents — load context, save sessions, evolve knowledge |
+| [skill-creator](cognitives/skills/general/skill-creator/) | general | 3.3.0 | Creates AI skills following SynapSync spec with templates and best practices |
+| [universal-planner](cognitives/skills/planning/universal-planner/) | planning | 3.5.0 | Unified planning and execution skill for any software scenario with PLAN and EXECUTE modes |
+| [code-analyzer](cognitives/skills/analytics/code-analyzer/) | analytics | 2.5.0 | Analyzes code modules and generates structured technical reports with architecture diagrams |
+| [obsidian](cognitives/skills/integrations/obsidian/) | integrations | 3.8.0 | Unified Obsidian vault manager: sync documents, read notes, and search knowledge |
+| [sprint-forge](cognitives/skills/workflow/sprint-forge/) | workflow | 1.6.0 | Adaptive sprint workflow — analysis, roadmap, iterative sprints, debt tracking, and context persistence |
+| [project-brain](cognitives/skills/workflow/project-brain/) | workflow | 2.6.0 | Session memory for AI agents — load context, save sessions, evolve knowledge |
 
 ### Agents
 
@@ -80,7 +83,7 @@ The obsidian skill operates in two modes, detected automatically from the user's
 | **Purpose** | Persist reports, plans, and docs into the vault | Retrieve knowledge from the vault to inform decisions |
 | **Trigger** | "sync to obsidian", "save plan to obsidian" | "read from obsidian", "what do my notes say about X?" |
 | **MCP Tools** | `write_note`, `patch_note`, `delete_note`, `move_note`, `update_frontmatter`, `list_directory` | `read_note`, `read_multiple_notes`, `search_notes`, `get_frontmatter`, `get_notes_info`, `get_vault_stats`, `manage_tags`, `list_directory` |
-| **Fallback** | N/A (requires MCP to write) | Filesystem read via `Read`/`Glob`/`Grep` if MCP is unavailable |
+| **Fallback** | Filesystem write via `Write`/`Glob` if MCP is unavailable | Filesystem read via `Read`/`Glob`/`Grep` if MCP is unavailable |
 
 ### Architecture Overview
 
@@ -198,7 +201,7 @@ Skills that produce output documents (reports, plans, analysis) resolve their ou
 3. If not found → **ask the user**: use default (`.agents/staging/{skill-name}/{project-name}/`) or provide a custom path
 4. **Persist** the chosen value to AGENTS.md so future sessions skip the prompt
 
-After generating output, skills offer **post-production delivery**: sync to Obsidian vault, move to a custom path, or keep in place.
+After generating output, skills offer **post-production delivery**: sync to Obsidian vault (via the `obsidian` skill -- never calling MCP tools directly), move to a custom path, or keep in place.
 
 ### For Skill Authors
 

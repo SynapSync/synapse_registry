@@ -56,7 +56,3 @@ Templates use `{{variable}}` syntax for placeholders:
 - `{{module-name}}` — Name of the analyzed module
 - `{{project-name}}` — Name of the containing project
 - `{{YYYY-MM-DD}}` — Date in ISO format
-
-## Version History
-
-- **2.0** (2026-02-12): Assets pattern migration — extracted templates and diagram guidelines from SKILL.md
