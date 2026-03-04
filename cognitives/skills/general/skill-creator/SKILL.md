@@ -730,4 +730,4 @@ Optional sections (add if relevant):
 ### References
 
 - **Examples**: Review existing skills in `{output_dir}/skills/` for reference patterns
-- **SynapSync Registry**: https://github.com/SynapSync/synapse-registry - Public skill repository
+- **SynapSync Registry**: https://github.com/SynapSync/skills-registry - Public skill repository

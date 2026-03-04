@@ -31,7 +31,7 @@
   "file": "SKILL.md",
   "repository": {
     "type": "git",
-    "url": "https://github.com/SynapSync/synapse-registry"
+    "url": "https://github.com/SynapSync/skills-registry"
   },
   "homepage": "https://synapsync.dev/cognitives/skill-creator",
   "createdAt": "2026-01-20T00:00:00Z",

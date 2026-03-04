@@ -184,7 +184,7 @@ Every cognitive MUST have a `manifest.json` in its directory:
   "file": "{content-file-name}",
   "repository": {
     "type": "git",
-    "url": "https://github.com/SynapSync/synapse-registry"
+    "url": "https://github.com/SynapSync/skills-registry"
   },
   "homepage": "https://synapsync.dev/cognitives/{name}",
   "createdAt": "{ISO 8601 current date}T00:00:00Z",

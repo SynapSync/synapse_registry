@@ -214,7 +214,7 @@ Specify which AI providers your cognitive works with:
 
 ## Questions?
 
-- Open an issue: https://github.com/SynapSync/synapse-registry/issues
+- Open an issue: https://github.com/SynapSync/skills-registry/issues
 - Join our Discord: https://discord.gg/synapsync (coming soon)
 
 ## License

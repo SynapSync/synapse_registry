@@ -62,7 +62,7 @@ After resolving `{brain_dir}`, persist the value to AGENTS.md so future sessions
 
 ## How to Use This Guide
 
-This section of the `AGENTS.md` file contains project-specific guidelines and available skills from [SynapSync Registry](https://github.com/SynapSync/synapse-registry).
+This section of the `AGENTS.md` file contains project-specific guidelines and available skills from [SynapSync Registry](https://github.com/SynapSync/skills-registry).
 
 ## Configuration
 
