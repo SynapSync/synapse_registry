@@ -55,7 +55,7 @@
     {
       "name": "code-analyzer",
       "type": "skill",
-      "version": "2.5.0",
+      "version": "2.6.0",
       "description": "Analyzes code modules and generates structured technical reports with architecture diagrams",
       "author": "synapsync",
       "category": "analytics",
@@ -84,7 +84,7 @@
     {
       "name": "universal-planner",
       "type": "skill",
-      "version": "3.5.0",
+      "version": "3.6.0",
       "description": "Unified planning and execution skill for any software scenario with PLAN and EXECUTE modes",
       "author": "synapsync",
       "category": "planning",
@@ -170,7 +170,7 @@
     {
       "name": "project-brain",
       "type": "skill",
-      "version": "2.7.0",
+      "version": "2.8.0",
       "description": "Session memory for AI agents — load context, save sessions, evolve knowledge",
       "author": "synapsync",
       "category": "workflow",

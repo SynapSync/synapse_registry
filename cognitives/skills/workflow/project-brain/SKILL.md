@@ -9,7 +9,7 @@ description: >
 license: Apache-2.0
 metadata:
   author: synapsync
-  version: "2.7"
+  version: "2.8"
   scope: [root]
   auto_invoke:
     # English triggers — LOAD
@@ -181,7 +181,7 @@ This will: detect if a brain exists (UPDATE) or not (INIT), gather session data,
 |-----------|:----:|:-----------:|:-------------:|
 | Resolve `{brain_dir}` from AGENTS.md | Yes | Yes | Yes |
 | Auto-discover brain documents | Yes | No | Yes |
-| Read brain from Obsidian MCP | Yes | No | No |
+| Read brain from Obsidian vault | Yes | No | No |
 | Read brain from filesystem | Yes | No | No |
 | Parse v2.0, v1.0, free-form | Yes | No | Yes |
 | Deliver context briefing | Yes | No | No |
@@ -197,7 +197,7 @@ This will: detect if a brain exists (UPDATE) or not (INIT), gather session data,
 | Skill | Integration |
 |-------|------------|
 | `sprint-forge` | LOAD reads sprint-forge re-entry prompts. SAVE captures sprint progress as session entries. |
-| `obsidian` | LOAD can read brain documents from vault via obsidian READ mode. Invoke via `Skill("obsidian")` or say "read from obsidian". Subagent fallback: read obsidian SKILL.md directly. Never call `mcp__obsidian__*` without the skill. |
+| `obsidian` | LOAD can read brain documents from vault via obsidian READ mode. Invoke via `Skill("obsidian")` or say "read from obsidian". Subagent fallback: read obsidian SKILL.md directly. |
 | `universal-planner` | LOAD reads planning documents. SAVE captures planning decisions. |
 
 **Composition patterns:**
@@ -219,6 +219,6 @@ new session        → project-brain LOAD → full context restored
 1. **Markdown only**: Handles `.md` files; does not parse `.yaml`, `.json`, or other formats
 2. **Single file**: One brain document per project — not a recursive folder reader
 3. **No synthesis**: If the brain document is outdated, the briefing reflects that
-4. **MCP for Obsidian only in LOAD**: SAVE always writes to filesystem (Obsidian syncs via the `obsidian` skill if needed)
+4. **Obsidian integration in LOAD only**: SAVE always writes to filesystem. To sync to Obsidian, use the `obsidian` skill after SAVE.
 5. **Session Log size**: Compacted at 15+ entries — older sessions are archived to `{brain_dir}/archive/` and replaced with a summary paragraph
 6. **No auto-save**: SAVE must be explicitly invoked — the agent doesn't auto-save on exit

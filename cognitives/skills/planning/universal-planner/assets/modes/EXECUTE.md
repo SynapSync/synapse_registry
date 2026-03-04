@@ -281,7 +281,6 @@ If they choose option 1 or 2, move (not copy) the files to the destination. If t
 - **Preferred**: `Skill("obsidian")`, then say "sync the files in {output_dir} to the vault"
 - **Alternative**: Say "sync the output to obsidian" (triggers auto_invoke)
 - **Subagent fallback**: Read the obsidian SKILL.md and follow SYNC mode workflow
-- **NEVER** call `mcp__obsidian__*` tools directly — always go through the obsidian skill
 
 ---
 

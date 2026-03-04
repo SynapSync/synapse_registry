@@ -55,11 +55,11 @@ synapse-registry/
 | Name | Category | Version | Description |
 |------|----------|---------|-------------|
 | [skill-creator](cognitives/skills/general/skill-creator/) | general | 3.3.0 | Creates AI skills following SynapSync spec with templates and best practices |
-| [universal-planner](cognitives/skills/planning/universal-planner/) | planning | 3.5.0 | Unified planning and execution skill for any software scenario with PLAN and EXECUTE modes |
-| [code-analyzer](cognitives/skills/analytics/code-analyzer/) | analytics | 2.5.0 | Analyzes code modules and generates structured technical reports with architecture diagrams |
+| [universal-planner](cognitives/skills/planning/universal-planner/) | planning | 3.6.0 | Unified planning and execution skill for any software scenario with PLAN and EXECUTE modes |
+| [code-analyzer](cognitives/skills/analytics/code-analyzer/) | analytics | 2.6.0 | Analyzes code modules and generates structured technical reports with architecture diagrams |
 | [obsidian](cognitives/skills/integrations/obsidian/) | integrations | 4.0.0 | Unified Obsidian vault manager: sync documents, read notes, and search knowledge |
 | [sprint-forge](cognitives/skills/workflow/sprint-forge/) | workflow | 1.8.0 | Adaptive sprint workflow — analysis, roadmap, iterative sprints, debt tracking, and context persistence |
-| [project-brain](cognitives/skills/workflow/project-brain/) | workflow | 2.7.0 | Session memory for AI agents — load context, save sessions, evolve knowledge |
+| [project-brain](cognitives/skills/workflow/project-brain/) | workflow | 2.8.0 | Session memory for AI agents — load context, save sessions, evolve knowledge |
 
 ### Agents
 
@@ -82,8 +82,7 @@ The obsidian skill operates in two modes, detected automatically from the user's
 | **Direction** | Workspace **-->** Vault | Vault **-->** Agent |
 | **Purpose** | Persist reports, plans, and docs into the vault | Retrieve knowledge from the vault to inform decisions |
 | **Trigger** | "sync to obsidian", "save plan to obsidian" | "read from obsidian", "what do my notes say about X?" |
-| **MCP Tools** | `write_note`, `patch_note`, `delete_note`, `move_note`, `update_frontmatter`, `list_directory` | `read_note`, `read_multiple_notes`, `search_notes`, `get_frontmatter`, `get_notes_info`, `get_vault_stats`, `manage_tags`, `list_directory` |
-| **Fallback** | Filesystem write via `Write`/`Glob` if MCP is unavailable | Filesystem read via `Read`/`Glob`/`Grep` if MCP is unavailable |
+| **Tools** | `Write`, `Edit`, `Glob`, `Bash` | `Read`, `Glob`, `Grep`, `Bash` |
 
 ### Architecture Overview
 
@@ -97,7 +96,7 @@ The obsidian skill operates in two modes, detected automatically from the user's
 │                                             │  SYNC mode     │  │
 │                                             └───────┬────────┘  │
 │                                                     │           │
-│                                            Obsidian MCP Server  │
+│                                          Write/Edit/Glob/Bash   │
 │                                                     │           │
 │                                             ┌───────▼────────┐  │
 │  Agent needs context ─────────────────────> │    obsidian    │  │
@@ -110,11 +109,11 @@ The obsidian skill operates in two modes, detected automatically from the user's
 │                              Agent uses knowledge to reason     │
 └─────────────────────────────────────────────────────────────────┘
                                 │
-                                │  mcp__obsidian__*
+                                │  Read/Glob/Grep/Bash
                                 ▼
                    ┌─────────────────────────┐
                    │     Obsidian Vault       │
-                   │                         │
+                   │  (filesystem access)     │
                    │  work/                  │
                    │    project-a/           │
                    │      plans/             │
@@ -125,26 +124,7 @@ The obsidian skill operates in two modes, detected automatically from the user's
 
 ### Prerequisites
 
-The obsidian skill requires the **Obsidian MCP server** for full functionality:
-
-1. **Install Obsidian** and open your vault
-2. **Install the Local REST API plugin** in Obsidian (Community Plugins > Local REST API)
-3. **Configure the MCP server** in your Claude Code settings (`~/.claude/.mcp.json`):
-
-```json
-{
-  "mcpServers": {
-    "obsidian": {
-      "command": "npx",
-      "args": ["-y", "obsidian-mcp"],
-      "env": {
-        "OBSIDIAN_API_KEY": "your-api-key",
-        "OBSIDIAN_API_URL": "https://127.0.0.1:27124"
-      }
-    }
-  }
-}
-```
+The obsidian skill requires only **Obsidian** with your vault stored on the local filesystem (the default). No plugins or MCP configuration needed — it reads and writes `.md` files directly via Claude Code's native file tools.
 
 ### Usage Examples
 

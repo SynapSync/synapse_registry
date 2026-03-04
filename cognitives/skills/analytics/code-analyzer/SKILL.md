@@ -6,7 +6,7 @@ description: >
 license: Apache-2.0
 metadata:
   author: synapsync
-  version: "2.5"
+  version: "2.6"
   scope: [root]
   auto_invoke: "When the user asks to analyze, explain, or document a code module or file"
 allowed-tools: Read, Edit, Write, Glob, Grep, Bash, Task
@@ -316,7 +316,6 @@ Ask the user which option they prefer.
 - **Preferred**: `Skill("obsidian")`, then say "sync the files in {output_dir} to the vault"
 - **Alternative**: Say "sync the output to obsidian" (triggers auto_invoke)
 - **Subagent fallback**: Read the obsidian SKILL.md and follow SYNC mode workflow
-- **NEVER** call `mcp__obsidian__*` tools directly — always go through the obsidian skill
 
 ---
 

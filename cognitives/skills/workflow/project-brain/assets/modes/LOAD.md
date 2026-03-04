@@ -1,6 +1,6 @@
 # LOAD Mode
 
-Loads a brain document and delivers a structured context briefing. Supports Obsidian MCP, filesystem paths, and three document formats (v2.0, v1.0, free-form).
+Loads a brain document and delivers a structured context briefing. Supports Obsidian vault paths, filesystem paths, and three document formats (v2.0, v1.0, free-form).
 
 ---
 
@@ -47,7 +47,7 @@ AskUserQuestion:
 ```
 
 Path classification:
-- **Obsidian vault** → detect MCP availability with `ToolSearch query: "+obsidian read"`. If tools load, use `mcp__obsidian__read_note`. If not, expand to absolute path using the configured vault root and use `Read`.
+- **Obsidian vault** → expand to absolute path using the configured vault root (from CLAUDE.md or ask the user) and use `Read`.
 - **Filesystem path** → resolve relative paths from cwd, use `Read` directly
 - **Create new** → switch to SAVE mode (INIT sub-mode) and stop LOAD
 

@@ -2,7 +2,7 @@
   "$schema": "https://synapsync.dev/schemas/cognitive-manifest.json",
   "name": "code-analyzer",
   "type": "skill",
-  "version": "2.5.0",
+  "version": "2.6.0",
   "description": "Analyzes code modules and generates structured technical reports with architecture diagrams",
   "author": {
     "name": "SynapSync",
@@ -33,7 +33,7 @@
   "file": "SKILL.md",
   "repository": {
     "type": "git",
-    "url": "https://github.com/SynapSync/synapse-registry"
+    "url": "https://github.com/SynapSync/skills-registry"
   },
   "homepage": "https://synapsync.dev/cognitives/code-analyzer",
   "assets": {
@@ -41,6 +41,13 @@
     "helpers": 1
   },
   "changelog": [
+    {
+      "version": "2.6.0",
+      "date": "2026-03-04",
+      "changes": [
+        "Remove NEVER mcp__obsidian__* line from Post-Production Delivery — obsidian skill is now filesystem-only"
+      ]
+    },
     {
       "version": "2.5.0",
       "date": "2026-02-21",
@@ -94,5 +101,5 @@
     }
   ],
   "createdAt": "2026-01-29T00:00:00Z",
-  "updatedAt": "2026-02-21T00:00:00Z"
+  "updatedAt": "2026-03-04T00:00:00Z"
 }

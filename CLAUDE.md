@@ -36,7 +36,7 @@ Every cognitive lives in `cognitives/{type}s/{category}/{name}/` and must contai
 - **skill-creator** (`cognitives/skills/general/skill-creator/`) — Meta-skill for creating new skills with templates. Includes `assets/` with basic and advanced templates.
 - **universal-planner** (`cognitives/skills/planning/universal-planner/`) — Unified planning and execution skill with PLAN and EXECUTE modes. Covers new projects, features, refactors, bug fixes, tech debt, and architecture changes. Uses modular assets pattern with 8 modes (2 top-level + 6 planning sub-modes).
 - **code-analyzer** (`cognitives/skills/analytics/code-analyzer/`) — Analyzes code modules and generates structured technical reports with architecture diagrams.
-- **obsidian** (`cognitives/skills/integrations/obsidian/`) — Unified Obsidian vault manager with SYNC and READ modes. Syncs documents to vault and reads/searches notes via MCP. Includes the Obsidian markdown standard specification and linter as internal assets. Claude-only.
+- **obsidian** (`cognitives/skills/integrations/obsidian/`) — Unified Obsidian vault manager with SYNC and READ modes. Syncs documents to vault and reads/searches notes via filesystem (Read/Write/Edit/Glob/Grep). Includes the Obsidian markdown standard specification and linter as internal assets. Claude-only.
 - **sprint-forge** (`cognitives/skills/workflow/sprint-forge/`) — Adaptive sprint workflow with 3 modes (INIT, SPRINT, STATUS). Deep analysis, evolving roadmap, one-at-a-time sprints, formal debt tracking, and re-entry prompts for context persistence. Language-agnostic. Modular assets: 3 modes, 4 helpers, 4 templates.
 - **project-brain** (`cognitives/skills/workflow/project-brain/`) — Session memory for AI agents: LOAD mode recovers context, SAVE mode persists sessions. Auto-discovery of brain documents, incremental merge, configurable brain directory via AGENTS.md branded block.
 
@@ -190,7 +190,6 @@ Ask the user which option they prefer. If they choose option 1 or 2, move (not c
 - **Preferred**: `Skill("obsidian")`, then say "sync the files in {output_dir} to the vault"
 - **Alternative**: Say "sync the output to obsidian" (triggers auto_invoke)
 - **Subagent fallback**: Read the obsidian SKILL.md and follow SYNC mode workflow
-- **NEVER** call `mcp__obsidian__*` tools directly — always go through the obsidian skill
 ```
 
 ## Commit Convention
@@ -278,7 +277,7 @@ Verify these constraints before committing:
 - [ ] No `## Version History` section in SKILL.md body
 - [ ] If modular (2+ modes): `## Asset Loading (Mode-Gated)` section exists
 - [ ] If produces output: `## Configuration Resolution` section exists + `{output_dir}` used + post-production delivery exists
-- [ ] If invokes obsidian: uses `Skill("obsidian")` or auto_invoke, never direct `mcp__obsidian__*` calls
+- [ ] If invokes obsidian: uses `Skill("obsidian")` or auto_invoke — obsidian skill handles all vault I/O
 
 ### Quick Reference: Files Touched per Skill Change
 
