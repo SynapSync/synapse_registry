@@ -139,7 +139,7 @@
     {
       "name": "sprint-forge",
       "type": "skill",
-      "version": "1.6.0",
+      "version": "1.8.0",
       "description": "Adaptive sprint workflow — analysis, roadmap, iterative sprints, debt tracking, and context persistence",
       "author": "synapsync",
       "category": "workflow",

@@ -9,9 +9,9 @@
 | Path | Value |
 |------|-------|
 | Codebase | `{codebase_path}` |
-| Working Directory | `{output_dir}` |
-| Findings | `{output_dir}/findings/` |
-| Sprints | `{output_dir}/sprints/` |
+| Working Directory | `{output_sprint_forge_dir}` |
+| Findings | `{output_sprint_forge_dir}/findings/` |
+| Sprints | `{output_sprint_forge_dir}/sprints/` |
 
 ---
 

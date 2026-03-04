@@ -30,14 +30,16 @@ If ambiguous, ask:
 
 ### Step 0 — Locate Output Directory
 
-Before reading any sprint files, determine `{output_dir}`:
+Determine `{output_sprint_forge_dir}` before reading any sprint files:
 
-1. If the user's request includes an explicit path, use it
-2. Otherwise, check `{cwd}/.agents/sprint-forge/` — if a single project directory exists, use it
-3. If multiple directories exist, ask: "Which project? Found: {list}"
-4. If none found, ask: "Where are your sprint-forge documents? (e.g. `.agents/sprint-forge/my-project/`)"
+1. **Re-entry prompt paths** — If the user's message contains absolute file paths (e.g. `/Users/.../ROADMAP.md`), extract `{output_sprint_forge_dir}` from those paths. This is the most reliable source.
+2. **Explicit path** — If the user mentions a path directly, use it.
+3. **Auto-discover** — Scan `{cwd}/.agents/sprint-forge/`:
+   - Single directory found → use it
+   - Multiple directories → ask: "Which project? Found: {list}"
+4. **Ask** — If none of the above: "Where are your sprint-forge documents? (e.g. `.agents/sprint-forge/my-project/`)"
 
-Once resolved, all subsequent steps use `{output_dir}` as the base for all file paths.
+Once resolved, all subsequent steps use `{output_sprint_forge_dir}` as the base for all file paths.
 
 ### Step 1 — Determine Sprint Number
 
@@ -188,7 +190,7 @@ When all tasks are done (or explicitly skipped/blocked/carried-over):
 
 After sprint execution:
 
-1. Open `{output_dir}/RE-ENTRY-PROMPTS.md`
+1. Open `{output_sprint_forge_dir}/RE-ENTRY-PROMPTS.md`
 2. Update current sprint number
 3. Update file references (last sprint, next finding)
 4. Update Quick Reference table with new sprint status

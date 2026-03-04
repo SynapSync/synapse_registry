@@ -8,7 +8,7 @@ description: >
 license: Apache-2.0
 metadata:
   author: synapsync
-  version: "1.6"
+  version: "1.8"
   scope: [root]
   auto_invoke:
     # English triggers
@@ -111,16 +111,13 @@ This skill works for **any** project type, language, or framework.
 
 ## Configuration Resolution
 
-Before starting any mode workflow, resolve `{output_dir}` — the directory where sprint-forge documents are stored.
+`{output_sprint_forge_dir}` is the directory where sprint-forge stores all project documents. Resolve it once at the start of any mode:
 
-1. **Read** `{cwd}/AGENTS.md` → scan for `<!-- synapsync-skills:start -->` block → find `## Configuration` table → parse `output_dir` row
-2. If `output_dir` found → use it, done
-3. If not found → **ask the user**:
-   - Option A: **Use default** (`.agents/staging/sprint-forge/{project-name}/`)
-   - Option B: **Provide a custom path**
-4. **Persist** the chosen value to AGENTS.md Configuration table
+1. **Re-entry prompt** — If the user's message contains file paths (e.g. `/Users/.../ROADMAP.md`), extract `{output_sprint_forge_dir}` from those paths. It's already there.
+2. **INIT (first time)** — Ask the user where to save documents. Store the chosen path in `README.md` and `RE-ENTRY-PROMPTS.md`. These are the only sources of truth.
+3. **SPRINT/STATUS without re-entry prompt** — Auto-discover by scanning `.agents/sprint-forge/` in `{cwd}`, or ask the user directly.
 
-The skill follows the same 6-case persistence rules for the branded block. See [project-brain brain-config.md](../project-brain/assets/helpers/brain-config.md) for the full block template and persistence algorithm.
+No AGENTS.md. No branded blocks. The re-entry prompts and README carry the path across sessions.
 
 ---
 
@@ -202,7 +199,6 @@ This will: read all sprints, calculate metrics, display progress and accumulated
 
 | Skill | Integration |
 |-------|------------|
-| `obsidian` | INIT: Save findings and roadmap to vault (SYNC). SPRINT: Update sprint files (SYNC). STATUS: Access vault data (READ). Invoke via `Skill("obsidian")` or say "sync to obsidian" / "read from obsidian". Subagent fallback: read obsidian SKILL.md directly. Never call `mcp__obsidian__*` without the skill. |
 | `code-analyzer` | INIT: Can be used as a preliminary step. The code-analyzer reports feed into Sprint Forge findings, providing structured technical input for the roadmap. |
 
 ---

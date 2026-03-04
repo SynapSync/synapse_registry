@@ -58,7 +58,7 @@ synapse-registry/
 | [universal-planner](cognitives/skills/planning/universal-planner/) | planning | 3.5.0 | Unified planning and execution skill for any software scenario with PLAN and EXECUTE modes |
 | [code-analyzer](cognitives/skills/analytics/code-analyzer/) | analytics | 2.5.0 | Analyzes code modules and generates structured technical reports with architecture diagrams |
 | [obsidian](cognitives/skills/integrations/obsidian/) | integrations | 3.8.0 | Unified Obsidian vault manager: sync documents, read notes, and search knowledge |
-| [sprint-forge](cognitives/skills/workflow/sprint-forge/) | workflow | 1.6.0 | Adaptive sprint workflow — analysis, roadmap, iterative sprints, debt tracking, and context persistence |
+| [sprint-forge](cognitives/skills/workflow/sprint-forge/) | workflow | 1.8.0 | Adaptive sprint workflow — analysis, roadmap, iterative sprints, debt tracking, and context persistence |
 | [project-brain](cognitives/skills/workflow/project-brain/) | workflow | 2.7.0 | Session memory for AI agents — load context, save sessions, evolve knowledge |
 
 ### Agents
@@ -228,7 +228,7 @@ We welcome contributions! See [CONTRIBUTING.md](CONTRIBUTING.md) for guidelines 
 ## Links
 
 - **Skills CLI**: `npx skills add owner/repo`
-- **Issues**: https://github.com/SynapSync/synapse-registry/issues
+- **Issues**: https://github.com/SynapSync/skills-registry/issues
 
 ## License
 

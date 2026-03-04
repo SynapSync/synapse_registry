@@ -26,7 +26,7 @@ If you are an AI agent resuming work on this project, read these files in order:
 ## Directory Structure
 
 ```
-{output_dir}/
+{output_sprint_forge_dir}/
 ├── README.md              ← This file
 ├── ROADMAP.md             ← Adaptive roadmap (living document)
 ├── RE-ENTRY-PROMPTS.md    ← Context recovery prompts
@@ -47,11 +47,11 @@ If you are an AI agent resuming work on this project, read these files in order:
 | Resource | Path |
 |----------|------|
 | Codebase | `{codebase_path}` |
-| Working Directory | `{output_dir}` |
-| Findings | `{output_dir}/findings/` |
-| Sprints | `{output_dir}/sprints/` |
-| Roadmap | `{output_dir}/ROADMAP.md` |
-| Re-entry Prompts | `{output_dir}/RE-ENTRY-PROMPTS.md` |
+| Working Directory | `{output_sprint_forge_dir}` |
+| Findings | `{output_sprint_forge_dir}/findings/` |
+| Sprints | `{output_sprint_forge_dir}/sprints/` |
+| Roadmap | `{output_sprint_forge_dir}/ROADMAP.md` |
+| Re-entry Prompts | `{output_sprint_forge_dir}/RE-ENTRY-PROMPTS.md` |
 
 ---
 

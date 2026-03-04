@@ -49,7 +49,7 @@ The following variables are filled with actual values during INIT and updated af
 |----------|-------------|---------|
 | `{project_name}` | Project name | `nebux-design-system-audit` |
 | `{codebase_path}` | Absolute path to the codebase | `/Users/dev/projects/nebux` |
-| `{output_dir}` | Working directory for sprint artifacts | `/Users/dev/projects/nebux/.agents/sprint-forge/nebux-design-system-audit` |
+| `{output_sprint_forge_dir}` | Working directory for sprint artifacts | `/Users/dev/projects/nebux/.agents/sprint-forge/nebux-design-system-audit` |
 | `{current_sprint}` | Current sprint number | `3` |
 | `{last_sprint_file}` | Filename of the last completed sprint | `SPRINT-2-api-surface.md` |
 | `{next_finding_file}` | Finding file for the next sprint | `03-component-quality.md` |
@@ -65,7 +65,7 @@ Generate ALL 4 prompts with:
 - Actual project paths (codebase, output dir)
 - Sprint 1 as the current/next sprint
 - Finding file 01 as the first finding
-- Write to `{output_dir}/RE-ENTRY-PROMPTS.md`
+- Write to `{output_sprint_forge_dir}/RE-ENTRY-PROMPTS.md`
 
 ### After Each Sprint Execution
 
@@ -84,7 +84,7 @@ Prompt 1 (First Sprint) can be left as-is or marked as "N/A — Sprint 1 already
 
 1. Read the `REENTRY-PROMPTS.md` template from `assets/templates/`
 2. Fill in all template variables with actual values
-3. Write to `{output_dir}/RE-ENTRY-PROMPTS.md`
+3. Write to `{output_sprint_forge_dir}/RE-ENTRY-PROMPTS.md`
 
 For updates (after sprint execution):
 1. Read the existing `RE-ENTRY-PROMPTS.md`

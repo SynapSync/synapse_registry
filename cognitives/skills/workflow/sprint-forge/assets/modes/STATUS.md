@@ -23,7 +23,7 @@ This mode reads all project artifacts and generates a comprehensive progress rep
 
 ### Step 0 — Locate Output Directory
 
-Before reading any files, determine `{output_dir}`:
+Before reading any files, determine `{output_sprint_forge_dir}`:
 
 1. If the user's request includes an explicit path, use it
 2. Otherwise, check `{cwd}/.agents/sprint-forge/` — if a single project directory exists, use it
@@ -34,9 +34,9 @@ Before reading any files, determine `{output_dir}`:
 
 Read the following files:
 
-1. `{output_dir}/README.md` — Project overview and paths
-2. `{output_dir}/ROADMAP.md` — Planned sprints, dependencies, execution rules
-3. All sprint files in `{output_dir}/sprints/` — Progress, debt, retros
+1. `{output_sprint_forge_dir}/README.md` — Project overview and paths
+2. `{output_sprint_forge_dir}/ROADMAP.md` — Planned sprints, dependencies, execution rules
+3. All sprint files in `{output_sprint_forge_dir}/sprints/` — Progress, debt, retros
 
 ### Step 2 — Calculate Metrics
 
@@ -66,7 +66,7 @@ Output the report directly to the console (do NOT write to a file):
 
 > Generated: {date}
 > Codebase: `{codebase_path}`
-> Working Dir: `{output_dir}`
+> Working Dir: `{output_sprint_forge_dir}`
 
 ---
 
