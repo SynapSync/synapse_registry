@@ -144,7 +144,7 @@
     {
       "name": "obsidian",
       "type": "skill",
-      "version": "4.0.0",
+      "version": "4.1.0",
       "description": "Unified Obsidian vault manager: sync documents, read notes, and search knowledge",
       "author": "synapsync",
       "category": "integrations",
@@ -168,7 +168,7 @@
     {
       "name": "sprint-forge",
       "type": "skill",
-      "version": "1.8.0",
+      "version": "1.10.0",
       "description": "Adaptive sprint workflow — analysis, roadmap, iterative sprints, debt tracking, and context persistence",
       "author": "synapsync",
       "category": "workflow",

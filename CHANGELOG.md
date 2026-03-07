@@ -9,6 +9,13 @@ Format based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and th
 ## [Unreleased]
 
 ### Changed
+- **sprint-forge** skill (workflow, v1.10.0): Add checkpoint-per-phase persistence rule to EXECUTE workflow. Sprint file is now written to disk after each phase completes, ensuring progress survives agent crashes or session timeouts without fragmenting task-to-task execution flow.
+
+### Added
+- **sprint-forge** skill (workflow, v1.9.0): YAML frontmatter properties on all templates (SPRINT, ROADMAP, PROJECT-README, REENTRY-PROMPTS) and finding file format. New `agents` field tracks AI model names (e.g., claude-opus-4-6, gpt-4o, codex) that created/modified documents. INIT and SPRINT modes updated with frontmatter generation and close-time update instructions.
+- **obsidian** skill (integrations, v4.1.0): New `agents` field in universal frontmatter schema — tracks AI model names that created or modified documents. Updated frontmatter-generator with agents merge rule (append, never remove). Updated obsidian-md-standard extended fields table.
+
+### Changed
 - **growth-ceo** skill (planning, v1.4.0): Added Strategic Frameworks (7 named mental models), Founder Council (internal challenge filter), Deep Thinking process (generate 10, present top 3), Leverage Categories (10 dimensions), Insight field in output format. Expanded founder roster with Patrick Collison and Sam Altman.
 
 ### Added

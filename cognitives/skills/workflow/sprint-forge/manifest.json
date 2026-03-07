@@ -2,7 +2,7 @@
   "$schema": "https://synapsync.dev/schemas/cognitive-manifest.json",
   "name": "sprint-forge",
   "type": "skill",
-  "version": "1.8.0",
+  "version": "1.10.0",
   "description": "Adaptive sprint workflow — analysis, roadmap, iterative sprints, debt tracking, and context persistence",
   "author": {
     "name": "SynapSync",
@@ -44,6 +44,22 @@
     "templates": 4
   },
   "changelog": [
+    {
+      "version": "1.10.0",
+      "date": "2026-03-07",
+      "changes": [
+        "Add checkpoint-per-phase persistence rule to SPRINT EXECUTE workflow — sprint file is written to disk after each phase completes, balancing crash safety with execution fluidity"
+      ]
+    },
+    {
+      "version": "1.9.0",
+      "date": "2026-03-06",
+      "changes": [
+        "Add YAML frontmatter properties to all templates (SPRINT, ROADMAP, PROJECT-README, REENTRY-PROMPTS) and finding file format",
+        "Add `agents` field to frontmatter — tracks AI model names (e.g., claude-opus-4-6, gpt-4o, codex) that created or modified the document",
+        "Update INIT and SPRINT modes with frontmatter generation instructions and close-time frontmatter updates"
+      ]
+    },
     {
       "version": "1.8.0",
       "date": "2026-03-03",
@@ -129,5 +145,5 @@
     }
   ],
   "createdAt": "2026-02-16T00:00:00Z",
-  "updatedAt": "2026-03-03T01:00:00Z"
+  "updatedAt": "2026-03-07T00:00:00Z"
 }

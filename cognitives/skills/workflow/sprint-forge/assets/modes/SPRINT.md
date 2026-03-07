@@ -94,13 +94,14 @@ For each phase:
 
 Use the [SPRINT.md template](../templates/SPRINT.md):
 
-1. Fill metadata: source finding, previous sprint, version target, type, carry-over count
-2. Write sprint objective
-3. Write Disposition table (Sprint 2+)
-4. Write phases with tasks
-5. Copy debt table from previous sprint + add new items
-6. Write Definition of Done
-7. Leave Retro and Recommendations sections EMPTY
+1. Fill frontmatter properties with actual values (title, date, project, sprint number, previous/next doc links, related findings)
+2. Fill metadata: source finding, previous sprint, version target, type, carry-over count
+3. Write sprint objective
+4. Write Disposition table (Sprint 2+)
+5. Write phases with tasks
+6. Copy debt table from previous sprint + add new items
+7. Write Definition of Done
+8. Leave Retro and Recommendations sections EMPTY
 
 **Reference**: See [debt-tracker.md](../helpers/debt-tracker.md) for debt table rules.
 
@@ -121,7 +122,7 @@ Load the sprint file to execute. Verify it has:
 - Debt table
 - Definition of Done
 
-**Fill execution metadata**: Set `Execution Date` to today's date and `Executed By` to the executor's name in the sprint header. These fields track who executed the sprint and when.
+**Fill execution metadata**: Set `Execution Date` to today's date and `Executed By` to the executor's name in the sprint header. Also update the frontmatter `updated` field to today's date. These fields track who executed the sprint and when.
 
 ### Step 8 — Execute Task by Task
 
@@ -140,6 +141,8 @@ For each task in each phase:
 **Document evidence inline**: For each task, fill the `Evidence` field with concrete proof of work — trace logs, before/after snapshots, tables of affected items, verification marks. Evidence is not optional; it makes the sprint auditable.
 
 **Execution order**: Process phases in order (Phase 1 → Phase 2 → ...). Within a phase, process tasks in order unless dependencies require different ordering.
+
+**Persistence rule — checkpoint per phase**: After completing all tasks in a phase, write the sprint file to disk with all status updates (`[x]`, `[!]`, `[>]`) and evidence for that phase. This ensures progress survives unexpected interruptions (agent crash, session timeout, context overflow) without disrupting task-to-task flow within a phase. Do NOT write the file after every individual task — that fragments the agent's focus and wastes I/O. Do NOT defer all writes to sprint close — that risks losing all progress tracking on failure.
 
 **Code quality**: Write production-quality code. Follow existing project patterns. Do not introduce new patterns without justification.
 
@@ -182,7 +185,13 @@ When all tasks are done (or explicitly skipped/blocked/carried-over):
    - Update deferred items if timelines changed
    - Follow all rules from [debt-tracker.md](../helpers/debt-tracker.md)
 
-4. **Verify Definition of Done**:
+4. **Update Frontmatter**:
+   - Set `updated` to today's date
+   - Set `status` to `"completed"` (or `"active"` if carry-overs exist)
+   - Set `progress` to final completion percentage (0-100)
+   - Append changelog entry: `{"version": "1.1", "date": "{today}", "changes": ["Sprint completed"]}`
+
+5. **Verify Definition of Done**:
    - Check every DoD item
    - Mark as complete or document why it's not
 

@@ -8,7 +8,7 @@ description: >
 license: Apache-2.0
 metadata:
   author: synapsync
-  version: "1.8"
+  version: "1.10"
   scope: [root]
   auto_invoke:
     # English triggers
@@ -118,6 +118,10 @@ This skill works for **any** project type, language, or framework.
 3. **SPRINT/STATUS without re-entry prompt** — Auto-discover by scanning `.agents/sprint-forge/` in `{cwd}`, or ask the user directly.
 
 No AGENTS.md. No branded blocks. The re-entry prompts and README carry the path across sessions.
+
+### Frontmatter Properties
+
+All generated markdown documents include YAML frontmatter following the [Obsidian markdown standard](../integrations/obsidian/assets/standards/obsidian-md-standard.md). The `agents` field tracks the AI model that generated or modified the document. Resolve `{agent_model}` from the model ID powering the current session (e.g., `"claude-opus-4-6"`, `"gpt-4o"`, `"codex"`, `"grok"`). When modifying an existing document, append the current model to the `agents` array if not already present.
 
 ---
 
