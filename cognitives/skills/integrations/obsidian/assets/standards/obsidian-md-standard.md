@@ -22,6 +22,8 @@ project: "{project-name}"     # Kebab-case project identifier
 type: "{document-type}"       # From the Document Type Taxonomy (section 2)
 status: "draft"               # draft | active | completed | superseded | archived
 version: "1.0"                # Document version (semver-ish)
+agents:
+  - "{agent-model}"
 tags:
   - "{project-name}"
   - "{type}"
@@ -53,6 +55,7 @@ related:
 | `approved_date` | any gated document | "YYYY-MM-DD" |
 | `severity` | bug-fix analysis | critical / high / medium / low |
 | `scope_modules` | refactor analysis | List of affected modules |
+| `agents` | any | List of AI models that created or modified the document (e.g., `"claude-opus-4-6"`, `"gpt-4o"`, `"codex"`, `"grok"`) |
 
 ### 2. Document Type Taxonomy
 

@@ -7,7 +7,7 @@ description: >
 license: Apache-2.0
 metadata:
   author: synapsync
-  version: "4.0"
+  version: "4.1"
   scope: [root]
   auto_invoke:
     # English — SYNC

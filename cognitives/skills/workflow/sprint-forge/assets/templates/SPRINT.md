@@ -1,3 +1,31 @@
+---
+title: "Sprint {N} — {title}"
+date: "{date}"
+updated: "{date}"
+project: "{project_name}"
+type: "sprint-plan"
+status: "active"
+version: "1.0"
+sprint: {N}
+progress: 0
+previous_doc: "[[SPRINT-{N-1}-{previous_slug}]]"
+next_doc: "[[SPRINT-{N+1}-{next_slug}]]"
+parent_doc: "[[ROADMAP]]"
+agents:
+  - "{agent_model}"
+tags:
+  - "{project_name}"
+  - "sprint-plan"
+  - "sprint-{N}"
+changelog:
+  - version: "1.0"
+    date: "{date}"
+    changes: ["Sprint generated"]
+related:
+  - "[[ROADMAP]]"
+  - "[[{finding_file_ref}]]"
+---
+
 # Sprint {N} — {title}
 
 > Source: `findings/{finding_file}`

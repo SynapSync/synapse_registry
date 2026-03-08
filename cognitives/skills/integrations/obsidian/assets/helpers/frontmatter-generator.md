@@ -77,6 +77,7 @@ Refer to the [Obsidian markdown standard](../standards/obsidian-md-standard.md) 
 | `version` | Preserve existing or `"1.0"` for new | `"1.0"` |
 | `tags` | `[project, type, ...topics]` | `[project]` |
 | `changelog` | Preserve existing or new entry | `[{"version": "1.0", "date": "YYYY-MM-DD", "changes": ["Synced to Obsidian"]}]` |
+| `agents` | AI model(s) that created or modified the document | `["claude-opus-4-6"]` |
 | `related` | Extract from `[[wiki-links]]` in content or `## Referencias` | `[]` |
 
 ### Step 5: Build Frontmatter Object
@@ -92,6 +93,8 @@ project: "agent-sync-sdk"
 type: "plan"
 status: "active"
 version: "1.0"
+agents:
+  - "{agent_model}"
 tags:
   - "agent-sync-sdk"
   - "plan"
@@ -124,10 +127,11 @@ For specific document types, add extended fields as defined in the [Obsidian mar
 When enriching existing frontmatter:
 
 1. **Never overwrite existing fields** — preserve all values already present
-2. **Add missing required fields** — ensure title, date, updated, project, type, status, version, tags, changelog, related exist
+2. **Add missing required fields** — ensure title, date, updated, project, type, status, version, agents, tags, changelog, related exist
 3. **Preserve field order** — place new fields after existing ones or follow schema order
 4. **Update `updated` date** — always set to today's date (sync date)
 5. **Append to `changelog`** — add new entry without removing existing ones
+6. **Append to `agents`** — add the current AI model name if not already present (never remove existing entries). This tracks which models have touched the document over time.
 
 ## Example: Full Generation
 
@@ -159,6 +163,8 @@ project: "agent-sync-sdk"
 type: "analysis"
 status: "active"
 version: "1.0"
+agents:
+  - "{agent_model}"
 tags:
   - "agent-sync-sdk"
   - "analysis"
@@ -208,6 +214,8 @@ sprint: 2
 progress: 0
 previous_doc: "[[SPRINT-1-foundation]]"
 parent_doc: "[[PROGRESS]]"
+agents:
+  - "{agent_model}"
 tags:
   - "agent-sync-sdk"
   - "sprint-2"
@@ -252,6 +260,8 @@ changelog:
     date: "{date}"
     changes:
       - "{change_description}"
+agents:
+  - "{agent_model}"
 related:
   - "[[{related_doc_1}]]"
   - "[[{related_doc_2}]]"

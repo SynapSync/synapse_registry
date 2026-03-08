@@ -1,3 +1,27 @@
+---
+title: "{project_name} — Re-entry Prompts"
+date: "{date}"
+updated: "{date}"
+project: "{project_name}"
+type: "execution-plan"
+status: "active"
+version: "1.0"
+agents:
+  - "{agent_model}"
+tags:
+  - "{project_name}"
+  - "execution-plan"
+  - "reentry"
+  - "sprint-forge"
+changelog:
+  - version: "1.0"
+    date: "{date}"
+    changes: ["Re-entry prompts created"]
+related:
+  - "[[README]]"
+  - "[[ROADMAP]]"
+---
+
 # {project_name} — Re-entry Prompts
 
 > Last updated: {date}

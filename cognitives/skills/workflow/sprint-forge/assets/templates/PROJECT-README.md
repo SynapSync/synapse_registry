@@ -1,3 +1,26 @@
+---
+title: "{project_name} — Working Project"
+date: "{date}"
+updated: "{date}"
+project: "{project_name}"
+type: "progress"
+status: "active"
+version: "1.0"
+agents:
+  - "{agent_model}"
+tags:
+  - "{project_name}"
+  - "progress"
+  - "sprint-forge"
+changelog:
+  - version: "1.0"
+    date: "{date}"
+    changes: ["Project initialized"]
+related:
+  - "[[ROADMAP]]"
+  - "[[RE-ENTRY-PROMPTS]]"
+---
+
 # {project_name} — Working Project
 
 > Type: {work_type}

@@ -95,7 +95,7 @@ Write each distinct finding as a separate file:
 
 **Naming**: `NN-descriptive-slug.md` (e.g., `01-architecture-issues.md`)
 
-**Content per file**: Summary, severity, details with code examples, affected files, recommendations.
+**Content per file**: YAML frontmatter properties (following the template in analysis-guide.md) + Summary, severity, details with code examples, affected files, recommendations.
 
 **Number of findings**: VARIABLE. Determined entirely by what the analysis reveals:
 - Small project: 2-4 findings
@@ -141,7 +141,7 @@ Create the full directory structure:
 └── sprints/               ← Empty directory, sprints created later
 ```
 
-**README.md**: Use the [PROJECT-README.md template](../templates/PROJECT-README.md). Fill in:
+**README.md**: Use the [PROJECT-README.md template](../templates/PROJECT-README.md). Fill in the frontmatter properties with actual values, then fill in:
 - Project name, type, date
 - Description of the work
 - All absolute paths
