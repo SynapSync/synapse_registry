@@ -256,20 +256,21 @@
     {
       "name": "growth-ceo",
       "type": "skill",
-      "version": "1.4.0",
-      "description": "CEO-level strategist generating high-leverage initiatives, product ideas, and growth opportunities",
+      "version": "2.0.0",
+      "description": "Elite tech CEO strategist: first principles, 7 Powers, flywheels, and billion-dollar-scale thinking",
       "author": "joicodev",
       "category": "planning",
       "tags": [
         "strategy",
         "growth",
-        "product",
         "ceo",
-        "founder",
+        "first-principles",
+        "7-powers",
+        "flywheel",
+        "platform",
         "vision",
-        "initiatives",
-        "competitive-advantage",
-        "leverage"
+        "competitive-moat",
+        "exponential"
       ],
       "providers": [
         "claude",

@@ -2,8 +2,8 @@
   "$schema": "https://synapsync.dev/schemas/cognitive-manifest.json",
   "name": "growth-ceo",
   "type": "skill",
-  "version": "1.4.0",
-  "description": "CEO-level strategist generating high-leverage initiatives, product ideas, and growth opportunities",
+  "version": "2.0.0",
+  "description": "Elite tech CEO strategist: first principles, 7 Powers, flywheels, and billion-dollar-scale thinking",
   "author": {
     "name": "joicodev",
     "url": "https://github.com/joicodev"
@@ -13,13 +13,14 @@
   "tags": [
     "strategy",
     "growth",
-    "product",
     "ceo",
-    "founder",
+    "first-principles",
+    "7-powers",
+    "flywheel",
+    "platform",
     "vision",
-    "initiatives",
-    "competitive-advantage",
-    "leverage"
+    "competitive-moat",
+    "exponential"
   ],
   "providers": [
     "claude",
@@ -36,8 +37,36 @@
     "url": "https://github.com/joicodev/skills-registry"
   },
   "createdAt": "2026-03-04T00:00:00Z",
-  "updatedAt": "2026-03-05T00:00:00Z",
+  "updatedAt": "2026-03-09T00:00:00Z",
   "changelog": [
+    {
+      "version": "2.0.0",
+      "date": "2026-03-09",
+      "changes": [
+        "BREAKING: Complete rewrite — vision-first thinking replaces constraint-first thinking",
+        "New core principle: 'Vision First, Resources Second' — never limit strategy to current team size or budget",
+        "Added 7 Powers framework (Hamilton Helmer) as initiative evaluation backbone",
+        "Added Flywheel design as mandatory strategic element for every initiative",
+        "Added Musk's Algorithm (5-step first principles process) as primary thinking framework",
+        "Added Decision Classification (Bezos Type 1/Type 2 doors)",
+        "Added Disruption Radar (Christensen's Innovator's Dilemma)",
+        "Added Strategic Inflection Points (Andy Grove's 10X forces)",
+        "Added Wartime vs Peacetime CEO diagnosis (Horowitz)",
+        "Added Blitzscaling conditions assessment (Hoffman)",
+        "Added Monopoly Theory (Thiel's contrarian truth and secrets)",
+        "Added Idiot Index metric (Musk) for process efficiency evaluation",
+        "Expanded Founder Council: Thiel, Bezos, Musk, Huang, Altman, Collison, Hoffman (was Jobs, Bezos, Musk, Nadella, Altman)",
+        "New output structure: Contrarian Truth → Strategic Diagnosis → Initiatives → Flywheel Map → Positioning & GTM → First Moves → What NOT to Build → 10X Question",
+        "Each initiative now includes: Secret, Vision (full scale), Strategic Power, Flywheel, 3-phase Execution Roadmap, Resource Acquisition Plan, Impact Projection, Risks & Countermeasures",
+        "Resource Acquisition Plan section in every initiative — hiring, capital, partnerships, infrastructure",
+        "Go-To-Market section replaces simple positioning — includes distribution strategy, pricing thesis, first 1000 users",
+        "Deep thinking expanded: generate 15 candidates (was 10), 5-dimensional scoring, Founder Council filter",
+        "Added 9 CEO mental models with source attribution (Musk, Bezos, Altman, Huang, Zuckerberg, Amodei, Collison, Thiel, Hoffman)",
+        "New calibration examples: SpaceX, AWS, Stripe, NVIDIA (was Amazon Prime, Netflix, Airbnb)",
+        "Removed all constraint-limiting language ('fantasy ideas', 'hard limits', 'current team')",
+        "Removed 'favor simplicity over complexity' bias — replaced with strategic power evaluation"
+      ]
+    },
     {
       "version": "1.4.0",
       "date": "2026-03-05",

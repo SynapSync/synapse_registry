@@ -9,14 +9,12 @@ Format based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and th
 ## [Unreleased]
 
 ### Changed
+- **growth-ceo** skill (planning, v2.0.0): BREAKING — Complete rewrite. Vision-first thinking replaces constraint-first thinking. Never limits strategy to current team size or budget. Added 7 Powers framework (Hamilton Helmer), Flywheel design, Musk's Algorithm (5-step first principles), Bezos Type 1/Type 2 decisions, Christensen's Disruption Radar, Grove's Strategic Inflection Points, Horowitz Wartime/Peacetime CEO, Hoffman Blitzscaling conditions, Thiel Monopoly Theory, Musk's Idiot Index. New output: Contrarian Truth → Strategic Diagnosis → Initiatives (with Resource Acquisition Plan) → Flywheel Map → Positioning & GTM → First Moves → What NOT to Build → 10X Question. Deep thinking expanded to 15 candidates with 5-dimensional scoring.
 - **sprint-forge** skill (workflow, v1.10.0): Add checkpoint-per-phase persistence rule to EXECUTE workflow. Sprint file is now written to disk after each phase completes, ensuring progress survives agent crashes or session timeouts without fragmenting task-to-task execution flow.
 
 ### Added
 - **sprint-forge** skill (workflow, v1.9.0): YAML frontmatter properties on all templates (SPRINT, ROADMAP, PROJECT-README, REENTRY-PROMPTS) and finding file format. New `agents` field tracks AI model names (e.g., claude-opus-4-6, gpt-4o, codex) that created/modified documents. INIT and SPRINT modes updated with frontmatter generation and close-time update instructions.
 - **obsidian** skill (integrations, v4.1.0): New `agents` field in universal frontmatter schema — tracks AI model names that created or modified documents. Updated frontmatter-generator with agents merge rule (append, never remove). Updated obsidian-md-standard extended fields table.
-
-### Changed
-- **growth-ceo** skill (planning, v1.4.0): Added Strategic Frameworks (7 named mental models), Founder Council (internal challenge filter), Deep Thinking process (generate 10, present top 3), Leverage Categories (10 dimensions), Insight field in output format. Expanded founder roster with Patrick Collison and Sam Altman.
 
 ### Added
 - **growth-ceo** skill (planning, v1.3.0): CEO-level strategic initiative engine. Output structure: Focal Question -> Constraint-Aware Diagnosis -> Ranked Initiatives (Problem/Vision/Execution/Impact/Risks/Reference) -> Positioning & First Moves ("Don't say X, say Y" + 3 this-week actions) -> What NOT to Do. Constraints-first thinking filters ideas through team/runway/budget reality. Persists approved initiatives to `{output_dir}/initiatives/`. Configuration Resolution via AGENTS.md branded block. Post-Production Delivery with Obsidian sync option.
