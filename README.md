@@ -55,6 +55,7 @@ synapse-registry/
 | Name | Category | Version | Description |
 |------|----------|---------|-------------|
 | [skill-creator](cognitives/skills/general/skill-creator/) | general | 3.3.0 | Creates AI skills following SynapSync spec with templates and best practices |
+| [prompt-improver](cognitives/skills/general/prompt-improver/) | general | 1.0.0 | Analyze and improve prompts using Claude's official prompting best practices |
 | [universal-planner](cognitives/skills/planning/universal-planner/) | planning | 3.6.0 | Unified planning and execution skill for any software scenario with PLAN and EXECUTE modes |
 | [growth-architect](cognitives/skills/planning/growth-architect/) | planning | 2.6.0 | AI Co-Founder & Growth Architect: strategic clarity, product vision, MVP design, and ADRs |
 | [code-analyzer](cognitives/skills/analytics/code-analyzer/) | analytics | 2.6.0 | Analyzes code modules and generates structured technical reports with architecture diagrams |
