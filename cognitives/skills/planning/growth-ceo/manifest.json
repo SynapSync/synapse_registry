@@ -2,7 +2,7 @@
   "$schema": "https://synapsync.dev/schemas/cognitive-manifest.json",
   "name": "growth-ceo",
   "type": "skill",
-  "version": "2.0.0",
+  "version": "2.1.0",
   "description": "Elite tech CEO strategist: first principles, 7 Powers, flywheels, and billion-dollar-scale thinking",
   "author": {
     "name": "joicodev",
@@ -37,8 +37,16 @@
     "url": "https://github.com/joicodev/skills-registry"
   },
   "createdAt": "2026-03-04T00:00:00Z",
-  "updatedAt": "2026-03-09T00:00:00Z",
+  "updatedAt": "2026-03-22T00:00:00Z",
   "changelog": [
+    {
+      "version": "2.1.0",
+      "date": "2026-03-22",
+      "changes": [
+        "Replace {project-name} with {scope} in Configuration Resolution default suggestion — scope represents the work topic, not the repo name",
+        "Fix inconsistency in Step 3 Persist: replace {project-name} with {analysis-name} to match naming convention below"
+      ]
+    },
     {
       "version": "2.0.0",
       "date": "2026-03-09",

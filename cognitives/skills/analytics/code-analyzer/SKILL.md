@@ -6,7 +6,7 @@ description: >
 license: Apache-2.0
 metadata:
   author: synapsync
-  version: "2.6"
+  version: "2.7"
   scope: [root]
   auto_invoke: "When the user asks to analyze, explain, or document a code module or file"
 allowed-tools: Read, Edit, Write, Glob, Grep, Bash, Task
@@ -81,7 +81,7 @@ The user provides:
 
 1. **User message context** — If the user's message contains file paths, extract `{output_dir}` from those paths
 2. **Auto-discover** — Scan for `.agents/code-analyzer/` in `{cwd}`
-3. **Ask the user** — If nothing found, ask where to save reports. Default suggestion: `.agents/code-analyzer/{project-name}/`
+3. **Ask the user** — If nothing found, ask where to save reports. Default suggestion: `.agents/code-analyzer/{scope}/` (where `{scope}` is the topic, e.g., `auth-module`, `api-layer`)
 
 No AGENTS.md. No branded blocks. The output directory is resolved at runtime.
 

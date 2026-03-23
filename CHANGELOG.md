@@ -9,6 +9,18 @@ Format based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and th
 ## [Unreleased]
 
 ### Changed
+- **Convention**: Replace `{project-name}` with `{scope}` in Configuration Resolution default suggestion across all skills and docs. `{scope}` represents the work topic (e.g., `oauth-implementation`, `ui-redesign`), not the repo name — avoids redundant paths like `project/.agents/skill/project/`.
+- **growth-ceo** skill (planning, v2.1.0): Configuration Resolution uses `{scope}`. Fix Step 3 Persist inconsistency — replace `{project-name}` with `{analysis-name}` to match existing naming convention.
+- **code-analyzer** skill (analytics, v2.7.0): Configuration Resolution uses `{scope}`.
+- **skill-creator** skill (general, v3.4.0): Configuration Resolution uses `{scope}`.
+- **project-brain** skill (workflow, v2.9.0): Configuration Resolution, brain-config, and brain-resolve defaults use `{scope}`.
+
+### Removed
+- **sprint-forge** skill (workflow, v1.10.0): Removed from registry — migrated to a workflow cognitive type. Will be re-added as a workflow in a future release.
+- **universal-planner** skill (planning, v3.6.0): Removed from registry.
+- **growth-architect** skill (planning, v2.6.0): Removed from registry.
+
+### Changed
 - **growth-ceo** skill (planning, v2.0.0): BREAKING — Complete rewrite. Vision-first thinking replaces constraint-first thinking. Never limits strategy to current team size or budget. Added 7 Powers framework (Hamilton Helmer), Flywheel design, Musk's Algorithm (5-step first principles), Bezos Type 1/Type 2 decisions, Christensen's Disruption Radar, Grove's Strategic Inflection Points, Horowitz Wartime/Peacetime CEO, Hoffman Blitzscaling conditions, Thiel Monopoly Theory, Musk's Idiot Index. New output: Contrarian Truth → Strategic Diagnosis → Initiatives (with Resource Acquisition Plan) → Flywheel Map → Positioning & GTM → First Moves → What NOT to Build → 10X Question. Deep thinking expanded to 15 candidates with 5-dimensional scoring.
 - **sprint-forge** skill (workflow, v1.10.0): Add checkpoint-per-phase persistence rule to EXECUTE workflow. Sprint file is now written to disk after each phase completes, ensuring progress survives agent crashes or session timeouts without fragmenting task-to-task execution flow.
 

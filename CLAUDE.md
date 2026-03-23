@@ -34,11 +34,8 @@ Every cognitive lives in `cognitives/{type}s/{category}/{name}/` and must contai
 
 ### Skills
 - **skill-creator** (`cognitives/skills/general/skill-creator/`) — Meta-skill for creating new skills with templates. Includes `assets/` with basic and advanced templates.
-- **universal-planner** (`cognitives/skills/planning/universal-planner/`) — Unified planning and execution skill with PLAN and EXECUTE modes. Covers new projects, features, refactors, bug fixes, tech debt, and architecture changes. Uses modular assets pattern with 8 modes (2 top-level + 6 planning sub-modes).
-- **growth-architect** (`cognitives/skills/planning/growth-architect/`) — AI Co-Founder & Growth Architect: strategic clarity, product vision, MVP design, and ADRs. Single ANALYZE mode with optional focus modifiers (CTO, Product, Growth, Investor, Technical, Brutal). Modular assets: 1 mode, 1 helper, 2 templates.
 - **code-analyzer** (`cognitives/skills/analytics/code-analyzer/`) — Analyzes code modules and generates structured technical reports with architecture diagrams.
 - **obsidian** (`cognitives/skills/integrations/obsidian/`) — Unified Obsidian vault manager with SYNC and READ modes. Syncs documents to vault and reads/searches notes via filesystem (Read/Write/Edit/Glob/Grep). Includes the Obsidian markdown standard specification and linter as internal assets. Claude-only.
-- **sprint-forge** (`cognitives/skills/workflow/sprint-forge/`) — Adaptive sprint workflow with 3 modes (INIT, SPRINT, STATUS). Deep analysis, evolving roadmap, one-at-a-time sprints, formal debt tracking, and re-entry prompts for context persistence. Language-agnostic. Modular assets: 3 modes, 4 helpers, 4 templates.
 - **project-brain** (`cognitives/skills/workflow/project-brain/`) — Session memory for AI agents: LOAD mode recovers context, SAVE mode persists sessions. Auto-discovery of brain documents, incremental merge, configurable brain directory.
 - **growth-ceo** (`cognitives/skills/planning/growth-ceo/`) — Elite tech CEO strategist combining first principles (Musk), 7 Powers (Helmer), flywheels (Bezos), and exponential thinking (Altman). Vision-first, resources-second. Generates billion-dollar-scale initiatives with Resource Acquisition Plans. Output: Contrarian Truth → Diagnosis → Initiatives → Flywheel Map → GTM → First Moves → What NOT to Build → 10X Question.
 
@@ -131,7 +128,9 @@ Skills that produce output resolve `{output_dir}` at runtime — no external con
 
 1. **User message context** — If the user's message contains file paths, extract `{output_dir}` from those paths
 2. **Auto-discover** — Scan for `.agents/{skill-name}/` in `{cwd}`
-3. **Ask the user** — If nothing found, ask where to save documents. Default suggestion: `.agents/{skill-name}/{project-name}/`
+3. **Ask the user** — If nothing found, ask where to save documents. Default suggestion: `.agents/{skill-name}/{scope}/`
+
+`{scope}` is a short kebab-case name for the topic or work scope (e.g., `oauth-implementation`, `ui-redesign`, `q2-growth`). It is NOT the repo/project name — the repo is already `{cwd}`.
 
 No AGENTS.md. No branded blocks. Each skill resolves its output directory at runtime.
 
@@ -150,7 +149,9 @@ No AGENTS.md. No branded blocks. Each skill resolves its output directory at run
 
 1. **User message context** — If the user's message contains file paths, extract `{output_dir}` from those paths
 2. **Auto-discover** — Scan for `.agents/{skill-name}/` in `{cwd}`
-3. **Ask the user** — If nothing found, ask where to save documents. Default suggestion: `.agents/{skill-name}/{project-name}/`
+3. **Ask the user** — If nothing found, ask where to save documents. Default suggestion: `.agents/{skill-name}/{scope}/`
+
+`{scope}` is a short kebab-case name for the topic or work scope (e.g., `oauth-implementation`, `ui-redesign`, `q2-growth`). It is NOT the repo/project name — the repo is already `{cwd}`.
 
 No AGENTS.md. No branded blocks. The output directory is resolved at runtime.
 ````

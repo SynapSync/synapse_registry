@@ -2,7 +2,7 @@
   "$schema": "https://synapsync.dev/schemas/cognitive-manifest.json",
   "name": "project-brain",
   "type": "skill",
-  "version": "2.8.0",
+  "version": "2.9.0",
   "description": "Session memory for AI agents — load context, save sessions, evolve knowledge",
   "author": {
     "name": "SynapSync",
@@ -37,6 +37,13 @@
   },
   "homepage": "https://synapsync.dev/cognitives/project-brain",
   "changelog": [
+    {
+      "version": "2.9.0",
+      "date": "2026-03-22",
+      "changes": [
+        "Replace {project-name} with {scope} in Configuration Resolution and brain-config/brain-resolve defaults — scope represents the work topic, not the repo name"
+      ]
+    },
     {
       "version": "2.8.0",
       "date": "2026-03-04",
@@ -148,5 +155,5 @@
     }
   ],
   "createdAt": "2026-02-18T00:00:00Z",
-  "updatedAt": "2026-03-04T00:00:00Z"
+  "updatedAt": "2026-03-22T00:00:00Z"
 }

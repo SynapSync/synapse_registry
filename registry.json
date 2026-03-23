@@ -2,12 +2,12 @@
   "$schema": "https://synapsync.dev/schemas/registry.json",
   "version": "2.0.1",
   "lastUpdated": "2026-03-04T21:44:00Z",
-  "totalCognitives": 10,
+  "totalCognitives": 7,
   "cognitives": [
     {
       "name": "skill-creator",
       "type": "skill",
-      "version": "3.3.0",
+      "version": "3.4.0",
       "description": "Creates AI skills following SynapSync spec with templates and best practices",
       "author": "synapsync",
       "category": "general",
@@ -55,7 +55,7 @@
     {
       "name": "code-analyzer",
       "type": "skill",
-      "version": "2.6.0",
+      "version": "2.7.0",
       "description": "Analyzes code modules and generates structured technical reports with architecture diagrams",
       "author": "synapsync",
       "category": "analytics",
@@ -82,66 +82,6 @@
       "path": "cognitives/skills/analytics/code-analyzer"
     },
     {
-      "name": "universal-planner",
-      "type": "skill",
-      "version": "3.6.0",
-      "description": "Unified planning and execution skill for any software scenario with PLAN and EXECUTE modes",
-      "author": "synapsync",
-      "category": "planning",
-      "tags": [
-        "planning",
-        "execution",
-        "sdlc",
-        "sprints",
-        "architecture",
-        "refactoring",
-        "project-management",
-        "scrum",
-        "analysis",
-        "universal"
-      ],
-      "providers": [
-        "claude",
-        "openai",
-        "cursor",
-        "windsurf",
-        "copilot",
-        "gemini",
-        "codex"
-      ],
-      "downloads": 0,
-      "path": "cognitives/skills/planning/universal-planner"
-    },
-    {
-      "name": "growth-architect",
-      "type": "skill",
-      "version": "2.6.0",
-      "description": "AI Co-Founder & Growth Architect: strategic clarity, product vision, MVP design, and ADRs",
-      "author": "joicodev",
-      "category": "planning",
-      "tags": [
-        "strategy",
-        "growth",
-        "product",
-        "founder",
-        "architecture",
-        "vision",
-        "startup",
-        "MVP",
-        "ADR"
-      ],
-      "providers": [
-        "claude",
-        "openai",
-        "cursor",
-        "windsurf",
-        "copilot",
-        "gemini"
-      ],
-      "downloads": 0,
-      "path": "cognitives/skills/planning/growth-architect"
-    },
-    {
       "name": "obsidian",
       "type": "skill",
       "version": "4.1.0",
@@ -166,40 +106,9 @@
       "path": "cognitives/skills/integrations/obsidian"
     },
     {
-      "name": "sprint-forge",
-      "type": "skill",
-      "version": "1.10.0",
-      "description": "Adaptive sprint workflow — analysis, roadmap, iterative sprints, debt tracking, and context persistence",
-      "author": "synapsync",
-      "category": "workflow",
-      "tags": [
-        "workflow",
-        "sprint",
-        "planning",
-        "execution",
-        "debt-tracking",
-        "roadmap",
-        "iterative",
-        "adaptive",
-        "context-persistence",
-        "reentry"
-      ],
-      "providers": [
-        "claude",
-        "openai",
-        "cursor",
-        "windsurf",
-        "copilot",
-        "gemini",
-        "codex"
-      ],
-      "downloads": 0,
-      "path": "cognitives/skills/workflow/sprint-forge"
-    },
-    {
       "name": "project-brain",
       "type": "skill",
-      "version": "2.8.0",
+      "version": "2.9.0",
       "description": "Session memory for AI agents — load context, save sessions, evolve knowledge",
       "author": "synapsync",
       "category": "workflow",
@@ -256,7 +165,7 @@
     {
       "name": "growth-ceo",
       "type": "skill",
-      "version": "2.0.0",
+      "version": "2.1.0",
       "description": "Elite tech CEO strategist: first principles, 7 Powers, flywheels, and billion-dollar-scale thinking",
       "author": "joicodev",
       "category": "planning",

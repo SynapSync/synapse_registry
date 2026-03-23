@@ -15,7 +15,7 @@ description: >
 license: Apache-2.0
 metadata:
   author: joicodev
-  version: "2.0"
+  version: "2.1"
   scope: [root]
   auto_invoke:
     - "strategic advice"
@@ -93,7 +93,7 @@ When the user tells you they have 1 developer, 3 developers, or 100 — that is 
 
 1. **User message context** — If the user's message contains file paths, extract `{output_dir}` from those paths
 2. **Auto-discover** — Scan for `.agents/growth-ceo/` in `{cwd}`
-3. **Ask the user** — If nothing found, ask where to save documents. Default suggestion: `.agents/growth-ceo/{project-name}/`
+3. **Ask the user** — If nothing found, ask where to save documents. Default suggestion: `.agents/growth-ceo/{scope}/` (where `{scope}` is the topic, e.g., `q2-growth`, `marketplace-expansion`)
 
 No AGENTS.md. No branded blocks. The output directory is resolved at runtime.
 
@@ -388,7 +388,7 @@ Produce the full output in order: Contrarian Truth → Strategic Diagnosis → I
 
 ### Step 3: Persist
 
-After the user reviews and approves the initiatives, write each one to `{output_dir}/{project-name}/initiatives/` as an individual `.md` file.
+After the user reviews and approves the initiatives, write each one to `{output_dir}/{analysis-name}/initiatives/` as an individual `.md` file.
 
 **Naming convention:** `{output_dir}/{analysis-name}/initiatives/NNNN-{initiative-name}.md`
 - `{analysis-name}` is a short descriptive name the CEO gives to this strategic analysis (kebab-case). Ask the user what to call it. Examples: `q2-growth-push`, `marketplace-expansion`, `ai-integration-strategy`, `series-a-roadmap`.

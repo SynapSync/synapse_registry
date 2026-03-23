@@ -27,7 +27,7 @@ AskUserQuestion:
   header: "Brain dir"
   options:
     - label: "Default (Recommended)"
-      description: ".agents/project-brain/{project-name}/"
+      description: ".agents/project-brain/{scope}/"
 ```
 
 The built-in "Other" option (shown as "Write your custom path") lets the user type a relative path directly. Set `{brain_dir}` to the chosen or typed path.

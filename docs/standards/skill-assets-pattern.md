@@ -219,7 +219,7 @@ See [assets/helpers/config-resolver.md](assets/helpers/config-resolver.md) for t
 **Quick summary:**
 1. Check user message for file paths → extract `{output_dir}`
 2. Auto-discover → scan for `.agents/{skill-name}/` in `{cwd}`
-3. If not found → **ask the user** (default `.agents/{skill-name}/{project-name}/` or custom path)
+3. If not found → **ask the user** (default `.agents/{skill-name}/{scope}/` or custom path)
 4. Use `{output_dir}/` for all output paths
 ```
 

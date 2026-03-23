@@ -54,15 +54,12 @@ synapse-registry/
 
 | Name | Category | Version | Description |
 |------|----------|---------|-------------|
-| [skill-creator](cognitives/skills/general/skill-creator/) | general | 3.3.0 | Creates AI skills following SynapSync spec with templates and best practices |
+| [skill-creator](cognitives/skills/general/skill-creator/) | general | 3.4.0 | Creates AI skills following SynapSync spec with templates and best practices |
 | [prompt-improver](cognitives/skills/general/prompt-improver/) | general | 1.0.0 | Analyze and improve prompts using Claude's official prompting best practices |
-| [universal-planner](cognitives/skills/planning/universal-planner/) | planning | 3.6.0 | Unified planning and execution skill for any software scenario with PLAN and EXECUTE modes |
-| [growth-architect](cognitives/skills/planning/growth-architect/) | planning | 2.6.0 | AI Co-Founder & Growth Architect: strategic clarity, product vision, MVP design, and ADRs |
-| [code-analyzer](cognitives/skills/analytics/code-analyzer/) | analytics | 2.6.0 | Analyzes code modules and generates structured technical reports with architecture diagrams |
+| [code-analyzer](cognitives/skills/analytics/code-analyzer/) | analytics | 2.7.0 | Analyzes code modules and generates structured technical reports with architecture diagrams |
 | [obsidian](cognitives/skills/integrations/obsidian/) | integrations | 4.1.0 | Unified Obsidian vault manager: sync documents, read notes, and search knowledge |
-| [sprint-forge](cognitives/skills/workflow/sprint-forge/) | workflow | 1.10.0 | Adaptive sprint workflow — analysis, roadmap, iterative sprints, debt tracking, and context persistence |
-| [project-brain](cognitives/skills/workflow/project-brain/) | workflow | 2.8.0 | Session memory for AI agents — load context, save sessions, evolve knowledge |
-| [growth-ceo](cognitives/skills/planning/growth-ceo/) | planning | 2.0.0 | Elite tech CEO strategist: first principles, 7 Powers, flywheels, and billion-dollar-scale thinking |
+| [project-brain](cognitives/skills/workflow/project-brain/) | workflow | 2.9.0 | Session memory for AI agents — load context, save sessions, evolve knowledge |
+| [growth-ceo](cognitives/skills/planning/growth-ceo/) | planning | 2.1.0 | Elite tech CEO strategist: first principles, 7 Powers, flywheels, and billion-dollar-scale thinking |
 
 ### Agents
 
@@ -181,7 +178,7 @@ Skills that produce output documents (reports, plans, analysis) resolve their ou
 
 1. **User message context** — If the user's message contains file paths, extract `{output_dir}` from those paths
 2. **Auto-discover** — Scan for `.agents/{skill-name}/` in `{cwd}`
-3. **Ask the user** — If nothing found, ask where to save documents. Default suggestion: `.agents/{skill-name}/{project-name}/`
+3. **Ask the user** — If nothing found, ask where to save documents. Default suggestion: `.agents/{skill-name}/{scope}/` (where `{scope}` is the topic, e.g., `oauth-implementation`, `ui-redesign`)
 
 After generating output, skills offer **post-production delivery**: sync to Obsidian vault (via the `obsidian` skill -- never calling MCP tools directly), move to a custom path, or keep in place.
 

@@ -2,7 +2,7 @@
   "$schema": "https://synapsync.dev/schemas/cognitive-manifest.json",
   "name": "code-analyzer",
   "type": "skill",
-  "version": "2.6.0",
+  "version": "2.7.0",
   "description": "Analyzes code modules and generates structured technical reports with architecture diagrams",
   "author": {
     "name": "SynapSync",
@@ -41,6 +41,13 @@
     "helpers": 1
   },
   "changelog": [
+    {
+      "version": "2.7.0",
+      "date": "2026-03-22",
+      "changes": [
+        "Replace {project-name} with {scope} in Configuration Resolution default suggestion — scope represents the work topic, not the repo name"
+      ]
+    },
     {
       "version": "2.6.0",
       "date": "2026-03-04",
@@ -101,5 +108,5 @@
     }
   ],
   "createdAt": "2026-01-29T00:00:00Z",
-  "updatedAt": "2026-03-04T00:00:00Z"
+  "updatedAt": "2026-03-22T00:00:00Z"
 }

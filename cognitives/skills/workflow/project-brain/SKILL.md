@@ -9,7 +9,7 @@ description: >
 license: Apache-2.0
 metadata:
   author: synapsync
-  version: "2.8"
+  version: "2.9"
   scope: [root]
   auto_invoke:
     # English triggers — LOAD
@@ -115,7 +115,7 @@ A markdown file that captures project state, session history, architecture decis
 
 1. **User message context** — If the user's message contains file paths, extract `{brain_dir}` from those paths
 2. **Auto-discover** — Scan for `.agents/project-brain/` in `{cwd}`, or look for existing brain documents
-3. **Ask the user** — If nothing found, ask where to store brain documents via `AskUserQuestion`. Default suggestion: `.agents/project-brain/{project-name}/`
+3. **Ask the user** — If nothing found, ask where to store brain documents via `AskUserQuestion`. Default suggestion: `.agents/project-brain/{scope}/`
 
 No AGENTS.md. No branded blocks. The brain directory is resolved at runtime.
 

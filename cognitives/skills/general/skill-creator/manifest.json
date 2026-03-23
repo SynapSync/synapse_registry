@@ -2,7 +2,7 @@
   "$schema": "https://synapsync.dev/schemas/cognitive-manifest.json",
   "name": "skill-creator",
   "type": "skill",
-  "version": "3.3.0",
+  "version": "3.4.0",
   "description": "Creates AI skills following SynapSync spec with templates and best practices",
   "author": {
     "name": "SynapSync",
@@ -35,8 +35,15 @@
   },
   "homepage": "https://synapsync.dev/cognitives/skill-creator",
   "createdAt": "2026-01-20T00:00:00Z",
-  "updatedAt": "2026-02-21T00:00:00Z",
+  "updatedAt": "2026-03-22T00:00:00Z",
   "changelog": [
+    {
+      "version": "3.4.0",
+      "date": "2026-03-22",
+      "changes": [
+        "Replace {project-name} with {scope} in Configuration Resolution default suggestion — scope represents the work topic, not the repo name"
+      ]
+    },
     {
       "version": "3.3.0",
       "date": "2026-02-21",
